@@ -2,8 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("node:path");
 const nocache = require("nocache")
-const session = require("express-session");
-// const userData = require("../project 1/models/userDB")
+const session = require('express-session');
 require("dotenv").config()
 const database = require("./config/mongodb")
 database()
@@ -14,16 +13,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "/public")));
 const router = require("./routes/userRoutes");
 
-
-app.use(nocache())
-app.use(router);
 app.use(
   session({
     secret: "keyboard cat",
-    resave: false,
+    resave: true,
     saveUninitialized: true,
   })
 );
+app.use(nocache())
+app.use(router);
 
 
 app.listen(3000, () => {

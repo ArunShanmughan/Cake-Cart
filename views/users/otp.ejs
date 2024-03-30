@@ -89,7 +89,7 @@
       <div class="col-6">
         <div class="row ms_breadcrumb_inner">
           <div class="col-md-6 col-sm-12">
-            <h2 class="ms-breadcrumb-title">Login Page</h2>
+            <h2 class="ms-breadcrumb-title">OTP Verification</h2>
           </div>
           <div class="col-md-6 col-sm-12">
             <!-- ms-breadcrumb-list start -->
@@ -97,7 +97,7 @@
               <li class="ms-breadcrumb-item">
                 <a href="/">Home</a>
               </li>
-              <li class="ms-breadcrumb-item active">Login Page</li>
+              <li class="ms-breadcrumb-item active">OTP VERIFICATION</li>
             </ul>
             <!-- ms-breadcrumb-list end -->
           </div>
@@ -107,13 +107,30 @@
   </div>
 </div>
 <!-- Breadcrumb end -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    let a = 60;
+    let timerElement = document.getElementById('timer');
+    let verifyOTPButton = document.querySelector('#otpForm button[type="submit"]');
+    let resendOTPLink = document.getElementById('ResendOTP');
+
+    let otpTimer = setInterval(() => {
+      timerElement.innerText = a--;
+
+      if (a === -1) {
+        clearInterval(otpTimer);
+        verifyOTPButton.style.display = 'none';
+        resendOTPLink.style.display = 'block';
+      }
+    }, 1000);
+  });
+</script>
 
 <!-- Login section -->
 <section class="ms-login padding-tb-30">
   <div class="container">
     <div class="section-title-2">
-      <h2 class="ms-title">Login<span></span></h2>
-      <p>Get access to your Orders, Wishlist and Recommendations.</p>
+      <h2 class="ms-title">OTP VERIFICATION<span></span></h2>
     </div>
     <div class="ms-login-content p-t-15">
       <div class="ms-login-box">
@@ -123,72 +140,33 @@
             style="background-color: antiquewhite"
           >
             <div class="ms-login-form">
-              <form id="loginvalidation" action="/views/users/login" method="post">
+              <form action="/views/users/otp" method="post" id="otpForm">
+                <span class="ms-login-wrap">
+                  <label>Enter OTP</label>
+                  <input
+                    type="text"
+                    name="otp"
+                    placeholder="Enter your OTP"
+                    required
+                  />
+                </span>
                 <% if(typeof message!=="undefined"){ %>
                   <p style="color: red;">
                     <%= message %>
                 </p>
                   <% } %>
-                <span class="ms-login-wrap">
-                  <label>Email Address*</label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email add..."
-                    required
-                  />
+                  <button class="ms-btn-2 btn" type="submit">Verify OTP</button>
                 </span>
-                <span class="ms-login-wrap">
-                  <label>Password*</label>
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    required
-                  />
-                </span>
-                <span class="ms-login-wrap ms-login-fp">
-                  <label><a href="#">Forgot Password?</a></label>
-                </span>
-                <span class="ms-login-wrap ms-login-btn">
-                  <span
-                    ><a href="/views/users/signup" class="">Create Account?</a></span
-                  >
-                  <button class="ms-btn-2 btn" type="submit">Login</button>
-                </span>
-              </form>
-              <script src="https://code.jquery.com/jquery-3.7.1.js"
-                                integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-                                crossorigin="anonymous"></script>
-                            <script
-                                src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
-                                integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
-                                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-                            <script
-                                src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"
-                                integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A=="
-                                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-
-                            <script>
-
-                                $('#loginvalidation').validate({
-
-                                    rules: {
-                                        email: {
-                                            email:true,
-                                            required: true
-                                              },
-                                        password: {
-                                            pattern: /^.{6,30}$/,
-                                            required: true
-
-                                        },
-                                    }
-
-                                });
-
-                            </script>
+                <div class="form-group">
+                  <label>Time Left: </label>
+                  <span>
+                    <h4 id="timer"></h4>
+                  </span>
+                  <a href="/resendOTP">
+                    <p class="mt-3">Didn't receive OTP?<span id="ResendOTP">Resend</span></p>
+                  </a>
+                </div>
+              </form>                         
             </div>
           </div>
         </div>
