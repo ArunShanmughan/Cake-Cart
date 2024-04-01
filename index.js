@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "/public")));
 const router = require("./routes/userRoutes");
+const adminRouter = require("./routes/adminRoutes");
 
 app.use(
   session({
@@ -22,6 +23,7 @@ app.use(
 );
 app.use(nocache())
 app.use(router);
+app.use(adminRouter);
 
 
 app.listen(3000, () => {

@@ -6,6 +6,7 @@ const getlandingpage = (req, res) => {
   try {
     // console.log(req.session.isLogged)
     if(req.session.isLogged){
+      req.session.otpRequest=false;
       res.render("users/homePage",{islogin:true});
     }else{
       res.render("users/homePage",{islogin:false});
@@ -19,7 +20,11 @@ const getlandingpage = (req, res) => {
 
 const getLogin = (req, res) => {
   try {
-  res.render("users/login");
+    if(req.session.isLogged==false){
+      res.render("users/login");
+    }else{
+      res.redirect("/")
+    }
   } catch (error) {
     console.log("something went wrong",error)
   }
@@ -42,6 +47,7 @@ const postLogin = async(req,res)=>{
 
 const getOtp = async(req,res)=>{
   try {
+    if(req.session.otpRequest){
     const userEmail = req.session.email;
     // console.log(userEmail);
     const userDetail = await userData.findOne({email:userEmail});
@@ -54,6 +60,9 @@ const getOtp = async(req,res)=>{
       text:`Here is your One Time Password for registration ${req.session.OTP}`
     })
       res.render("users/otp")
+  }else{
+    res.redirect("/views/users/login")
+  }
   } catch (error) {
     console.log("something went wrong", error)
   }
@@ -62,9 +71,10 @@ const getOtp = async(req,res)=>{
 const postOtp = async(req,res)=>{
   try {
     if(req.session.OTP==req.body.otp){
+      req.session.isLogged=true;
       res.redirect("/");
     }else{
-      res.render("/views/users/otp",{message:"Invalid OTP"})
+      res.render("users/otp",{message:"Invalid OTP"})
     }
   } catch (error) {
     console.log("Something went wrong", error);
@@ -96,6 +106,7 @@ const postSignup = async(req,res)=>{
     await userData.insertMany([data]);
     req.session.email = req.body.email;
     req.session.isLogged = true;
+    req.session.otpRequest = true;
     res.redirect("/views/users/otp");
   }
   } catch (error) {

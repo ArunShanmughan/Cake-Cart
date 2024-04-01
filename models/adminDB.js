@@ -7,4 +7,4 @@ const adminSchema= new mongoose.Schema({
 
 const adminCollections = mongoose.model('admins',adminSchema);
 
-model.exports = adminCollections;
+module.exports = adminCollections;
