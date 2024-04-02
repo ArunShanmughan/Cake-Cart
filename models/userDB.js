@@ -35,6 +35,11 @@ const LogInSchema = new mongoose.Schema({
     type:String,
     required:true,
   },
+  isBlocked:{
+    type:Boolean,
+    required:true,
+    default:false,
+  }
 });
 
 const collection = new mongoose.model("UserDB", LogInSchema);

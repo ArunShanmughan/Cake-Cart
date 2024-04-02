@@ -20,7 +20,8 @@ const getlandingpage = (req, res) => {
 
 const getLogin = (req, res) => {
   try {
-    if(req.session.isLogged==false){
+    if(!req.session.isLogged){
+      console.log("loginpage is rendering")
       res.render("users/login");
     }else{
       res.redirect("/")
@@ -33,7 +34,7 @@ const getLogin = (req, res) => {
 const postLogin = async(req,res)=>{
   try {
     const check  = await userData.findOne({email:req.body.email})
-    if(check.password==req.body.password){
+    if(check.password==req.body.password&&check.isBlocked==false){
       req.session.isLogged = true;
       // console.log(req.session.isLogged)
       res.redirect("/")
