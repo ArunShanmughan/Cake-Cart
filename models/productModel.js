@@ -1,39 +1,40 @@
 const mongoose= require('mongoose')
 
-const productSchema= new mongoose.Schema({
+const productSchema = new mongoose.Schema({
     productName: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-    parentCategory:{
-        type: String,
-        required: true
+    price: {
+      type: Number,
+      required: true,
     },
-    productImage1:{
-        type: String,
+    offerPrice: {
+      type: Number,
+      required:true
     },
-    productImage2:{
-        type: String,
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "categoryModel",
+      required: true,
     },
-    productImage3:{
-        type: String,
+    quantity: {
+      type: Number,
+      required: true,
     },
-    productPrice:{
-        type: Number,
-        required: true
+    description: {
+      type: String,
+      required: true,
     },
-    productStock: {
-        type: Number,
-        required: true
+    images: {
+      type: Array,
+      required: true,
     },
     isListed: {
-        type: Boolean,
-        default: true
-    },stockSold: {
-        type: Number,
-        default: 0
-    }
-})
+      type: Boolean,
+      default: true,
+    },
+  });
 
 const productCollection= mongoose.model('products',productSchema)
 
