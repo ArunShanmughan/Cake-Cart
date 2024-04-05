@@ -1,4 +1,3 @@
-const adminData = require("../models/adminDB");
 const userdata = require("../models/userDB");
 const categoryModel = require("../models/categoryModel");
 const productModel = require("../models/productModel");
@@ -89,13 +88,13 @@ const getCategoryManagment = async (req, res) => {
 const getProductManagment = async (req, res) => {
   try {
     if (req.session.adminLogged) {
-      const productdetails = await productModel.find();
-      const categorydetails = await categoryModel.find({
-        _id: productdetails._id,
-      });
+      const productdetails = await productModel.find().populate("category");
+      // const categorydetails = await categoryModel.find({
+      //   _id: productdetails._id,
+      // })
       res.render("admin/productManagment", {
-        productModel: productdetails,
-        categoryModel: categorydetails,
+        productData: productdetails,
+        // categoryModel: categorydetails,
       });
     }
   } catch (error) {
@@ -189,7 +188,6 @@ const postEditCategory = async (req, res) => {
 
 const productBlock = async (req, res) => {
   try {
-    console.log(req.query.id);
     await productModel.updateOne(
       { _id: req.query.id },
       { $set: { isListed: false } }
@@ -202,8 +200,7 @@ const productBlock = async (req, res) => {
 
 const productUnBlock = async (req, res) => {
   try {
-    console.log(req.query.id);
-    await productCollection.updateOne(
+    await productModel.updateOne(
       { _id: req.query.id },
       { $set: { isListed: true } }
     );
@@ -217,7 +214,7 @@ const getAddProduct = async (req, res) => {
   try {
     if (req.session.adminLogged) {
       const categorydetails = await categoryModel.find();
-      res.render("admin/productManagment", { categoryModel: categorydetails });
+      res.render("admin/addproduct", { categoryModel: categorydetails });
     }
   } catch (error) {
     console.log("Something Went Wrong", error);
@@ -226,19 +223,75 @@ const getAddProduct = async (req, res) => {
 
 
 const postAddProduct = async(req,res)=>{
+  // console.log(req.files)
+  try {
+    if(req.session.adminLogged){
+    let images = [];
+    for(let i=0;i<req.files.length;i++){
+      images[i]=req.files[i].filename;
+    }
+    // console.log(images)
+    // console.log(req.body);
+    const addproduct = new productModel({
+      productName: req.body.productName,
+      category: req.body.parentCategory,
+      images: images,
+      price: req.body.productPrice,
+      quantity: req.body.productQuantity
+  });
+  const productDetails = await productModel.find({ productName: { $regex: new RegExp('^' + req.body.productName.toLowerCase() + '$', 'i') } })
+        if (/^\s*$/.test(req.body.productName) || /^\s*$/.test(req.body.productPrice) || /^\s*$/.test(req.body.productStock)) {
+            res.send({ noValue: true })
+        }
+        else if (productDetails.length > 0) {
+            res.send({ exists: true })
+        } else {
+            res.send({ success: true })
+            addproduct.save()
+        }
+      }
+  } catch (error) {
+    console.log("Something Went Wrong",error)
+  }
+}
+
+const getEditProduct = async(req,res)=>{
+  try {
+    if(req.session.adminLogged){
+      const categoryDetails = await categoryModel.find()
+      const categoryInfo = await categoryModel.findOne({ _id: req.query.catId })
+      const productInfo = await productModel.findOne({ _id: req.query.proId })
+    res.render("admin/editProduct",{productInfo:productInfo,categoryInfo:categoryInfo,categorydetails:categoryDetails});
+    }
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
+
+const postEditProduct = async(req,res)=>{
   try {
     let images = [];
     for(let i=0;i<req.files.length;i++){
       images[i]=req.files[i].filename;
     }
+    const productDetails = await productModel.find({ productName: { $regex: new RegExp('^' + req.body.productName.toLowerCase() + '$', 'i') } })
+        if (/^\s*$/.test(req.body.productName) || /^\s*$/.test(req.body.productPrice) || /^\s*$/.test(req.body.productStock)) {
+            res.send({ noValue: true })
+        }else if (productDetails.length > 0 && req.body.productName != productDetails.productName ) {
+          res.send({ exists: true })
+      } else {
+          await productCollection.updateOne({ _id: req.params.id }, {
+              $set: {
+                  productName: req.body.productName,
+                  category: req.body.parentCategory,
+                  Images: images,
+                  price: req.body.productPrice,
+                  quantity: req.body.productStock
+              }
+          })
+          res.send({ success: true })
 
-    const addproduct = new productCollection({
-      productName: req.body.productName,
-      parentCategory: req.body.parentCategory,
-      productImage: imgFiles,
-      productPrice: req.body.productPrice,
-      productStock: req.body.productStock
-  })
+      }
   } catch (error) {
     console.log("Something Went Wrong",error)
   }
@@ -263,4 +316,6 @@ module.exports = {
   productUnBlock,
   getAddProduct,
   postAddProduct,
+  getEditProduct,
+  postEditProduct
 };

@@ -9,10 +9,6 @@ const productSchema = new mongoose.Schema({
       type: Number,
       required: true,
     },
-    offerPrice: {
-      type: Number,
-      required:true
-    },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "categoryModel",
@@ -24,11 +20,9 @@ const productSchema = new mongoose.Schema({
     },
     description: {
       type: String,
-      required: true,
     },
     images: {
       type: Array,
-      required: true,
     },
     isListed: {
       type: Boolean,

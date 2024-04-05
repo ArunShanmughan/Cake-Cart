@@ -1,5 +1,6 @@
 const express = require("express");
 const admRouter = express.Router();
+const upload = require('../services/multer.js')
 
 const {getAdmin,
       postAdmin,
@@ -16,7 +17,9 @@ const {getAdmin,
       productBlock,
       productUnBlock,
       getAddProduct,
-      postAddProduct} = require("../controllers/admincontroller")
+      postAddProduct,
+      getEditProduct,
+      postEditProduct} = require("../controllers/admincontroller")
 
 admRouter.get("/admin",getAdmin);
 admRouter.post("/adminlog",postAdmin);
@@ -33,7 +36,9 @@ admRouter.post("/editCategory",postEditCategory);
 admRouter.get("/productBlock",productBlock);
 admRouter.get("/productUnBlock",productUnBlock);
 admRouter.get("/addProduct",getAddProduct);
-admRouter.post("/addProducts",postAddProduct);
+admRouter.post("/addProducts",upload.any(),postAddProduct);
+admRouter.get("/editProduct",getEditProduct);
+admRouter.post("/editProducts",upload.any(),postEditProduct)
 
 
 

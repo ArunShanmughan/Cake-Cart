@@ -377,104 +377,138 @@
       <!-- Content -->
 
       <!-- <body> -->
-        <div class="container mt-4 p-4 bg-white shadow">
-          <h1 class="text-center mb-4">ADD PRODUCT</h1>
-      
-          <form id="addProduct" enctype="multipart/form-data">
-      
-              <div class="form-group">
-                  <label for="exampleFormControlInput1">Product Name</label>
-                  <input type="text" name="productName" class="form-control" id="exampleFormControlInput1" placeholder="" maxlength="50" style="max-width: 300px;">
-              </div>
-              <br>
-              <select name="parentCategory" class="form-control form-control-md mb-4" style="max-width: 300px;">
-                  <option disabled selected>Select Parent Category</option>
-                  <% for(let i=0;i<categoryModel.length;i++){ %>
-      
-                  <option value="<%=categoryModel[i]._id%>">
-                      <%=categoryModel[i].categoryName%>
-                  </option>
-      
-                  <% } %>
-              </select>
-      
-              <div class="form-group">
-                  <label for="images">Add image</label>
-                  <input type="file" name="images" class="form-control-file" id="images" multiple>
-              </div>
-      
-              <br>
-      
-              <div class="form-group">
-                  <label for="exampleFormControlInput1">Product Price</label>
-                  <input class="form-control" name="productPrice" type="text" placeholder="" maxlength="50" style="max-width: 300px;">
-              </div>
-      
-              <div class="form-group">
-                  <label for="exampleFormControlInput1">Product Quantity</label>
-                  <input class="form-control" name="productQuantity" type="text" placeholder="" maxlength="50" style="max-width: 300px;">
-              </div>
-      
-              <button type="submit" class="btn btn-success mt-4">Add</button>
-          </form>
-      
-          <script>
-      
-            $('#addProduct').validate({
-              rules: {
-                productName: {
-                  required: true,
-                },
-                productPrice: {
-                  required: true,
-                  pattern: "[0-9]+"
-                },
-                productStock: {
-                  required: true,
-                  pattern: "[0-9]+"
-                },
-                parentCategory: {
-                  required: true,
-      
-                }
-              },  
-      
-              submitHandler: async (form, event) => {
-      
-                event.preventDefault()
-                // Create a new FormData object
-                const formData = new FormData(form);
-      
-                let response = await fetch('/addProducts', {
-                  method: 'POST',
-                  body: formData
-                })
-                let result = await response.json()
-                if (result.exists) {
-                  await Swal.fire({
-                    icon: "error",
-                    title: "Product Already exists"
-                  })
-                }
-                if (result.success) {
-                  await Swal.fire({
-                    icon: "success",
-                    title: "Product Added"
-                  })
-                  window.location.href = '/productManagement'
-                }
-                if (result.noValue) {
-                  await Swal.fire({
-                    icon: "error",
-                    title: "No Value in Product Name"
-                  })
-                }
+      <div class="container mt-4">
+        <h1 class="text-center mb-4">EDIT PRODUCT</h1>
+
+        <form id="editproduct" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Product Name</label>
+            <input
+              type="text"
+              value="<%=productInfo.productName%>"
+              name="productName"
+              class="form-control"
+              id="exampleFormControlInput1"
+              placeholder=""
+              maxlength="50"
+              style="max-width: 300px"
+            />
+          </div>
+          <br />
+          <select
+            name="parentCategory"
+            class="form-control form-control-md mb-4"
+            style="max-width: 300px"
+          >
+            <option disabled selected>Select Parent Category</option>
+            <% categorydetails.forEach(category => { %>
+             
+              <option > <%= category.categoryName%></option>
+            <% }) %>
+          </select>
+
+          <div class="form-group">
+            <label for="images">Add image</label>
+            <input
+              type="file"
+              name="images"
+              class="form-control-file"
+              id="images"
+              multiple
+            />
+          </div>
+
+          <br />
+
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Product Price</label>
+            <input
+              class="form-control"
+              value="<%=productInfo.price%>"
+              name="productPrice"
+              type="text"
+              placeholder=""
+              maxlength="50"
+              style="max-width: 300px"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Product Stock</label>
+            <input
+              class="form-control"
+              value="<%=productInfo.quantity%>"
+              name="productStock"
+              type="text"
+              placeholder=""
+              maxlength="50"
+              style="max-width: 300px"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-success mt-4">Save</button>
+        </form>
+      </div>
+      <script>
+        $("#editproduct").validate({
+          rules: {
+            productName: {
+              required: true,
+            },
+            productPrice: {
+              required: true,
+              pattern: "[0-9]+",
+            },
+            productStock: {
+              required: true,
+              pattern: "[0-9]+",
+            },
+            parentCategory: {
+              required: true,
+            },
+          },
+          submitHandler: async (form, event) => {
+            event.preventDefault();
+            // Create a new FormData object
+            const formData = new FormData(form);
+
+            const fileInputs = form.querySelectorAll(
+              'input[type="file"][name="images"]'
+            );
+            fileInputs.forEach((input) => {
+              const files = input.files;
+              for (let i = 0; i < files.length; i++) {
+                formData.append("images", files[i]);
               }
-            })
-      
-          </script>
-      
-        </div>
+            });
+
+            let response = await fetch("/editProducts", {
+              method: "POST",
+              body: formData,
+            });
+            let result = await response.json();
+            if (result.exists) {
+              await Swal.fire({
+                icon: "error",
+                title: "Product Already exists",
+              });
+            }
+            if (result.success) {
+              await Swal.fire({
+                icon: "success",
+                title: "Product Added",
+              });
+              window.location.href = "/productManagement";
+            }
+            if (result.noValue) {
+              await Swal.fire({
+                icon: "error",
+                title: "No Value in Product Name",
+              });
+            }
+          },
+        });
+      </script>
       <!-- </body> -->
 
       <div class="clearfix"></div>
@@ -500,7 +534,7 @@
         max-width: 600px;
         /* Optional: Set maximum width of the container */
       }
-  
+
       .error {
         color: red;
       }
