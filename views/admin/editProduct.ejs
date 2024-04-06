@@ -377,78 +377,99 @@
       <!-- Content -->
 
       <!-- <body> -->
-      <div class="container mt-4">
-        <h1 class="text-center mb-4">EDIT PRODUCT</h1>
-
-        <form id="editproduct" enctype="multipart/form-data">
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Product Name</label>
-            <input
-              type="text"
-              value="<%=productInfo.productName%>"
-              name="productName"
-              class="form-control"
-              id="exampleFormControlInput1"
-              placeholder=""
-              maxlength="50"
+        <style>
+          .container {
+             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+             padding: 20px;
+             border-radius: 5px;
+             background-color: #f9f9f9;
+             margin-bottom: 40px;
+           }
+          .form-control {
+             border-radius: 5px;
+             border-color: #cccccc;
+           }
+          .btn-success {
+             border-radius: 5px;
+             background-color: #4caf50;
+             border-color: #4caf50;
+           }
+          .btn-success:hover {
+             background-color: #45a049;
+           }
+         </style>
+         
+         <div class="container mt-4">
+          <h1 class="text-center mb-4">EDIT PRODUCT</h1>
+          <form id="editproduct" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Product Name</label>
+              <input
+                type="text"
+                value="<%=productInfo.productName%>"
+                name="productName"
+                class="form-control"
+                id="exampleFormControlInput1"
+                placeholder=""
+                maxlength="50"
+                style="max-width: 300px"
+              />
+            </div>
+            <br />
+            <select
+              name="parentCategory"
+              class="form-control form-control-md mb-4"
               style="max-width: 300px"
-            />
-          </div>
-          <br />
-          <select
-            name="parentCategory"
-            class="form-control form-control-md mb-4"
-            style="max-width: 300px"
-          >
-            <option disabled selected>Select Parent Category</option>
-            <% categorydetails.forEach(category => { %>
-             
-              <option > <%= category.categoryName%></option>
-            <% }) %>
-          </select>
-
-          <div class="form-group">
-            <label for="images">Add image</label>
-            <input
-              type="file"
-              name="images"
-              class="form-control-file"
-              id="images"
-              multiple
-            />
-          </div>
-
-          <br />
-
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Product Price</label>
-            <input
-              class="form-control"
-              value="<%=productInfo.price%>"
-              name="productPrice"
-              type="text"
-              placeholder=""
-              maxlength="50"
-              style="max-width: 300px"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Product Stock</label>
-            <input
-              class="form-control"
-              value="<%=productInfo.quantity%>"
-              name="productStock"
-              type="text"
-              placeholder=""
-              maxlength="50"
-              style="max-width: 300px"
-            />
-          </div>
-
-          <button type="submit" class="btn btn-success mt-4">Save</button>
-        </form>
-      </div>
+            >
+              <option disabled selected>Select Parent Category</option>
+              <% categorydetails.forEach(category => { %>
+  
+              <option><%= category.categoryName%></option>
+              <% }) %>
+            </select>
+  
+            <div class="form-group">
+              <label for="images">Add image</label>
+              <input
+                type="file"
+                name="images"
+                class="form-control-file"
+                id="images"
+                multiple
+              />
+            </div>
+  
+            <br />
+  
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Product Price</label>
+              <input
+                class="form-control"
+                value="<%=productInfo.price%>"
+                name="productPrice"
+                type="text"
+                placeholder=""
+                maxlength="50"
+                style="max-width: 300px"
+              />
+            </div>
+  
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Product Stock</label>
+              <input
+                class="form-control"
+                value="<%=productInfo.quantity%>"
+                name="productStock"
+                type="text"
+                placeholder=""
+                maxlength="50"
+                style="max-width: 300px"
+              />
+            </div>
+  
+            <button type="submit" class="btn btn-success mt-4">Save</button>
+          </form>
+         </div>
       <script>
         $("#editproduct").validate({
           rules: {

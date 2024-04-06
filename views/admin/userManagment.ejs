@@ -359,6 +359,38 @@
       <!-- /#header -->
 
       <!-- <body> -->
+      <style>
+        .container {
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+          padding: 20px;
+          border-radius: 5px;
+          background-color: #f9f9f9;
+          margin-bottom: 40px;
+        }
+        .table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+        .table th,
+        .table td {
+          border: 1px solid #dddddd;
+          padding: 12px 15px;
+          text-align: left;
+        }
+        .table th {
+          background-color: #f2f2f2;
+          font-weight: bold;
+        }
+        .table tr:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+        .btn-success:hover {
+          background-color: #45a049;
+        }
+        .btn-danger:hover {
+          background-color: #b32013;
+        }
+      </style>
       <div class="container">
         <table class="table">
           <thead>
@@ -376,9 +408,27 @@
               <td><%= x.email %></td>
               <td><%= x.mobile %></td>
               <% if(x.isBlocked){ %>
-                <td><button id="unblock<%x%>" onclick="fnBlock('<%=x._id %>')" type="button" class="btn btn-success">Unblock</button> </td>
+              <td>
+                <button
+                  id="unblock<%x%>"
+                  onclick="fnBlock('<%=x._id %>')"
+                  type="button"
+                  class="btn btn-success"
+                >
+                  Unblock
+                </button>
+              </td>
               <% }else{ %>
-                    <td><button id="block<%x%>" onclick="fnUnBlock('<%=x._id %>')" type="button" class="btn btn-danger">Block</button> </td>
+              <td>
+                <button
+                  id="block<%x%>"
+                  onclick="fnUnBlock('<%=x._id %>')"
+                  type="button"
+                  class="btn btn-danger"
+                >
+                  Block
+                </button>
+              </td>
               <% } %>
             </tr>
             <% }); %>
@@ -402,35 +452,35 @@
     </div>
     <!-- /#right-panel -->
   </body>
-  
+
   <script>
     async function fnBlock(userId) {
-        let response = await fetch(`/userBlock?id=${userId}`, {
-            method: 'GET',
-        })
-        let result = await response.json()
-        if (result.success) {
-            await Swal.fire({
-                icon: "success",
-                title: "User unblocked",
-            });
-        }
-        window.location.reload();
+      let response = await fetch(`/userBlock?id=${userId}`, {
+        method: "GET",
+      });
+      let result = await response.json();
+      if (result.success) {
+        await Swal.fire({
+          icon: "success",
+          title: "User unblocked",
+        });
+      }
+      window.location.reload();
     }
 
     async function fnUnBlock(userId) {
-        let response = await fetch(`/userUnBlock?id=${userId}`, {
-            method: 'GET',
-        })
-        let result = await response.json()
-        if (result.success) {
-            await Swal.fire({
-                icon: "error",
-                title: "User blocked",
-                confirmButtonText: "OK",
-            });
-        }
-        window.location.reload();
+      let response = await fetch(`/userUnBlock?id=${userId}`, {
+        method: "GET",
+      });
+      let result = await response.json();
+      if (result.success) {
+        await Swal.fire({
+          icon: "error",
+          title: "User blocked",
+          confirmButtonText: "OK",
+        });
+      }
+      window.location.reload();
     }
   </script>
 </html>
