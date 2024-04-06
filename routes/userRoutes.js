@@ -8,10 +8,10 @@ const {
   postSignup,
   getOtp,
   postOtp,
-  getCategory,
   getCart,
   getCheckout,
   getLogout,
+  getProducts,
 } = require("../controllers/usercontroller");
 
 router.get("/", getlandingpage);
@@ -22,10 +22,10 @@ router.post("/views/users/signup", postSignup);
 router.get("/views/users/otp", getOtp);
 router.post("/views/users/otp",postOtp);
 router.get("/resendOTP",getOtp);
-router.get("/views/users/category", getCategory);
 router.get("/views/users/cart", getCart);
 router.get("/views/users/checkout", getCheckout);
-router.get("/views/users/logout",getLogout)
+router.get("/views/users/logout",getLogout);
+router.get("/products",getProducts);
 
 
 

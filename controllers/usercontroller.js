@@ -1,6 +1,7 @@
 // const { escapeXML } = require("ejs");
 const userData = require("../models/userDB")
 const transport = require('../services/sendOTP')
+const productModel = require("../models/productModel")
 
 const getlandingpage = (req, res) => {
   try {
@@ -115,8 +116,9 @@ const postSignup = async(req,res)=>{
   }
 }
 
-const getCategory = (req,res)=>{
-  res.render("users/category")
+const getProducts = async(req,res)=>{
+  const productInfo = await productModel.find().populate("category")
+  res.render("users/products",{productInfo:productInfo})
 };
 
 const getCart = (req, res) => {
@@ -140,8 +142,8 @@ module.exports={
   postSignup,
   getOtp,
   postOtp,
-  getCategory,
   getCart,
   getCheckout,
-  getLogout
+  getLogout,
+  getProducts,
 }
