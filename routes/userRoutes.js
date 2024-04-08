@@ -12,6 +12,7 @@ const {
   getCheckout,
   getLogout,
   getProducts,
+  getSingleProduct,
 } = require("../controllers/usercontroller");
 
 router.get("/", getlandingpage);
@@ -26,6 +27,7 @@ router.get("/views/users/cart", getCart);
 router.get("/views/users/checkout", getCheckout);
 router.get("/views/users/logout",getLogout);
 router.get("/products",getProducts);
+router.get("/singleProduct",getSingleProduct);
 
 
 

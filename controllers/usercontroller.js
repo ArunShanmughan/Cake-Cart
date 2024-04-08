@@ -2,15 +2,18 @@
 const userData = require("../models/userDB")
 const transport = require('../services/sendOTP')
 const productModel = require("../models/productModel")
+const categoryModel = require("../models/categoryModel")
 
-const getlandingpage = (req, res) => {
+const getlandingpage = async(req, res) => {
   try {
+    const categoryInfo = await categoryModel.find()
+    const ProductInfo = await productModel.find().populate("category")
     // console.log(req.session.isLogged)
     if(req.session.isLogged){
       req.session.otpRequest=false;
-      res.render("users/homePage",{islogin:true});
+      res.render("users/homePage",{islogin:true,categoryInfo:categoryInfo,productInfo:ProductInfo});
     }else{
-      res.render("users/homePage",{islogin:false});
+      res.render("users/homePage",{islogin:false,categoryInfo:categoryInfo,productInfo:ProductInfo});
     }
   } catch (error) {
     console.log("something went wrong", error)
@@ -117,9 +120,22 @@ const postSignup = async(req,res)=>{
 }
 
 const getProducts = async(req,res)=>{
-  const productInfo = await productModel.find().populate("category")
-  res.render("users/products",{productInfo:productInfo})
+  const productInfo = await productModel.find().populate("category");
+  const categoryInfo = await categoryModel.find()
+  console.log(categoryInfo)
+  res.render("users/products",{productInfo:productInfo,categoryDet:categoryInfo})
 };
+
+const getSingleProduct = async(req,res)=>{
+  try {
+    const productDetails = await productModel.findOne({ _id: req.query.id });
+    const categoryDetails = await categoryModel.findOne({ _id: req.query.id });
+    console.log(productDetails)
+    res.render("users/singleProduct",{productInfo:productDetails,categoryInfo:categoryDetails});
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
 
 const getCart = (req, res) => {
   res.render("users/cart");
@@ -146,4 +162,5 @@ module.exports={
   getCheckout,
   getLogout,
   getProducts,
+  getSingleProduct
 }
