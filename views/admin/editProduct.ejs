@@ -177,7 +177,7 @@
                 <i class="menu-icon fa fa-table"></i>User Managment</a
               >
             </li>
-            <li>
+            <li class="menu-item-has-children dropdown">
               <a
                 href="/ordermanagment"
                 class="dropdown-toggle"
@@ -365,7 +365,7 @@
                   ><i class="fa fa -cog"></i>Settings</a
                 >
 
-                <a class="nav-link" href="#"
+                <a class="nav-link" href="/admLogOut"
                   ><i class="fa fa-power -off"></i>Logout</a
                 >
               </div>
@@ -424,15 +424,31 @@
               <option disabled selected>Select Parent Category</option>
               <% categorydetails.forEach(category => { %>
   
-              <option><%= category.categoryName%></option>
+              <option value="<%=category._id %>"><%= category.categoryName%></option>
               <% }) %>
             </select>
+
+            <div class="form-group">
+              <span id="imageCount" style="margin-top: 5px;">
+                <% if (productInfo.images.length> 0) { %>
+                  <%=productInfo.images.length%> images exists
+                    <% } else { %>
+                      No image exists
+                      <% } %>
+              </span>
+            </div>
+
+            <% for(let i=0;i<productInfo.images.length;i++){ %>
+              <img src="assets/img/uploads/<%=productInfo.images[i]%>"
+                style="height: 60px; width: 60px; border-radius: 0;">
+              <% } %>
   
             <div class="form-group">
               <label for="images">Add image</label>
               <input
                 type="file"
                 name="images"
+                value = "productInfo.images[i]"
                 class="form-control-file"
                 id="images"
                 multiple
@@ -503,7 +519,7 @@
               }
             });
 
-            let response = await fetch("/editProducts", {
+            let response = await fetch("/editProducts/<%=productInfo._id%>", {
               method: "POST",
               body: formData,
             });
@@ -519,7 +535,7 @@
                 icon: "success",
                 title: "Product Added",
               });
-              window.location.href = "/productManagement";
+              window.location.href = "/productManagment";
             }
             if (result.noValue) {
               await Swal.fire({

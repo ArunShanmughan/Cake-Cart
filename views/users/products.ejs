@@ -530,7 +530,8 @@
             <div class="shop-pro-content">
               <div class="shop-pro-inner">
                 <div class="row">
-                  <% productInfo.forEach(product => { %>
+                  <% productInfo.forEach((product,i) =>{ %>
+                    <% if(product.isListed==true){ %>
                   <div
                     class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content ms-product-content"
                   >
@@ -766,6 +767,7 @@
                     </div>
                   </div>
                   <!-- Quickview Modal end -->
+                  <% } %>
                   <% }) %>
                 </div>
               </div>
