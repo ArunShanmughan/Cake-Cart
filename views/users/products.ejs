@@ -67,22 +67,45 @@
               <!-- Header Search Start -->
               <div class="align-self-center ms-header-search">
                 <div class="header-search">
-                  <form class="ms-search-group-form" action="#">
-                    <input
-                      class="form-control ms-search-bar"
-                      placeholder="Search Products..."
-                      type="text"
-                    />
-                    <button class="search_submit" type="submit">
+                  <div class="input-group">
+                    <div class="form-outline" data-mdb-input-init>
+                      <input type="search" name="searchValue" style="height: 40px;" id="searchValue"
+                        placeholder="Search Products..." class="form-control" />
+                    </div>
+                    <button type="button" onclick="fnSearch()" class="search_submit" data-mdb-ripple-init>
+                      <i class="fas fa-search"></i>
                       <img
                         src="/assets/img/icons/search.svg"
                         class="svg_img search_svg"
                         alt=""
                       />
                     </button>
-                  </form>
+                  </div>
                 </div>
               </div>
+              <script>
+                async function fnSearch() {
+                  const searchValue = document.getElementById('searchValue').value
+                  let response = await fetch('/searchProducts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ searchElement: searchValue })
+                  })
+                  console.log("Response from server:", response);
+    
+                  let result = await response.json()
+                  console.log("Parsed result:", result);
+    
+                  if (result.searchProduct) {
+                    window.location.href = '/products?searchId='+ encodeURIComponent(searchValue);
+                  } else {
+                    await Swal.fire({
+                      icon: "error",
+                      title: "No results",
+                    });
+                  }
+                }
+              </script>
               <!-- Header Search End -->
 
               <!-- Header Button Start -->
@@ -531,7 +554,6 @@
               <div class="shop-pro-inner">
                 <div class="row">
                   <% productInfo.forEach((product,i) =>{ %>
-                    <% if(product.isListed==true){ %>
                   <div
                     class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content ms-product-content"
                   >
@@ -767,7 +789,6 @@
                     </div>
                   </div>
                   <!-- Quickview Modal end -->
-                  <% } %>
                   <% }) %>
                 </div>
               </div>

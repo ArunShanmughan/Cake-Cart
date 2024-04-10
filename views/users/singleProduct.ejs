@@ -212,7 +212,7 @@
                             <li><a href="about-us.ejs">About Us</a></li>
                             <li><a href="contact-us.ejs">Contact Us</a></li>
                             <li><a href="/views/users/login.ejs">Login</a></li>
-                            <li><a href="signup.ejs">Signup</a></li>
+                            <li><a href="/signup.ejs">Signup</a></li>
                             <li>
                               <a href="privacy-policy.ejs">Privacy Policy</a>
                             </li>
@@ -568,9 +568,9 @@
                             <span class="ms-single-sku">SKU#: WH12</span>
                             <span class="ms-single-ps-title">
                               <% if(productInfo.isListed){%>
-                                <h5>IN STOCK</h5>
+                                <h5 style="color: green;">IN STOCK</h5>
                                 <% }else{ %>
-                                  <h5>OUT OF STOCK</h5>
+                                  <h5 style="color: red;">OUT OF STOCK</h5>
                                   <% } %>
                             </span>
                           </div>

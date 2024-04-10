@@ -87,12 +87,15 @@ const postOtp = async(req,res)=>{
 }
 
 const getSignup = (req,res)=>{
-  res.render("users/signup.ejs");
+  try {
+    res.render("users/signup");
+  } catch (error) {
+    console.log("Something Went Wrong",error)
+  }
 };
 
 const postSignup = async(req,res)=>{
   try {
-    console.log(req.body)
   const data = {
       fName: req.body.firstname,
       lName: req.body.lastname,
@@ -104,7 +107,6 @@ const postSignup = async(req,res)=>{
       password:req.body.password,
   }
   const exist = await userData.findOne({email:req.body.email});
-  console.log(exist)
   if(exist!=null){
     res.render("users/signup",{message:"This is an Existing user"})
   }else{
@@ -120,9 +122,14 @@ const postSignup = async(req,res)=>{
 }
 
 const getProducts = async(req,res)=>{
-  const productInfo = await productModel.find().populate("category");
-  const categoryInfo = await categoryModel.find()
-  console.log(categoryInfo)
+  const categoryInfo = await categoryModel.find({isListed:true})
+  let query = {isListed: true};
+  if(req.query.searchId){
+    query.productName = {$regex:req.query.searchId,$options:'i'};
+  }else if(req.query.id){
+    query.parentCategory = req.query.id;
+  }
+  const productInfo = await productModel.find(query).populate("category")
   res.render("users/products",{productInfo:productInfo,categoryDet:categoryInfo})
 };
 
@@ -134,6 +141,22 @@ const getSingleProduct = async(req,res)=>{
     res.render("users/singleProduct",{productInfo:productDetails,categoryInfo:categoryDetails});
   } catch (error) {
     console.log("Something Went Wrong",error);
+  }
+}
+
+const getSearchProduct = async (req, res) => {
+  try {
+      const searchedProduct = await productModel.find({
+          productName: { $regex: req.body.searchElement, $options: 'i' }
+      })
+      if (searchedProduct.length > 0) {
+
+          res.send({ searchProduct: true })
+      } else {
+          res.send({ searchProduct: false })
+      }
+  } catch (error) {
+      console.log("Something Went Wrong",error);
   }
 }
 
@@ -162,5 +185,6 @@ module.exports={
   getCheckout,
   getLogout,
   getProducts,
-  getSingleProduct
+  getSingleProduct,
+  getSearchProduct,
 }
