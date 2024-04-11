@@ -575,9 +575,15 @@
                               alt="Product"
                             />
                           </a>
-                          <span class="flags">
-                            <span class="sale">Sale</span>
+                          <% if(product.isListed){ %>
+                          <span class="flags" style="color: #2bff4a;">
+                            <span class="sale">On Sale</span>
                           </span>
+                          <% }else{ %>
+                            <span class="flags" style="color: red;">
+                              <span class="sale">Off Sale</span>
+                            </span>
+                            <% } %>
                           <div class="ms-pro-actions">
                             <a class="ms-btn-group wishlist" title="Wishlist"
                               ><img

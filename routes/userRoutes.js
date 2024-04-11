@@ -29,7 +29,7 @@ router.get("/views/users/checkout", getCheckout);
 router.get("/views/users/logout",getLogout);
 router.get("/products",getProducts);
 router.get("/singleProduct",getSingleProduct);
-router.get("/searchProducts",getSearchProduct)
+router.post("/searchProducts",getSearchProduct)
 
 
 
