@@ -89,37 +89,73 @@
               <div class="align-self-center">
                 <div class="ms-header-bottons">
                   <!-- Header User Start -->
-                  <div class="ms-acc-drop">
-                    <a
-                      href="javascript:void(0)"
-                      class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
-                      title="Account"
-                    >
-                      <div class="header-icon">
-                        <img
-                          src="/assets/img/icons/user.svg"
-                          class="svg_img header_svg"
-                          alt=""
-                        />
-                      </div>
-                      <div class="ms-btn-desc">
-                        <span class="ms-btn-title">Account</span>
-                        <span class="ms-btn-stitle">Login</span>
-                      </div>
-                    </a>
-                    <ul class="ms-dropdown-menu">
-                      <li>
-                        <a class="dropdown-item" href="/views/users/signup.ejs"
-                          >Signup</a
-                        >
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="/views/users/login.ejs"
-                          >Login</a
-                        >
-                      </li>
-                    </ul>
-                  </div>
+                  
+                  <% if(islogin==true){ %>
+                    <div class="ms-acc-drop">
+                      <a
+                        href="javascript:void(0)"
+                        class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
+                        title="Account"
+                      >
+                        <div class="header-icon">
+                          <img
+                            src="assets/img/icons/user.svg"
+                            class="svg_img header_svg"
+                            alt=""
+                          />
+                        </div>
+                        <div class="ms-btn-desc">
+                          <span class="ms-btn-title">Account</span>
+                          <span class="ms-btn-stitle">Log-Out</span>
+                        </div>
+                      </a>
+                      <ul class="ms-dropdown-menu">
+                        <li>
+                          <a class="dropdown-item" href="/views/users/myaccount"
+                            >My Account</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="/views/users/logout"
+                            >Log-Out</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                    
+                  <% }else{ %>
+                    <div class="ms-acc-drop">
+                      <a
+                        href="javascript:void(0)"
+                        class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
+                        title="Account"
+                      >
+                        <div class="header-icon">
+                          <img
+                            src="assets/img/icons/user.svg"
+                            class="svg_img header_svg"
+                            alt=""
+                          />
+                        </div>
+                        <div class="ms-btn-desc">
+                          <span class="ms-btn-title">Account</span>
+                          <span class="ms-btn-stitle">Login</span>
+                        </div>
+                      </a>
+                      <ul class="ms-dropdown-menu">
+                        <li>
+                          <a class="dropdown-item" href="/signup"
+                            >Signup</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="/views/users/login"
+                            >Login</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  <% } %>
                   <!-- Header User End -->
                   <!-- Header wishlist Start -->
                   <a
@@ -129,7 +165,7 @@
                   >
                     <div class="header-icon">
                       <img
-                        src="/assets/img/icons/wishlist.svg"
+                        src="assets/img/icons/wishlist.svg"
                         class="svg_img header_svg"
                         alt=""
                       />
@@ -150,7 +186,7 @@
                   >
                     <div class="header-icon">
                       <img
-                        src="/assets/img/icons/cart_5.svg"
+                        src="assets/img/icons/cart_5.svg"
                         class="svg_img header_svg"
                         alt=""
                       />
@@ -559,7 +595,9 @@
                             >
                           </span>
                         </div>
-  
+                        <div>
+                          <p>Available:<%=productInfo.quantity%></p>
+                        </div>
                         <div class="ms-single-price-stoke">
                           <div class="ms-single-price">
                             <div class="final-price">MRP:$<%=productInfo.price%></div>

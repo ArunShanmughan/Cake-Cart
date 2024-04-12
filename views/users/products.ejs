@@ -112,37 +112,73 @@
               <div class="align-self-center">
                 <div class="ms-header-bottons">
                   <!-- Header User Start -->
-                  <div class="ms-acc-drop">
-                    <a
-                      href="javascript:void(0)"
-                      class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
-                      title="Account"
-                    >
-                      <div class="header-icon">
-                        <img
-                          src="/assets/img/icons/user.svg"
-                          class="svg_img header_svg"
-                          alt=""
-                        />
-                      </div>
-                      <div class="ms-btn-desc">
-                        <span class="ms-btn-title">Account</span>
-                        <span class="ms-btn-stitle">Login</span>
-                      </div>
-                    </a>
-                    <ul class="ms-dropdown-menu">
-                      <li>
-                        <a class="dropdown-item" href="/views/users/signup.ejs"
-                          >Signup</a
-                        >
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="/views/users/login.ejs"
-                          >Login</a
-                        >
-                      </li>
-                    </ul>
-                  </div>
+                  
+                  <% if(islogin==true){ %>
+                    <div class="ms-acc-drop">
+                      <a
+                        href="javascript:void(0)"
+                        class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
+                        title="Account"
+                      >
+                        <div class="header-icon">
+                          <img
+                            src="assets/img/icons/user.svg"
+                            class="svg_img header_svg"
+                            alt=""
+                          />
+                        </div>
+                        <div class="ms-btn-desc">
+                          <span class="ms-btn-title">Account</span>
+                          <span class="ms-btn-stitle">Log-Out</span>
+                        </div>
+                      </a>
+                      <ul class="ms-dropdown-menu">
+                        <li>
+                          <a class="dropdown-item" href="/views/users/myaccount"
+                            >My Account</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="/views/users/logout"
+                            >Log-Out</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                    
+                  <% }else{ %>
+                    <div class="ms-acc-drop">
+                      <a
+                        href="javascript:void(0)"
+                        class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
+                        title="Account"
+                      >
+                        <div class="header-icon">
+                          <img
+                            src="assets/img/icons/user.svg"
+                            class="svg_img header_svg"
+                            alt=""
+                          />
+                        </div>
+                        <div class="ms-btn-desc">
+                          <span class="ms-btn-title">Account</span>
+                          <span class="ms-btn-stitle">Login</span>
+                        </div>
+                      </a>
+                      <ul class="ms-dropdown-menu">
+                        <li>
+                          <a class="dropdown-item" href="/signup"
+                            >Signup</a
+                          >
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="/views/users/login"
+                            >Login</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  <% } %>
                   <!-- Header User End -->
                   <!-- Header wishlist Start -->
                   <a
@@ -152,7 +188,7 @@
                   >
                     <div class="header-icon">
                       <img
-                        src="/assets/img/icons/wishlist.svg"
+                        src="assets/img/icons/wishlist.svg"
                         class="svg_img header_svg"
                         alt=""
                       />
@@ -173,7 +209,7 @@
                   >
                     <div class="header-icon">
                       <img
-                        src="/assets/img/icons/cart_5.svg"
+                        src="assets/img/icons/cart_5.svg"
                         class="svg_img header_svg"
                         alt=""
                       />
@@ -535,17 +571,35 @@
               </div>
               <div class="col-md-6 ms-sort-select">
                 <div class="ms-select-inner">
-                  <select name="ms-select" id="ms-select">
+                  <select name="ms-select" id="ms-sort" onchange="sortProducts(event)" class="form-control">
                     <option selected disabled>Sort by</option>
-                    <option value="1">Position</option>
-                    <option value="2">Relevance</option>
-                    <option value="3">Name, A to Z</option>
-                    <option value="4">Name, Z to A</option>
-                    <option value="5">Price, low to high</option>
-                    <option value="6">Price, high to low</option>
+                    <option value="1">Name, A to Z</option>
+                    <option value="2">Name, Z to A</option>
+                    <option value="3">Price, low to high</option>
+                    <option value="4">Price, high to low</option>
+                    <option value="5">New Arrivals</option>
                   </select>
                 </div>
               </div>
+              <script>
+                async function sortProducts(e){
+                   let response= await fetch(`/products/sort/sortValue?sortId=${e.target.value}`,{
+                     method:'GET'
+                   })
+                   const result=await response.json()
+                   if(result.ascSort){
+                     window.location.reload()
+                   }else if(result.desSort){
+                     window.location.reload()
+                   }else if(result.highValueSort){
+                     window.location.reload()
+                   }else if(result.lowValueSort){
+                     window.location.reload()
+                   }else if(result.newArrive){
+                    window.location.reload()
+                   }
+                 }
+               </script>
             </div>
             <!-- Shop Top End -->
 

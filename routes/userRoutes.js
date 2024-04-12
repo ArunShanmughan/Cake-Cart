@@ -11,25 +11,33 @@ const {
   getCart,
   getCheckout,
   getLogout,
+} = require("../controllers/usercontroller");
+
+const {
   getProducts,
   getSingleProduct,
   getSearchProduct,
-} = require("../controllers/usercontroller");
+  getSortData,
+}=require("../controllers/userProductController");
 
 router.get("/", getlandingpage);
 router.get("/views/users/login", getLogin);
 router.post("/views/users/login", postLogin);
 router.get("/signup", getSignup);
-router.post("/signup", postSignup);
+router.post("/views/users/signup", postSignup);
 router.get("/views/users/otp", getOtp);
 router.post("/views/users/otp",postOtp);
 router.get("/resendOTP",getOtp);
 router.get("/views/users/cart", getCart);
 router.get("/views/users/checkout", getCheckout);
 router.get("/views/users/logout",getLogout);
+
+
+//user side product Controllers
 router.get("/products",getProducts);
 router.get("/singleProduct",getSingleProduct);
-router.post("/searchProducts",getSearchProduct)
+router.post("/searchProducts",getSearchProduct);
+router.get("/products/sort/sortValue",getSortData);
 
 
 

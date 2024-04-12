@@ -8662,7 +8662,7 @@ body.ms-menu-open:before {
   color: #777;
   padding-right: 22px;
 }
-.ms-shop .ms-pro-list-top .ms-sort-select .ms-select-inner {
+.ms-shop .ms-pro-list-top .ms-sort-select .ms-sort-inner {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -8675,7 +8675,7 @@ body.ms-menu-open:before {
   border-radius: 0;
   border-left: 1px solid #eee;
 }
-.ms-shop .ms-pro-list-top .ms-sort-select .ms-select-inner:after {
+.ms-shop .ms-pro-list-top .ms-sort-select .ms-sort-inner:after {
   padding: 0 10px;
   content: "\f107";
   position: absolute;
@@ -8699,7 +8699,7 @@ body.ms-menu-open:before {
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-.ms-shop .ms-pro-list-top .ms-sort-select .ms-select-inner select {
+.ms-shop .ms-pro-list-top .ms-sort-select .ms-sort-inner select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -8716,7 +8716,7 @@ body.ms-menu-open:before {
   color: #777;
   cursor: pointer;
 }
-.ms-shop .ms-select-bar {
+.ms-shop .ms-sort-bar {
   margin: -5px -5px 25px -5px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -8724,7 +8724,7 @@ body.ms-menu-open:before {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
-.ms-shop .ms-select-bar .ms-select-btn {
+.ms-shop .ms-sort-bar .ms-sort-btn {
   margin: 5px;
   padding: 0 10px;
   border: 1px solid #eee;
@@ -8739,16 +8739,16 @@ body.ms-menu-open:before {
   align-items: center;
   text-transform: capitalize;
 }
-.ms-shop .ms-select-bar .ms-select-btn .ms-select-cancel {
+.ms-shop .ms-sort-bar .ms-sort-btn .ms-sort-cancel {
   margin-left: 15px;
   color: #ff8585;
   font-size: 18px;
 }
-.ms-shop .ms-select-btn-clear {
+.ms-shop .ms-sort-btn-clear {
   padding: 0 !important;
   border: 1px solid #17181c !important;
 }
-.ms-shop .ms-select-btn-clear .ms-select-clear {
+.ms-shop .ms-sort-btn-clear .ms-sort-clear {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   height: 100%;
@@ -8763,7 +8763,7 @@ body.ms-menu-open:before {
   -ms-flex-align: center;
   align-items: center;
 }
-.ms-shop .ms-select-btn-clear .ms-select-clear:hover {
+.ms-shop .ms-sort-btn-clear .ms-sort-clear:hover {
   color: #fff;
   background-color: #17181c !important;
 }

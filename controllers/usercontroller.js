@@ -11,9 +11,9 @@ const getlandingpage = async(req, res) => {
     // console.log(req.session.isLogged)
     if(req.session.isLogged){
       req.session.otpRequest=false;
-      res.render("users/homePage",{islogin:true,categoryInfo:categoryInfo,productInfo:ProductInfo});
+      res.render("users/homePage",{islogin:req.session.isLogged,categoryInfo:categoryInfo,productInfo:ProductInfo});
     }else{
-      res.render("users/homePage",{islogin:false,categoryInfo:categoryInfo,productInfo:ProductInfo});
+      res.render("users/homePage",{islogin:null,categoryInfo:categoryInfo,productInfo:ProductInfo});
     }
   } catch (error) {
     console.log("something went wrong", error)
@@ -121,45 +121,6 @@ const postSignup = async(req,res)=>{
   }
 }
 
-const getProducts = async(req,res)=>{
-  const categoryInfo = await categoryModel.find({isListed:true})
-  let query = {isListed: true};
-  if(req.query.searchId){
-    query.productName = {$regex:req.query.searchId,$options:'i'};
-  }else if(req.query.id){
-    query.parentCategory = req.query.id;
-  }
-  const productInfo = await productModel.find(query).populate("category")
-  res.render("users/products",{productInfo:productInfo,categoryDet:categoryInfo})
-};
-
-const getSingleProduct = async(req,res)=>{
-  try {
-    const productDetails = await productModel.findOne({ _id: req.query.id });
-    const categoryDetails = await categoryModel.findOne({ _id: req.query.id });
-    console.log(productDetails)
-    res.render("users/singleProduct",{productInfo:productDetails,categoryInfo:categoryDetails});
-  } catch (error) {
-    console.log("Something Went Wrong",error);
-  }
-}
-
-const getSearchProduct = async (req, res) => {
-  try {
-      const searchedProduct = await productModel.find({
-          productName: { $regex: req.body.searchElement, $options: 'i' }
-      })
-      if (searchedProduct.length > 0) {
-
-          res.send({ searchProduct: true })
-      } else {
-          res.send({ searchProduct: false })
-      }
-  } catch (error) {
-      console.log("Something Went Wrong",error);
-  }
-}
-
 const getCart = (req, res) => {
   res.render("users/cart");
 };
@@ -184,7 +145,4 @@ module.exports={
   getCart,
   getCheckout,
   getLogout,
-  getProducts,
-  getSingleProduct,
-  getSearchProduct,
 }
