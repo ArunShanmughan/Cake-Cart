@@ -11,6 +11,9 @@ const {
   getCart,
   getCheckout,
   getLogout,
+  getMyAccount,
+  getOrderHistory,
+  getMyAddress,
 } = require("../controllers/usercontroller");
 
 const {
@@ -31,7 +34,9 @@ router.get("/resendOTP",getOtp);
 router.get("/views/users/cart", getCart);
 router.get("/views/users/checkout", getCheckout);
 router.get("/views/users/logout",getLogout);
-
+router.get("/myAccount",getMyAccount);
+router.get("/orderHistory",getOrderHistory);
+router.get("/myAddress",getMyAddress)
 
 //user side product Controllers
 router.get("/products",getProducts);

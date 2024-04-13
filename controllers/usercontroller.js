@@ -40,6 +40,7 @@ const postLogin = async(req,res)=>{
     const check  = await userData.findOne({email:req.body.email})
     if(check.password==req.body.password&&check.isBlocked==false){
       req.session.isLogged = true;
+      req.session.userInfo = check;
       // console.log(req.session.isLogged)
       res.redirect("/")
     }else{
@@ -121,6 +122,31 @@ const postSignup = async(req,res)=>{
   }
 }
 
+const getMyAccount = async(req,res)=>{
+  try {
+    res.render("users/myAccount",{islogin:req.session.isLogged});
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
+
+const getOrderHistory = async(req,res)=>{
+  try {
+    console.log(req.session.userInfo)
+    res.render("users/orderHistory",{islogin:req.session.isLogged,userData:req.session.userInfo});
+  } catch (error) {
+    console.log("Something Went wrong",error);
+  }
+}
+
+const getMyAddress = async(req,res)=>{
+  try {
+    console.log(req.session.isLogged);
+    res.render("users/myAddress",{islogin:req.session.isLogged,userData:req.session.userInfo});
+  } catch (error) {
+    console.log("Something Went wrong",error);
+  }
+}
 const getCart = (req, res) => {
   res.render("users/cart");
 };
@@ -145,4 +171,7 @@ module.exports={
   getCart,
   getCheckout,
   getLogout,
+  getMyAccount,
+  getOrderHistory,
+  getMyAddress,
 }
