@@ -3,6 +3,8 @@ const userData = require("../models/userDB")
 const transport = require('../services/sendOTP')
 const productModel = require("../models/productModel")
 const categoryModel = require("../models/categoryModel")
+const addressModel = require("../models/addressModel");
+const { postAddProduct } = require("./productcontroller");
 
 const getlandingpage = async(req, res) => {
   try {
@@ -124,7 +126,9 @@ const postSignup = async(req,res)=>{
 
 const getMyAccount = async(req,res)=>{
   try {
-    res.render("users/myAccount",{islogin:req.session.isLogged});
+    if(req.session.isLogged){
+    res.render("users/myAccount",{islogin:req.session.isLogged,userData:req.session.userInfo});
+    }
   } catch (error) {
     console.log("Something Went Wrong",error);
   }
@@ -132,8 +136,9 @@ const getMyAccount = async(req,res)=>{
 
 const getOrderHistory = async(req,res)=>{
   try {
-    console.log(req.session.userInfo)
+    if(req.sesion.isLogged){
     res.render("users/orderHistory",{islogin:req.session.isLogged,userData:req.session.userInfo});
+    }
   } catch (error) {
     console.log("Something Went wrong",error);
   }
@@ -141,12 +146,53 @@ const getOrderHistory = async(req,res)=>{
 
 const getMyAddress = async(req,res)=>{
   try {
-    console.log(req.session.isLogged);
-    res.render("users/myAddress",{islogin:req.session.isLogged,userData:req.session.userInfo});
+    if(req.session.isLogged){
+      console.log("address page is getting")
+    let userAddress = await addressModel.find({userId:req.session.userInfo._id})
+    console.log("something",userAddress)
+    res.render("users/myAddress",{islogin:req.session.isLogged,userAdd:userAddress});
+    }
   } catch (error) {
     console.log("Something Went wrong",error);
   }
 }
+
+const getAddAddress = async(req,res)=>{
+  try {
+    if(req.session.isLogged){
+      let addressData = await addressModel.find()
+      res.render("users/addAddress",{islogin:req.session.isLogged})
+    }
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
+
+const postAddAddress = async(req,res)=>{
+  try {
+    const addAddress = new addressModel({
+      userId:req.session.userInfo._id,
+      addressHead:req.body.addressTitle,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      addressLine1: req.body.addressLine1,
+      addressLine2: req.body.addressLine2,
+      phone:req.body.phone,
+  });
+
+  // const addressDetail = await addressModel.find({ addressLine1: { $regex: new RegExp('^' + req.body.addressline1.toLowerCase() + '$', 'i') } })
+  if (/^\s*$/.test(req.body.addressline1) || /^\s*$/.test(req.body.addressline2) || /^\s*$/.test(req.body.firstname)|| /^\s*$/.test(req.body.lastname) || /^\s*$/.test(req.body.phonenumber)){
+    res.send({noValue:true})
+  }else {
+    res.send({ success: true })
+    addAddress.save()
+  }
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
+
+
 const getCart = (req, res) => {
   res.render("users/cart");
 };
@@ -174,4 +220,6 @@ module.exports={
   getMyAccount,
   getOrderHistory,
   getMyAddress,
+  getAddAddress,
+  postAddAddress,
 }
