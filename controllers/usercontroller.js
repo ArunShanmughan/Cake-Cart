@@ -149,7 +149,6 @@ const getMyAddress = async(req,res)=>{
     if(req.session.isLogged){
       console.log("address page is getting")
     let userAddress = await addressModel.find({userId:req.session.userInfo._id})
-    console.log("something",userAddress)
     res.render("users/myAddress",{islogin:req.session.isLogged,userAdd:userAddress});
     }
   } catch (error) {
@@ -192,6 +191,47 @@ const postAddAddress = async(req,res)=>{
   }
 }
 
+const getEditAddress = async(req,res)=>{
+  try {
+    console.log(req.query);
+    if(req.session.isLogged){
+      let presentAddress = await addressModel.findOne({_id:req.query.addId});
+      console.log(presentAddress);
+      res.render("users/editAddress",{presentAddress,islogin:req.session.isLogged})
+    }
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
+
+const postEditAddress = async (req,res)=>{
+  try {
+    await addressModel.updateOne({_id:req.query.editAddId},{$set:{
+      addressHead: req.body.addressTitle,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      addressLine1: req.body.addressLine1,
+      addressLine2: req.body.addressLine2,
+      phone: req.body.phone,
+    }
+    });
+    res.redirect("/myAddress");
+  } catch (error) {
+    console.log("Something Went wrong",error);
+  }
+}
+
+const getDeleteAddress = async(req,res)=>{
+  try {
+    if(req.session.isLogged){
+      await addressModel.deleteOne({_id:req.query.dltId});
+      res.redirect("/myAddress");
+    }
+  } catch (error) {
+    console.log("Something Went wrong",error);
+  }
+  
+}
 
 const getCart = (req, res) => {
   res.render("users/cart");
@@ -222,4 +262,7 @@ module.exports={
   getMyAddress,
   getAddAddress,
   postAddAddress,
+  getEditAddress,
+  postEditAddress,
+  getDeleteAddress,
 }

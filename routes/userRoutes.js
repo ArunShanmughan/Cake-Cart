@@ -16,6 +16,9 @@ const {
   getMyAddress,
   getAddAddress,
   postAddAddress,
+  getEditAddress,
+  postEditAddress,
+  getDeleteAddress,
 } = require("../controllers/usercontroller");
 
 const {
@@ -41,6 +44,9 @@ router.get("/orderHistory",getOrderHistory);
 router.get("/myAddress",getMyAddress);
 router.get("/addAddress",getAddAddress);
 router.post("/addAddress",postAddAddress);
+router.get("/editAddress",getEditAddress);
+router.post("/editAddress",postEditAddress);
+router.get("/deleteAddress",getDeleteAddress);
 
 //user side product Controllers
 router.get("/products",getProducts);
