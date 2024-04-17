@@ -230,9 +230,31 @@ const getDeleteAddress = async(req,res)=>{
   } catch (error) {
     console.log("Something Went wrong",error);
   }
-  
 }
 
+const getChangePassword = async(req,res)=>{
+  try {
+    if(req.session.isLogged){
+      res.render("users/changePassword",{islogin:req.session.isLogged});
+    }
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
+
+const postChangePassword = async(req,res)=>{
+  try {
+    if(req.session.userInfo.password==req.body.currentPassword){
+      await userData.updateOne({_id:req.session.userInfo._id},{$set:{password:req.body.newpassword}})
+      res.redirect("/myAddress")
+    }else{
+      let warning  = "Please enter valid existing password"
+      res.render("users/changePassword",{message:warning,islogin:req.session.isLogged});
+    }
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
 const getCart = (req, res) => {
   res.render("users/cart");
 };
@@ -265,4 +287,6 @@ module.exports={
   getEditAddress,
   postEditAddress,
   getDeleteAddress,
+  getChangePassword,
+  postChangePassword
 }
