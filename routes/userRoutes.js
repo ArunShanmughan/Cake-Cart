@@ -8,8 +8,6 @@ const {
   postSignup,
   getOtp,
   postOtp,
-  getCart,
-  getCheckout,
   getLogout,
   getMyAccount,
   getOrderHistory,
@@ -21,6 +19,8 @@ const {
   getDeleteAddress,
   getChangePassword,
   postChangePassword,
+  getAddToCart,
+  getCart,
 } = require("../controllers/usercontroller");
 
 const {
@@ -38,8 +38,6 @@ router.post("/views/users/signup", postSignup);
 router.get("/views/users/otp", getOtp);
 router.post("/views/users/otp", postOtp);
 router.get("/resendOTP", getOtp);
-router.get("/views/users/cart", getCart);
-router.get("/views/users/checkout", getCheckout);
 router.get("/views/users/logout", getLogout);
 router.get("/myAccount", getMyAccount);
 router.get("/orderHistory", getOrderHistory);
@@ -51,6 +49,8 @@ router.post("/editAddress", postEditAddress);
 router.get("/deleteAddress", getDeleteAddress);
 router.get("/changePassword", getChangePassword);
 router.post("/changePassword",postChangePassword);
+router.post("/addToCart/:id",getAddToCart);
+router.get("/cart",getCart);
 
 //user side product Controllers
 router.get("/products", getProducts);

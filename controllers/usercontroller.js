@@ -5,6 +5,7 @@ const productModel = require("../models/productModel")
 const categoryModel = require("../models/categoryModel")
 const addressModel = require("../models/addressModel");
 const { postAddProduct } = require("./productcontroller");
+const cartModel = require("../models/cartModel")
 
 const getlandingpage = async(req, res) => {
   try {
@@ -128,6 +129,8 @@ const getMyAccount = async(req,res)=>{
   try {
     if(req.session.isLogged){
     res.render("users/myAccount",{islogin:req.session.isLogged,userData:req.session.userInfo});
+    }else{
+      res.redirect("/views/users/login")
     }
   } catch (error) {
     console.log("Something Went Wrong",error);
@@ -138,6 +141,8 @@ const getOrderHistory = async(req,res)=>{
   try {
     if(req.sesion.isLogged){
     res.render("users/orderHistory",{islogin:req.session.isLogged,userData:req.session.userInfo});
+    }else{
+      res.redirect("/views/users/login")
     }
   } catch (error) {
     console.log("Something Went wrong",error);
@@ -150,6 +155,8 @@ const getMyAddress = async(req,res)=>{
       console.log("address page is getting")
     let userAddress = await addressModel.find({userId:req.session.userInfo._id})
     res.render("users/myAddress",{islogin:req.session.isLogged,userAdd:userAddress});
+    }else{
+      res.redirect("/views/users/login")
     }
   } catch (error) {
     console.log("Something Went wrong",error);
@@ -161,6 +168,8 @@ const getAddAddress = async(req,res)=>{
     if(req.session.isLogged){
       let addressData = await addressModel.find()
       res.render("users/addAddress",{islogin:req.session.isLogged})
+    }else{
+      res.redirect("/views/users/login")
     }
   } catch (error) {
     console.log("Something Went Wrong",error);
@@ -198,6 +207,8 @@ const getEditAddress = async(req,res)=>{
       let presentAddress = await addressModel.findOne({_id:req.query.addId});
       console.log(presentAddress);
       res.render("users/editAddress",{presentAddress,islogin:req.session.isLogged})
+    }else{
+      res.redirect("/views/users/login")
     }
   } catch (error) {
     console.log("Something Went Wrong",error);
@@ -226,6 +237,8 @@ const getDeleteAddress = async(req,res)=>{
     if(req.session.isLogged){
       await addressModel.deleteOne({_id:req.query.dltId});
       res.redirect("/myAddress");
+    }else{
+      res.redirect("/views/users/login")
     }
   } catch (error) {
     console.log("Something Went wrong",error);
@@ -236,6 +249,8 @@ const getChangePassword = async(req,res)=>{
   try {
     if(req.session.isLogged){
       res.render("users/changePassword",{islogin:req.session.isLogged});
+    }else{
+      res.redirect("/views/users/login");
     }
   } catch (error) {
     console.log("Something Went Wrong",error);
@@ -245,7 +260,7 @@ const getChangePassword = async(req,res)=>{
 const postChangePassword = async(req,res)=>{
   try {
     if(req.session.userInfo.password==req.body.currentPassword){
-      await userData.updateOne({_id:req.session.userInfo._id},{$set:{password:req.body.newpassword}})
+      await userData.updateOne({_id:req.session.userInfo._id},{$set:{password:req.body.newPassword}})
       res.redirect("/myAddress")
     }else{
       let warning  = "Please enter valid existing password"
@@ -255,9 +270,48 @@ const postChangePassword = async(req,res)=>{
     console.log("Something Went Wrong",error);
   }
 }
-const getCart = (req, res) => {
-  res.render("users/cart");
+
+
+const getAddToCart = async(req, res) => {
+  try {
+    let existingProduct = await cartModel.findOne({
+      userId:req.session.userInfo._id,
+      productId:req.query.id
+    })
+    console.log("get to cart is coming")
+    if(existingProduct){
+      await cartModel.updateOne(
+        {_id:existingProduct._id},
+        {$inc:{productQuantity:req.query.quantity}}
+      );
+    }else{
+      await cartModel.insertMany([
+        {userId:req.session.userInfo._id,
+        productId:req.params.id,
+        productQuantity:req.query.quantity
+       },
+      ]);
+    }
+    res.send({success:true})
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
 };
+
+const getCart = async(req,res)=>{
+  try {
+    if(req.session.isLogged){
+      console.log(req.session.userInfo);
+      let cartDetails = await cartModel.find({ userId: req.session?.userInfo?._id }).populate("productId");
+      console.log(cartDetails);
+      res.render("users/cart",{islogin:req.session.isLogged,cartData:cartDetails})
+    }else{
+      res.redirect("/views/users/login");
+    }
+  } catch (error) {
+    console.log("Something went wrong",error)
+  }
+}
 
 const getCheckout=(req, res) => {
   res.render("users/checkout");
@@ -276,8 +330,6 @@ module.exports={
   postSignup,
   getOtp,
   postOtp,
-  getCart,
-  getCheckout,
   getLogout,
   getMyAccount,
   getOrderHistory,
@@ -288,5 +340,7 @@ module.exports={
   postEditAddress,
   getDeleteAddress,
   getChangePassword,
-  postChangePassword
+  postChangePassword,
+  getAddToCart,
+  getCart,
 }

@@ -20,6 +20,9 @@
     <!-- site Favicon -->
     <link rel="icon" href="/assets/img/favicon/favicon.png" sizes="32x32" />
 
+    <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- css Icon Font -->
     <link rel="stylesheet" href="/assets/css/vendor/msicons.min.css" />
 
@@ -89,72 +92,70 @@
               <div class="align-self-center">
                 <div class="ms-header-bottons">
                   <!-- Header User Start -->
-                  
+
                   <% if(islogin==true){ %>
-                    <div class="ms-acc-drop">
-                      <a
-                        href="javascript:void(0)"
-                        class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
-                        title="Account"
-                      >
-                        <div class="header-icon">
-                          <img
-                            src="assets/img/icons/user.svg"
-                            class="svg_img header_svg"
-                            alt=""
-                          />
-                        </div>
-                        <div class="ms-btn-desc">
-                          <span class="ms-btn-title">Account</span>
-                          <span class="ms-btn-stitle">Log-Out</span>
-                        </div>
-                      </a>
-                      <ul class="ms-dropdown-menu">
-                        <li>
-                          <a class="dropdown-item" href="/views/users/myaccount"
-                            >My Account</a
-                          >
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="/views/users/logout"
-                            >Log-Out</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
-                    
+                  <div class="ms-acc-drop">
+                    <a
+                      href="javascript:void(0)"
+                      class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
+                      title="Account"
+                    >
+                      <div class="header-icon">
+                        <img
+                          src="assets/img/icons/user.svg"
+                          class="svg_img header_svg"
+                          alt=""
+                        />
+                      </div>
+                      <div class="ms-btn-desc">
+                        <span class="ms-btn-title">Account</span>
+                        <span class="ms-btn-stitle">Log-Out</span>
+                      </div>
+                    </a>
+                    <ul class="ms-dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="/views/users/myaccount"
+                          >My Account</a
+                        >
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="/views/users/logout"
+                          >Log-Out</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+
                   <% }else{ %>
-                    <div class="ms-acc-drop">
-                      <a
-                        href="javascript:void(0)"
-                        class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
-                        title="Account"
-                      >
-                        <div class="header-icon">
-                          <img
-                            src="assets/img/icons/user.svg"
-                            class="svg_img header_svg"
-                            alt=""
-                          />
-                        </div>
-                        <div class="ms-btn-desc">
-                          <span class="ms-btn-title">Account</span>
-                          <span class="ms-btn-stitle">Login</span>
-                        </div>
-                      </a>
-                      <ul class="ms-dropdown-menu">
-                        <li>
-                          <a class="dropdown-item" href="/signup"
-                            >Signup</a
-                          >
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="/views/users/login"
-                            >Login</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
+                  <div class="ms-acc-drop">
+                    <a
+                      href="javascript:void(0)"
+                      class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
+                      title="Account"
+                    >
+                      <div class="header-icon">
+                        <img
+                          src="assets/img/icons/user.svg"
+                          class="svg_img header_svg"
+                          alt=""
+                        />
+                      </div>
+                      <div class="ms-btn-desc">
+                        <span class="ms-btn-title">Account</span>
+                        <span class="ms-btn-stitle">Login</span>
+                      </div>
+                    </a>
+                    <ul class="ms-dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="/signup">Signup</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="/views/users/login"
+                          >Login</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
                   <% } %>
                   <!-- Header User End -->
                   <!-- Header wishlist Start -->
@@ -387,8 +388,12 @@
                   <li class="ms-breadcrumb-item">
                     <a href="/">Home</a>
                   </li>
-                  <li class="ms-breadcrumb-item active"><a href="/products">All Products</a></li>
-                  <li class="ms-breadcrumb-item active"><%=productInfo.productName%></li>
+                  <li class="ms-breadcrumb-item active">
+                    <a href="/products">All Products</a>
+                  </li>
+                  <li class="ms-breadcrumb-item active">
+                    <%=productInfo.productName%>
+                  </li>
                 </ul>
                 <!-- ms-breadcrumb-list end -->
               </div>
@@ -521,180 +526,216 @@
         <div class="row">
           <div class="ms-pro-rightside ms-common-rightside col-md-12">
             <!-- Single product content Start -->
-              <div class="single-pro-block">
-                <div class="single-pro-inner">
-                  <div class="row">
-                    <div class="single-pro-img single-pro-img-no-sidebar">
-                      <div class="single-product-scroll">
-                        <div class="single-product-cover">
-                          <div class="single-slide zoom-image-hover">
-                            <img
-                              class="img-responsive"
-                              src="/assets/img/uploads/<%=productInfo.images[0]%>"
-                              alt=""
-                            />
-                          </div>
-                          <div class="single-slide zoom-image-hover">
-                            <img
-                              class="img-responsive"
-                              src="/assets/img/uploads/<%=productInfo.images[1]%>"
-                              alt=""
-                            />
-                          </div>
-                          <div class="single-slide zoom-image-hover">
-                            <img
-                              class="img-responsive"
-                              src="/assets/img/uploads/<%=productInfo.images[2]%>"
-                              alt=""
-                            />
-                          </div>
+            <div class="single-pro-block">
+              <div class="single-pro-inner">
+                <div class="row">
+                  <div class="single-pro-img single-pro-img-no-sidebar">
+                    <div class="single-product-scroll">
+                      <div class="single-product-cover">
+                        <div class="single-slide zoom-image-hover">
+                          <img
+                            class="img-responsive"
+                            src="/assets/img/uploads/<%=productInfo.images[0]%>"
+                            alt=""
+                          />
                         </div>
-                        <div class="single-nav-thumb">
-                          <div class="single-slide">
-                            <img
-                              class="img-responsive"
-                              src="/assets/img/uploads/<%=productInfo.images[0]%>"
-                              alt=""
-                            />
-                          </div>
-                          <div class="single-slide">
-                            <img
-                              class="img-responsive"
-                              src="/assets/img/uploads/<%=productInfo.images[1]%>"
-                              alt=""
-                            />
-                          </div>
-                          <div class="single-slide">
-                            <img
-                              class="img-responsive"
-                              src="/assets/img/uploads/<%=productInfo.images[2]%>"
-                              alt=""
-                            />
-                          </div>
+                        <div class="single-slide zoom-image-hover">
+                          <img
+                            class="img-responsive"
+                            src="/assets/img/uploads/<%=productInfo.images[1]%>"
+                            alt=""
+                          />
+                        </div>
+                        <div class="single-slide zoom-image-hover">
+                          <img
+                            class="img-responsive"
+                            src="/assets/img/uploads/<%=productInfo.images[2]%>"
+                            alt=""
+                          />
+                        </div>
+                      </div>
+                      <div class="single-nav-thumb">
+                        <div class="single-slide">
+                          <img
+                            class="img-responsive"
+                            src="/assets/img/uploads/<%=productInfo.images[0]%>"
+                            alt=""
+                          />
+                        </div>
+                        <div class="single-slide">
+                          <img
+                            class="img-responsive"
+                            src="/assets/img/uploads/<%=productInfo.images[1]%>"
+                            alt=""
+                          />
+                        </div>
+                        <div class="single-slide">
+                          <img
+                            class="img-responsive"
+                            src="/assets/img/uploads/<%=productInfo.images[2]%>"
+                            alt=""
+                          />
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="single-pro-desc single-pro-desc-no-sidebar m-t-991"
-                    >
-                      <div class="single-pro-content">
-                        <h5 class="ms-single-title">
-                          <%=productInfo.productName%>
-                        </h5>
-                        <div class="ms-single-rating-wrap">
-                          <div class="ms-single-rating">
-                            <i class="msicon msi-star fill"></i>
-                            <i class="msicon msi-star fill"></i>
-                            <i class="msicon msi-star fill"></i>
-                            <i class="msicon msi-star fill"></i>
-                            <i class="msicon msi-star-o"></i>
+                  </div>
+                  <div
+                    class="single-pro-desc single-pro-desc-no-sidebar m-t-991"
+                  >
+                    <div class="single-pro-content">
+                      <h5 class="ms-single-title">
+                        <%=productInfo.productName%>
+                      </h5>
+                      <div class="ms-single-rating-wrap">
+                        <div class="ms-single-rating">
+                          <i class="msicon msi-star fill"></i>
+                          <i class="msicon msi-star fill"></i>
+                          <i class="msicon msi-star fill"></i>
+                          <i class="msicon msi-star fill"></i>
+                          <i class="msicon msi-star-o"></i>
+                        </div>
+                        <span class="ms-read-review">
+                          |&nbsp;&nbsp;<a href="#ms-spt-nav-review"
+                            >992 Ratings</a
+                          >
+                        </span>
+                      </div>
+                      <div id="productQuantity">
+                        <p>Available:<%=productInfo.quantity%></p>
+                      </div>
+                      <div class="ms-single-price-stoke">
+                        <div class="ms-single-price">
+                          <div class="final-price">
+                            MRP:$<%=productInfo.price%>
                           </div>
-                          <span class="ms-read-review">
-                            |&nbsp;&nbsp;<a href="#ms-spt-nav-review"
-                              >992 Ratings</a
-                            >
+                        </div>
+                        <div class="ms-single-stoke">
+                          <span class="ms-single-sku">SKU#: WH12</span>
+                          <span class="ms-single-ps-title">
+                            <% if(productInfo.isListed){%>
+                            <h5 style="color: green">IN STOCK</h5>
+                            <% }else{ %>
+                            <h5 style="color: red">OUT OF STOCK</h5>
+                            <% } %>
                           </span>
                         </div>
-                        <div>
-                          <p>Available:<%=productInfo.quantity%></p>
-                        </div>
-                        <div class="ms-single-price-stoke">
-                          <div class="ms-single-price">
-                            <div class="final-price">MRP:$<%=productInfo.price%></div>
+                      </div>
+                      <div class="ms-single-desc">
+                        Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry. Lorem Ipsum has been the
+                        industry's standard dummy text ever since the 1990.
+                      </div>
+
+                      <div class="ms-single-list">
+                        <ul>
+                          <li><strong>Closure :</strong> Hook & Loop</li>
+                          <li><strong>Sole :</strong> Polyvinyl Chloride</li>
+                          <li><strong>Width :</strong> Medium</li>
+                          <li>
+                            <strong>Outer Material :</strong> A-Grade Standard
+                            Quality
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="ms-pro-variation">
+                        <div
+                          class="ms-pro-variation-inner ms-pro-variation-size"
+                        >
+                          <span>Weight</span>
+                          <div class="ms-pro-variation-content">
+                            <ul>
+                              <li class="active"><span>250g</span></li>
+                              <li><span>500g</span></li>
+                              <li><span>1kg</span></li>
+                              <li><span>2kg</span></li>
+                            </ul>
                           </div>
-                          <div class="ms-single-stoke">
-                            <span class="ms-single-sku">SKU#: WH12</span>
-                            <span class="ms-single-ps-title">
-                              <% if(productInfo.isListed){%>
-                                <h5 style="color: green;">IN STOCK</h5>
-                                <% }else{ %>
-                                  <h5 style="color: red;">OUT OF STOCK</h5>
-                                  <% } %>
-                            </span>
-                          </div>
                         </div>
-                        <div class="ms-single-desc">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry's standard dummy text ever since the 1990.
+                      </div>
+                      <div class="ms-single-qty">
+                        <div class="qty-plus-minus">
+                          <input
+                            class="qty-input"
+                            type="text"
+                            name="ms_qtybtn"
+                            value="1"
+                          />
                         </div>
-  
-                        <div class="ms-single-list">
-                          <ul>
-                            <li><strong>Closure :</strong> Hook & Loop</li>
-                            <li><strong>Sole :</strong> Polyvinyl Chloride</li>
-                            <li><strong>Width :</strong> Medium</li>
-                            <li>
-                              <strong>Outer Material :</strong> A-Grade Standard
-                              Quality
-                            </li>
-                          </ul>
-                        </div>
-  
-                        <div class="ms-pro-variation">
-                          <div
-                            class="ms-pro-variation-inner ms-pro-variation-size"
+                        <div class="ms-single-cart">
+                          <button
+                            class="btn btn-primary ms-btn-2"
+                            onclick="addToCart('<%=productInfo._id%>','<%=productInfo.quantity%>')"
                           >
-                            <span>Weight</span>
-                            <div class="ms-pro-variation-content">
-                              <ul>
-                                <li class="active"><span>250g</span></li>
-                                <li><span>500g</span></li>
-                                <li><span>1kg</span></li>
-                                <li><span>2kg</span></li>
-                              </ul>
-                            </div>
-                          </div>
+                            Add To Cart
+                          </button>
                         </div>
-                        <div class="ms-single-qty">
-                          <div class="qty-plus-minus">
-                            <input
-                              class="qty-input"
-                              type="text"
-                              name="ms_qtybtn"
-                              value="1"
+                        <div class="ms-single-wishlist">
+                          <a class="ms-btn-group wishlist" title="Wishlist">
+                            <img
+                              src="assets/img/icons/wishlist.svg"
+                              class="svg_img pro_svg"
+                              alt=""
                             />
-                          </div>
-                          <div class="ms-single-cart">
-                            <button class="btn btn-primary ms-btn-2">
-                              Add To Cart
-                            </button>
-                          </div>
-                          <div class="ms-single-wishlist">
-                            <a class="ms-btn-group wishlist" title="Wishlist">
-                              <img
-                                src="assets/img/icons/wishlist.svg"
-                                class="svg_img pro_svg"
-                                alt=""
-                              />
-                            </a>
-                          </div>
-                          <div class="ms-single-quickview">
-                            <a
-                              href="#"
-                              class="ms-btn-group quickview"
-                              data-link-action="quickview"
-                              title="Quick view"
-                              data-bs-toggle="modal"
-                              data-bs-target="#ms_quickview_modal"
-                            >
-                              <img
-                                src="assets/img/icons/quickview.svg"
-                                class="svg_img pro_svg"
-                                alt=""
-                              />
-                            </a>
-                          </div>
+                          </a>
+                        </div>
+                        <div class="ms-single-quickview">
+                          <a
+                            href="#"
+                            class="ms-btn-group quickview"
+                            data-link-action="quickview"
+                            title="Quick view"
+                            data-bs-toggle="modal"
+                            data-bs-target="#ms_quickview_modal"
+                          >
+                            <img
+                              src="assets/img/icons/quickview.svg"
+                              class="svg_img pro_svg"
+                              alt=""
+                            />
+                          </a>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
             <!--Single product content End -->
+            <script>
+                          async function addToCart(id, quantity) {
+                            console.log("coming to this function");
+                            try {
+                              let response = await fetch(
+                                `/addToCart/${id}?quantity=${quantity}`,
+                                {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                }
+                              );
+                              let result = await response.json();
 
-            <!-- Add More and get discount content Start -->
-            
+                              if (result.success) {
+                                await Swal.fire({
+                                  title: "Item Added To Cart",
+                                  text: "Wish to browse more Product",
+                                  icon: "success",
+                                  showCancelButton: true,
+                                  confirmButtonColor: "#3085d6",
+                                  cancelButtonColor: "#d33",
+                                  confirmButtonText: `Go To Cart`,
+                                }).then((result) => {
+                                 if (result.isConfirmed) {
+                                   window.location.href = "/cart";
+                                 }
+                              });
+                            }
+                            } catch (error) {
+                              console.log("something Went Wrong", error);
+                            }
+                          }
+            </script>
+
             <!-- Single product tab start -->
             <div class="ms-single-pro-tab">
               <div class="ms-single-pro-tab-wrapper">
