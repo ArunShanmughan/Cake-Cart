@@ -21,6 +21,7 @@ const {
   postChangePassword,
   getAddToCart,
   getCart,
+  postDeleteCart,
 } = require("../controllers/usercontroller");
 
 const {
@@ -51,6 +52,7 @@ router.get("/changePassword", getChangePassword);
 router.post("/changePassword",postChangePassword);
 router.post("/addToCart/:id",getAddToCart);
 router.get("/cart",getCart);
+router.post("/deleteCart/:id",postDeleteCart)
 
 //user side product Controllers
 router.get("/products", getProducts);

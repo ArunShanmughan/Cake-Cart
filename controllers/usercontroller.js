@@ -282,13 +282,13 @@ const getAddToCart = async(req, res) => {
     if(existingProduct){
       await cartModel.updateOne(
         {_id:existingProduct._id},
-        {$inc:{productQuantity:req.query.quantity}}
+        {$inc:{productQuantity: 1}}
       );
     }else{
       await cartModel.insertMany([
         {userId:req.session.userInfo._id,
         productId:req.params.id,
-        productQuantity:req.query.quantity
+        productQuantity:req.body.productQuantity
        },
       ]);
     }
@@ -313,7 +313,16 @@ const getCart = async(req,res)=>{
   }
 }
 
-const getCheckout=(req, res) => {
+const postDeleteCart = async(req,res)=>{
+  try {
+    await cartModel.findOneAndDelete({_id:req.params.id});
+    res.send({success:true})
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
+
+const getCheckout = (req, res) => {
   res.render("users/checkout");
 };
 
@@ -343,4 +352,5 @@ module.exports={
   postChangePassword,
   getAddToCart,
   getCart,
+  postDeleteCart,
 }

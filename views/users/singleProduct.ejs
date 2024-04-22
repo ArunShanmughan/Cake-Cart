@@ -659,13 +659,13 @@
                             class="qty-input"
                             type="text"
                             name="ms_qtybtn"
-                            value="1"
+                            value="<%=productInfo.quantity%>"
                           />
                         </div>
                         <div class="ms-single-cart">
                           <button
                             class="btn btn-primary ms-btn-2"
-                            onclick="addToCart('<%=productInfo._id%>','<%=productInfo.quantity%>')"
+                            onclick="addToCart('<%=productInfo._id%>')"
                           >
                             Add To Cart
                           </button>
@@ -703,11 +703,11 @@
             </div>
             <!--Single product content End -->
             <script>
-                          async function addToCart(id, quantity) {
+                          async function addToCart(id) {
                             console.log("coming to this function");
                             try {
                               let response = await fetch(
-                                `/addToCart/${id}?quantity=${quantity}`,
+                                `/addToCart/${id}`,
                                 {
                                   method: "POST",
                                   headers: { "Content-Type": "application/json" },
