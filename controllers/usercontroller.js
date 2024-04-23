@@ -322,6 +322,43 @@ const postDeleteCart = async(req,res)=>{
   }
 }
 
+const getDecQtyCart = async(req,res)=>{
+  try {
+    let cartFindData = await cartModel.findOne({_id:req.params.id}).populate("productId");
+    if(cartFindData.productQuantity>1){
+      cartFindData.productQuantity--
+    }
+    cartFindData= await cartFindData.save()
+    res.json({
+      success:true,
+      cartFindData,
+      currentUser:req.session.userInfo,
+    })
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
+
+const getIncQty = async(req,res)=>{
+  try {
+    console.log(req.params)
+    console.log("something happend while coming")
+    let cartFindData = await cartModel.findOne({_id:req.params.id}).populate("productId");
+    console.log(cartFindData)
+    if(cartFindData.productQuantity<cartFindData.productId.quantity){
+      cartFindData.productQuantity++
+    }
+    cartFindData = await cartFindData.save()
+    res.json({
+      success:true,
+      cartFindData,
+      currentUser:req.session.userInfo,
+    })
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
+
 const getCheckout = (req, res) => {
   res.render("users/checkout");
 };
@@ -353,4 +390,6 @@ module.exports={
   getAddToCart,
   getCart,
   postDeleteCart,
+  getDecQtyCart,
+  getIncQty,
 }

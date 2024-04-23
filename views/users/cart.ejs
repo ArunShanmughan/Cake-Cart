@@ -437,23 +437,72 @@
                       class="ms-cart-pro-qty"
                       style="text-align: center"
                     >
-                      <button
-                        type="button"
-                        onclick="cartDec('<%= items._id %>','<%=index%>')"
-                      ><i class="fa-solid fa-minus"></i>
-                      </button>
-                      <br />
-                      <span id="productQuantity<%=index%>">
-                        &nbsp; &nbsp;<%= items?.productQuantity%> &nbsp; &nbsp;
-                      </span>
-                      <br />
-                      <button
-                        type="button"
-                        onclick="cartInc('<%=items._id %>','<%=index %>')"
-                      ><i class="fa-solid fa-plus"></i>
-                      </button>
+                      <style>
+                        .product-quantity-container {
+                          display: flex;
+                          flex-direction: column;
+                          align-items: center;
+                          gap: 0.5rem;
+                        }
+
+                        .product-quantity-btn {
+                          background-color: transparent;
+                          border: none;
+                          cursor: pointer;
+                          font-size: 1.5rem;
+                          transition: color 0.2s;
+                        }
+
+                        .product-quantity-minus-btn {
+                          color: #dc3545;
+                        }
+
+                        .product-quantity-minus-btn:hover {
+                          color: #c82333;
+                        }
+
+                        .product-quantity-plus-btn {
+                          color: #28a745;
+                        }
+
+                        .product-quantity-plus-btn:hover {
+                          color: #1e7e34;
+                        }
+
+                        .product-quantity-value {
+                          font-size: 1.2rem;
+                          font-weight: bold;
+                        }
+                      </style>
+                      <div class="product-quantity-container">
+                        <button
+                          type="button"
+                          class="product-quantity-btn product-quantity-minus-btn"
+                          onclick="cartDec('<%=items._id %>','<%=index%>')"
+                        >
+                          <i class="fa-solid fa-minus"></i>
+                        </button>
+                        <span
+                          id="productQuantity<%=index%>"
+                          class="product-quantity-value"
+                        >
+                          &nbsp; &nbsp;<%= items?.productQuantity%> &nbsp;
+                          &nbsp;
+                        </span>
+                        <button
+                          type="button"
+                          class="product-quantity-btn product-quantity-plus-btn"
+                          onclick="cartInc('<%=items._id %>','<%=index %>')"
+                        >
+                          <i class="fa-solid fa-plus"></i>
+                        </button>
+                      </div>
                     </td>
-                    <td data-label="Total" class="ms-cart-pro-subtotal">
+                    <td
+                      data-label="Total"
+                      class="ms-cart-pro-subtotal"
+                      id="totalCostPerProduct<%=index%>"
+                    >
                       $<%=items.totalCostPerProduct%>
                     </td>
                     <td data-label="Remove" class="ms-cart-pro-remove">
@@ -462,31 +511,101 @@
                       </button>
                     </td>
                   </tr>
+                  <script>
+                    async function cartDec(id, index) {
+                      try {
+                        let productQuantityCart = document.getElementById(
+                          "productQuantity" + index
+                        );
+                        let totalCostPerProductElement =
+                          document.getElementById(
+                            "totalCostPerProduct" + index
+                          );
+
+                        if (Number(productQuantityCart.innerText) == 1) {
+                          return Swal.fire({
+                            title: "Seomthing Went Wrong",
+                            text: "Your minimum quantity is reached",
+                            icon: "warning",
+                          });
+                        }
+                        console.log("swudboudbwoed");
+                        let response = await fetch("/cart/decQty/" + id, {
+                          method: "PUT",
+                        });
+                        console.log("bediwdebiefbdue");
+                        let result = await response.json();
+                        console.log(result);
+
+                        productQuantityCart.innerText =
+                          result.cartFindData.productQuantity;
+                        totalCostPerProductElement.innerText =
+                          "₹" + (await result.cartFindData.totalCostPerProduct);
+                      } catch (error) {
+                        console.log("Something Went Wrong", error);
+                      }
+                    }
+
+                    async function cartInc(id, index) {
+                      try {
+                        let productQuantityCart = document.getElementById(
+                          "productQuantity" + index
+                        );
+                        let totalCostPerProductElement =
+                          document.getElementById(
+                            "totalCostPerProduct" + index
+                          );
+                          console.log('<%=items%>')
+                        if (
+                          Number(productQuantityCart.innerText) >
+                          "<%=items?.productId?.quantity%>"
+                        ) {
+                          return Swal.fire({
+                            title: "Oops...",
+                            text: "Your Maximum quantity is reached",
+                            icon: "warning",
+                          });
+                        }
+                        let response = await fetch("/cart/incQty/" + id, {
+                          method: "PUT",
+                        });
+                        let result = await response.json();
+
+                        console.log(result);
+                        productQuantityCart.innerText =
+                          result.cartFindData.productQuantity;
+                        totalCostPerProductElement.innerText =
+                          "₹" + result.cartFindData.totalCostPerProduct;
+                      } catch (error) {
+                        console.log("Something Went wrong", error);
+                      }
+                    }
+
+                    async function deleteItem(id) {
+                      console.log("coming to the delete function");
+                      try {
+                        let response = await fetch(`/deleteCart/${id}`, {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                        });
+                        let result = await response.json();
+
+                        if (result.success) {
+                          Swal.fire({
+                            title: "Item Deleted From The Cart",
+                            icon: "success",
+                          });
+                        }
+                      } catch (error) {
+                        console.log("something Went Wrong", error);
+                      }
+                    }
+                  </script>
                   <% }) %>
                 </tbody>
               </table>
             </div>
-            <script>
-              async function deleteItem(id) {
-                console.log("coming to the delete function");
-                try {
-                  let response = await fetch(`/deleteCart/${id}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                  });
-                  let result = await response.json();
 
-                  if (result.success) {
-                    Swal.fire({
-                      title: "Item Deleted From The Cart",
-                      icon: "success",
-                    });
-                  }
-                } catch (error) {
-                  console.log("something Went Wrong", error);
-                }
-              }
-            </script>
             <div class="row">
               <div class="col-lg-12">
                 <div class="ms-cart-update-bottom">

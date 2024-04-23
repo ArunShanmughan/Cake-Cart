@@ -39,10 +39,12 @@ const getSingleProduct = async (req, res) => {
   try {
     const productDetails = await productModel.findOne({ _id: req.query.id });
     const categoryDetails = await categoryModel.findOne({ _id: req.query.id });
+    const currentQuantity = productDetails.quantity;
     res.render("users/singleProduct", {
       islogin: req.session.isLogged,
       productInfo: productDetails,
       categoryInfo: categoryDetails,
+      maxValue : currentQuantity
     });
   } catch (error) {
     console.log("Something Went Wrong", error);
