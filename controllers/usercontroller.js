@@ -274,11 +274,11 @@ const postChangePassword = async(req,res)=>{
 
 const getAddToCart = async(req, res) => {
   try {
+    console.log(req.params)
     let existingProduct = await cartModel.findOne({
-      userId:req.session.userInfo._id,
-      productId:req.query.id
+      productId:req.params.id
     })
-    console.log("get to cart is coming")
+    console.log(existingProduct)
     if(existingProduct){
       await cartModel.updateOne(
         {_id:existingProduct._id},
@@ -298,13 +298,35 @@ const getAddToCart = async(req, res) => {
   }
 };
 
+
+async function WholeTotal(req){
+  try {
+    let usersCartData = await cartModel.find({userId:req?.session?.userInfo?._id}).populate("productId");
+
+    let wholeTotal = 0;
+    for(const k of usersCartData){
+      wholeTotal += k.productId.price * k.productQuantity;
+      await cartModel.updateOne({_id:k._id},{$set:{totalCostPerProduct:k.productId.price * k.productQuantity}}) 
+    }
+    usersCartData = await cartModel.find({userId:req.session.userInfo._id}).populate("productId");
+
+    req.session.wholeTotal = wholeTotal;
+
+    return JSON.parse(JSON.stringify(usersCartData))
+    
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+  
+}
+
+
 const getCart = async(req,res)=>{
   try {
     if(req.session.isLogged){
-      console.log(req.session.userInfo);
-      let cartDetails = await cartModel.find({ userId: req.session?.userInfo?._id }).populate("productId");
-      console.log(cartDetails);
-      res.render("users/cart",{islogin:req.session.isLogged,cartData:cartDetails})
+      let usersCartData = await WholeTotal(req);
+      // let cartDetails = await cartModel.find({ userId: req.session?.userInfo?._id }).populate("productId");
+      res.render("users/cart",{islogin:req.session.isLogged,userCartData:usersCartData,wholeTotal:req.session.wholeTotal})
     }else{
       res.redirect("/views/users/login");
     }
@@ -339,7 +361,7 @@ const getDecQtyCart = async(req,res)=>{
   }
 }
 
-const getIncQty = async(req,res)=>{
+const getIncQtyCart = async(req,res)=>{
   try {
     console.log(req.params)
     console.log("something happend while coming")
@@ -391,5 +413,5 @@ module.exports={
   getCart,
   postDeleteCart,
   getDecQtyCart,
-  getIncQty,
+  getIncQtyCart,
 }

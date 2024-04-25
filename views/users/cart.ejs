@@ -418,7 +418,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% cartData.forEach((items,index) => { %>
+                  <% usercartData.forEach((items,index) => { %>
                   <tr>
                     <td data-label="Product" class="ms-cart-pro-name">
                       <a href="product-left-sidebar.html">
@@ -514,6 +514,7 @@
                   <script>
                     async function cartDec(id, index) {
                       try {
+                        console.log("decreasing function is calling...");
                         let productQuantityCart = document.getElementById(
                           "productQuantity" + index
                         );
@@ -524,16 +525,14 @@
 
                         if (Number(productQuantityCart.innerText) == 1) {
                           return Swal.fire({
-                            title: "Seomthing Went Wrong",
+                            title: "Something Went Wrong",
                             text: "Your minimum quantity is reached",
                             icon: "warning",
                           });
                         }
-                        console.log("swudboudbwoed");
                         let response = await fetch("/cart/decQty/" + id, {
                           method: "PUT",
                         });
-                        console.log("bediwdebiefbdue");
                         let result = await response.json();
                         console.log(result);
 
@@ -548,6 +547,7 @@
 
                     async function cartInc(id, index) {
                       try {
+                        console.log("increasing function is calling");
                         let productQuantityCart = document.getElementById(
                           "productQuantity" + index
                         );
@@ -555,14 +555,16 @@
                           document.getElementById(
                             "totalCostPerProduct" + index
                           );
-                          console.log('<%=items%>')
                         if (
-                          Number(productQuantityCart.innerText) >
+                          Number(productQuantityCart.innerText) >=
                           "<%=items?.productId?.quantity%>"
                         ) {
+                          console.log(
+                            "This increasing quantity condition is true"
+                          );
                           return Swal.fire({
-                            title: "Oops...",
-                            text: "Your Maximum quantity is reached",
+                            title: "Oops...", 
+                            text: "Maximum qunatity reached!.",
                             icon: "warning",
                           });
                         }
@@ -570,7 +572,6 @@
                           method: "PUT",
                         });
                         let result = await response.json();
-
                         console.log(result);
                         productQuantityCart.innerText =
                           result.cartFindData.productQuantity;
