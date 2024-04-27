@@ -9,7 +9,7 @@ const addressSchema = new mongoose.Schema(
     addressLine1:{type:String,required:true},
     addressLine2:{type:String,required:true},
     phone:{type:Number,required:true},
-  }
+  },{ strictPopulate: false }
 )
 
 const addressModels = mongoose.model("addressModel",addressSchema);

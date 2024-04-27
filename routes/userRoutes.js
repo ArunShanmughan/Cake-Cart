@@ -24,6 +24,7 @@ const {
   postDeleteCart,
   getDecQtyCart,
   getIncQtyCart,
+  getCheckout,
 } = require("../controllers/usercontroller");
 
 const {
@@ -56,7 +57,8 @@ router.post("/addToCart/:id",getAddToCart);
 router.get("/cart",getCart);
 router.post("/deleteCart/:id",postDeleteCart);
 router.put("/cart/decQty/:id",getDecQtyCart);
-router.put("/cart/incQty/:id",getIncQtyCart)
+router.put("/cart/incQty/:id",getIncQtyCart);
+router.get("/checkout",getCheckout);
 
 //user side product Controllers
 router.get("/products", getProducts);

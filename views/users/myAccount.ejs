@@ -22,7 +22,13 @@
 
     <!-- css Icon Font -->
     <link rel="stylesheet" href="/assets/css/vendor/msicons.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
     <!-- css All Plugins Files -->
     <link rel="stylesheet" href="/assets/css/plugins/animate.css" />
@@ -69,72 +75,70 @@
               <div class="align-self-center">
                 <div class="ms-header-bottons">
                   <!-- Header User Start -->
-                  
+
                   <% if(islogin==true){ %>
-                    <div class="ms-acc-drop">
-                      <a
-                        href="javascript:void(0)"
-                        class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
-                        title="Account"
-                      >
-                        <div class="header-icon">
-                          <img
-                            src="assets/img/icons/user.svg"
-                            class="svg_img header_svg"
-                            alt=""
-                          />
-                        </div>
-                        <div class="ms-btn-desc">
-                          <span class="ms-btn-title">Account</span>
-                          <span class="ms-btn-stitle">Log-Out</span>
-                        </div>
-                      </a>
-                      <ul class="ms-dropdown-menu">
-                        <li>
-                          <a class="dropdown-item" href="/views/users/myaccount"
-                            >My Account</a
-                          >
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="/views/users/logout"
-                            >Log-Out</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
-                    
+                  <div class="ms-acc-drop">
+                    <a
+                      href="javascript:void(0)"
+                      class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
+                      title="Account"
+                    >
+                      <div class="header-icon">
+                        <img
+                          src="assets/img/icons/user.svg"
+                          class="svg_img header_svg"
+                          alt=""
+                        />
+                      </div>
+                      <div class="ms-btn-desc">
+                        <span class="ms-btn-title">Account</span>
+                        <span class="ms-btn-stitle">Log-Out</span>
+                      </div>
+                    </a>
+                    <ul class="ms-dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="/views/users/myaccount"
+                          >My Account</a
+                        >
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="/views/users/logout"
+                          >Log-Out</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+
                   <% }else{ %>
-                    <div class="ms-acc-drop">
-                      <a
-                        href="javascript:void(0)"
-                        class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
-                        title="Account"
-                      >
-                        <div class="header-icon">
-                          <img
-                            src="assets/img/icons/user.svg"
-                            class="svg_img header_svg"
-                            alt=""
-                          />
-                        </div>
-                        <div class="ms-btn-desc">
-                          <span class="ms-btn-title">Account</span>
-                          <span class="ms-btn-stitle">Login</span>
-                        </div>
-                      </a>
-                      <ul class="ms-dropdown-menu">
-                        <li>
-                          <a class="dropdown-item" href="/signup"
-                            >Signup</a
-                          >
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="/views/users/login"
-                            >Login</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
+                  <div class="ms-acc-drop">
+                    <a
+                      href="javascript:void(0)"
+                      class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
+                      title="Account"
+                    >
+                      <div class="header-icon">
+                        <img
+                          src="assets/img/icons/user.svg"
+                          class="svg_img header_svg"
+                          alt=""
+                        />
+                      </div>
+                      <div class="ms-btn-desc">
+                        <span class="ms-btn-title">Account</span>
+                        <span class="ms-btn-stitle">Login</span>
+                      </div>
+                    </a>
+                    <ul class="ms-dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="/signup">Signup</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="/views/users/login"
+                          >Login</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
                   <% } %>
                   <!-- Header User End -->
                   <!-- Header wishlist Start -->
@@ -213,26 +217,10 @@
                     <div class="ms-main-menu">
                       <ul>
                         <li class="non-drop">
-                          <a href="homePage.ejs">Home</a>
+                          <a href="/">Home</a>
                         </li>
-                        <li class="dropdown drop-list">
-                          <a href="javascript:void(0)" class="dropdown-arrow"
-                            >Products</a
-                          >
-                        </li>
-                        <li class="dropdown drop-list">
-                          <a href="javascript:void(0)" class="dropdown-arrow"
-                            >Others<i class="msicon msi-angle-right"></i
-                          ></a>
-                          <ul class="sub-menu">
-                            <li><a href="about-us.ejs">About Us</a></li>
-                            <li><a href="contact-us.ejs">Contact Us</a></li>
-                            <li><a href="/views/users/login.ejs">Login</a></li>
-                            <li><a href="/signup.ejs">Signup</a></li>
-                            <li>
-                              <a href="privacy-policy.ejs">Privacy Policy</a>
-                            </li>
-                          </ul>
+                        <li class="non-drop">
+                          <a href="/products">Products</a>
                         </li>
                       </ul>
                     </div>
@@ -377,15 +365,82 @@
     </div>
     <!-- Breadcrumb end -->
 
-   
-    <h4><i class="fa-solid fa-user-check fa-xl"></i>My Account</h4>
+    <style>
+      .custom-btn {
+        background-color: #337ab7; /* primary color */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .custom-btn:hover {
+        background-color: #23527c; /* hover color */
+        color: #fff;
+      }
+
+      .custom-btn i {
+        margin-right: 10px;
+      }
+
+      .custom-btn span {
+        font-weight: bold;
+      }
+
+      .btn-group {
+        margin-top: 20px;
+      }
+
+      h4 {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .fa-solid {
+        color: #337ab7; /* primary color */
+        font-size: 24px;
+        margin-right: 10px;
+      }
+    </style>
+    <h4 style="text-align: center;"><i class="fa-solid fa-user-check fa-xl"></i>My Account</h4>
     <div class="row">
       <div class="col-12">
-        <div class="btn-group me-0 d-flex justify-content-between" role="group" aria-label="...">
-          <a href="/orderHistory" class="btn btn-primary m-5"><i class="fa fa-user" aria-hidden="true"></i>Order History</a>
-          <a class="btn btn-primary m-5" href="/myAddress?UserId=<%=userData._id%>"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> My Address</a>
-          <a class="btn btn-primary m-5" href="/addAddress"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Add Address</a>
-          <a class="btn btn-primary m-5" href="/changePassword"><i class="fa fa-list" aria-hidden="true"></i>Change Password</a>
+        <div class="card">
+          <div class="card-body">
+            <p class="card-text">
+              <strong>Username:</strong> <span id="username"><%=userData.fName %></span>
+            </p>
+            <p class="card-text">
+              <strong>Phone Number:</strong> <span id="phone"><%=userData.mobile %></span>
+            </p>
+            <p class="card-text">
+              <strong>Email ID:</strong> <span id="email"><%=userData.email%></span>
+            </p>
+          </div>
+        </div>
+        <div
+          class="btn-group me-0 d-flex justify-content-between"
+          role="group"
+          aria-label="..."
+        >
+          <a href="/orderHistory" class="btn btn-primary m-5 custom-btn"
+            ><i class="fa fa-user" aria-hidden="true"></i>Order History</a
+          >
+          <a
+            class="btn btn-primary m-5 custom-btn"
+            href="/myAddress?UserId=<%=userData._id%>"
+            ><i class="fas fa-map-marker-alt" aria-hidden="true"></i> My
+            Address</a
+          >
+          <a class="btn btn-primary m-5 custom-btn" href="/addAddress"
+            ><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Add
+            Address</a
+          >
+          <a class="btn btn-primary m-5 custom-btn" href="/changePassword"
+            ><i class="fa fa-list" aria-hidden="true"></i>Change Password</a
+          >
         </div>
       </div>
     </div>
