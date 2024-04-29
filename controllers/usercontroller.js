@@ -301,9 +301,10 @@ const getAddToCart = async(req, res) => {
 
 async function wholeTotal(req){
   try {
-    let usersCartData = await cartModel.find({userId:req?.session?.userInfo?._id}).populate("productId");
+    let usersCartData = await cartModel.find({userId:req.session.userInfo?._id}).populate("productId");
 
     let wholeTotal = 0;
+    console.log(usersCartData)
     for(const k of usersCartData){
       wholeTotal += k.productId.price * k.productQuantity;
       await cartModel.updateOne({_id:k._id},{$set:{totalCostPerProduct:k.productId.price * k.productQuantity}}) 
@@ -325,6 +326,7 @@ const getCart = async(req,res)=>{
   try {
     if(req.session.isLogged){
       let usersCartData = await wholeTotal(req);
+      console.log(usersCartData)
       // let cartDetails = await cartModel.find({ userId: req.session?.userInfo?._id }).populate("productId");
       console.log("the page rerenderring");
       res.render("users/cart",{islogin:req.session.isLogged,userCartData:usersCartData,wholeTotal:req.session.wholeTotal})
@@ -349,9 +351,11 @@ const getDecQtyCart = async(req,res)=>{
   try {
     let cartFindData = await cartModel.findOne({_id:req.params.id}).populate("productId");
     if(cartFindData.productQuantity>1){
-      cartFindData.productQuantity--
+      cartFindData.productQuantity--;
+      cartFindData.totalCostPerProduct = cartFindData.productId.price*cartFindData.productQuantity
     }
-    cartFindData= await cartFindData.save()
+    await cartFindData.save()
+    console.log(cartFindData);
     await wholeTotal(req);
     res.json({
       success:true,
@@ -369,9 +373,11 @@ const getIncQtyCart = async(req,res)=>{
     let cartFindData = await cartModel.findOne({_id:req.params.id}).populate("productId");
     console.log(cartFindData)
     if(cartFindData.productQuantity<cartFindData.productId.quantity){
-      cartFindData.productQuantity++
+      cartFindData.productQuantity++;
+      cartFindData.totalCostPerProduct=cartFindData.productId.price * cartFindData.productQuantity;
     }
     cartFindData = await cartFindData.save()
+    console.log(cartFindData)
     await wholeTotal(req);
     res.json({
       success:true,

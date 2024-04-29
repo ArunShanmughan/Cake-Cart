@@ -5,6 +5,10 @@ const categoryModel = require("../models/categoryModel");
 const getProducts = async (req, res) => {
   try {
     const categoryInfo = await categoryModel.find({ isListed: true });
+      let productsInOnePage = 4
+      let pageNo = req.query.pageNo ||  1
+      let skip= (pageNo-1) * productsInOnePage 
+      let limit= productsInOnePage;
   let query = { isListed: true };
   if (req.query.searchId) {
     query.productName = { $regex: req.query.searchId, $options: "i" };
@@ -23,13 +27,20 @@ const getProducts = async (req, res) => {
   req.session.highValueSort = null;
   req.session.lowValueSort = null;
   req.session.newArrive = null;
-  const productInfo = await productModel.find(query).populate("category");
+  const productDataWithPagination = await productModel.find(query).populate("category").skip(skip).limit(limit);
+  let productInfo = req.session.productsData || productDataWithPagination
+
+  let totalPages=  Math.ceil(  await productModel.countDocuments() / productsInOnePage )
+      let totalPagesArray = new Array(totalPages).fill(null)
+
   res.render("users/products", {
     islogin: req.session.isLogged,
     productInfo:
       ascSort || desSort || highValueSort || lowValueSort || newArrive || productInfo,
     categoryDet: categoryInfo,
+    totalPagesArray,
   });
+  req.session.ProductsData = null;
   } catch (error) {
     console.log("Something went Wrong",error);
   }
@@ -87,7 +98,8 @@ const getSortData = async (req, res) => {
       const desSortByPrice = await productModel.find().sort({ price: -1 });
       req.session.lowValueSort = desSortByPrice;
       res.send({ lowValueSort: true });
-    }else if(req.query.sortId == 5){
+    }
+    else if(req.query.sortId == 5){
       const newArrivals = await productModel.find().sort({_id:-1});
       req.session.newArrive = newArrivals;
       res.send({newArrive:true})
