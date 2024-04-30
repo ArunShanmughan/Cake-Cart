@@ -11,12 +11,14 @@ const getlandingpage = async(req, res) => {
   try {
     const categoryInfo = await categoryModel.find()
     const ProductInfo = await productModel.find().populate("category")
+    const usersCartData = await wholeTotal(req);
+    console.log("this is homepage rendering data-->",usersCartData)
     // console.log(req.session.isLogged)
     if(req.session.isLogged){
       req.session.otpRequest=false;
-      res.render("users/homePage",{islogin:req.session.isLogged,categoryInfo:categoryInfo,productInfo:ProductInfo});
+      res.render("users/homePage",{islogin:req.session.isLogged,categoryInfo:categoryInfo,usersCartData:usersCartData,productInfo:ProductInfo,wholeTotal:req.session.wholeTotal});
     }else{
-      res.render("users/homePage",{islogin:null,categoryInfo:categoryInfo,productInfo:ProductInfo});
+      res.render("users/homePage",{islogin:null,categoryInfo:categoryInfo,productInfo:ProductInfo,wholeTotal:req.session.wholeTotal,cartData:usersCartData});
     }
   } catch (error) {
     console.log("something went wrong", error)
@@ -38,6 +40,7 @@ const getLogin = (req, res) => {
   }
 };
 
+
 const postLogin = async(req,res)=>{
   try {
     const check  = await userData.findOne({email:req.body.email})
@@ -53,6 +56,7 @@ const postLogin = async(req,res)=>{
     console.log("Something went Wrong",error)
   }
 }
+
 
 const getOtp = async(req,res)=>{
   try {
@@ -205,7 +209,6 @@ const getEditAddress = async(req,res)=>{
     console.log(req.query);
     if(req.session.isLogged){
       let presentAddress = await addressModel.findOne({_id:req.query.addId});
-      console.log(presentAddress);
       res.render("users/editAddress",{presentAddress,islogin:req.session.isLogged})
     }else{
       res.redirect("/views/users/login")
@@ -302,7 +305,6 @@ const getAddToCart = async(req, res) => {
 async function wholeTotal(req){
   try {
     let usersCartData = await cartModel.find({userId:req.session.userInfo?._id}).populate("productId");
-
     let wholeTotal = 0;
     console.log(usersCartData)
     for(const k of usersCartData){
@@ -310,15 +312,11 @@ async function wholeTotal(req){
       await cartModel.updateOne({_id:k._id},{$set:{totalCostPerProduct:k.productId.price * k.productQuantity}}) 
     }
     usersCartData = await cartModel.find({userId:req.session.userInfo._id}).populate("productId");
-
     req.session.wholeTotal = wholeTotal;
-
     return JSON.parse(JSON.stringify(usersCartData))
-    
   } catch (error) {
     console.log("Something Went Wrong",error);
-  }
-  
+  } 
 }
 
 
@@ -328,7 +326,6 @@ const getCart = async(req,res)=>{
       let usersCartData = await wholeTotal(req);
       console.log(usersCartData)
       // let cartDetails = await cartModel.find({ userId: req.session?.userInfo?._id }).populate("productId");
-      console.log("the page rerenderring");
       res.render("users/cart",{islogin:req.session.isLogged,userCartData:usersCartData,wholeTotal:req.session.wholeTotal})
     }else{
       res.redirect("/views/users/login");
@@ -368,10 +365,10 @@ const getDecQtyCart = async(req,res)=>{
   }
 }
 
+
 const getIncQtyCart = async(req,res)=>{
   try {
     let cartFindData = await cartModel.findOne({_id:req.params.id}).populate("productId");
-    console.log(cartFindData)
     if(cartFindData.productQuantity<cartFindData.productId.quantity){
       cartFindData.productQuantity++;
       cartFindData.totalCostPerProduct=cartFindData.productId.price * cartFindData.productQuantity;
@@ -386,7 +383,7 @@ const getIncQtyCart = async(req,res)=>{
       wholeTotal:req.session.wholeTotal,
     })
   } catch (error) {
-    console.log("Something Went Wrong",error);
+    console.log("Something Went Wrong",error)
   }
 }
 
@@ -396,7 +393,6 @@ const getCheckout = async(req, res) => {
       let addressData = await addressModel.find({userId:req.session.userInfo._id}).populate("addressModel");
       await wholeTotal(req);
       res.render("users/checkout",{islogin:req.session.isLogged,locationData:addressData,grandTotal:req?.session?.wholeTotal});
-      console.log("coming to checkout page")
       }else{
         res.redirect("/views/users/login")
       }
@@ -404,6 +400,17 @@ const getCheckout = async(req, res) => {
     console.log("Something went wrong",error);
   }
 };
+
+// const selectedAddress = async(req,res)=>{
+//   try {
+//     let currentSelectedAdd  = await addressModel.updateMany({deliveryAddress:true},{$set:{deliveryAddress:false}})
+//      currentSelectedAdd = await addressModel.updateOne({_id:req.query.id},{$set:{deliveryAddress:true}});
+//     req.session.selectedAddress = currentSelectedAdd;
+//     res.send({success:true})
+//   } catch (error) {
+//     console.log("Something Went Wrong",error);
+//   }
+// }
 
 const getLogout = (req,res)=>{
   req.session.isLogged=false;

@@ -36,6 +36,9 @@
     <link rel="stylesheet" href="assets/css/plugins/slick.min.css" />
     <link rel="stylesheet" href="assets/css/plugins/nouislider.css" />
 
+    <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Main Style -->
     <link rel="stylesheet" id="main_style" href="assets/css/demo-1.css" />
     <link rel="stylesheet" href="assets/css/responsive.css" />
@@ -367,6 +370,7 @@
     <!-- Header End  -->
 
     <!-- Cart sidebar Start -->
+    <% if (islogin==true) {%>
     <div class="ms-side-cart-overlay"></div>
     <div id="ms-side-cart" class="ms-side-cart">
         <div class="ms-cart-inner">
@@ -377,42 +381,17 @@
                             class="svg_img pro_svg" alt="close"></a>
                 </div>
                 <ul class="ms-cart-pro-items">
+                  <% for( let i = 0; i < usersCartData.length; i++ ) { %>
                     <li>
-                        <a href="product-left-sidebar.html" class="ms-pro-img"><img
-                                src="assets/img/product-images/25_1.jpg" alt="product"></a>
-                        <div class="ms-pro-content">
-                            <a href="product-left-sidebar.html" class="cart-pro-title">Fresh Lichi</a>
-                            <span class="cart-price"><span>$25.00</span> x 1 kg</span>
-                            <div class="qty-plus-minus">
-                                <input class="qty-input" type="text" name="ms-qtybtn" value="1">
-                            </div>
-                            <a href="javascript:void(0)" class="remove">×</a>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="product-left-sidebar.html" class="ms-pro-img"><img
-                                src="assets/img/product-images/17_1.jpg" alt="product"></a>
-                        <div class="ms-pro-content">
-                            <a href="product-left-sidebar.html" class="cart-pro-title">Ginger - Organic</a>
-                            <span class="cart-price"><span>$5.00</span> x 1 250g</span>
-                            <div class="qty-plus-minus">
-                                <input class="qty-input" type="text" name="ms-qtybtn" value="1">
-                            </div>
-                            <a href="javascript:void(0)" class="remove">×</a>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="product-left-sidebar.html" class="ms-pro-img"><img
-                                src="assets/img/product-images/2_1.jpg" alt="product"></a>
-                        <div class="ms-pro-content">
-                            <a href="product-left-sidebar.html" class="cart-pro-title">Dates Value Pack Pouch</a>
-                            <span class="cart-price"><span>$59.00</span> x 1 pack</span>
-                            <div class="qty-plus-minus">
-                                <input class="qty-input" type="text" name="ms-qtybtn" value="1">
-                            </div>
-                            <a href="javascript:void(0)" class="remove">×</a>
-                        </div>
-                    </li>
+                      <a href="/singleProduct?id=<%=usersCartData[i]?.productId%>" class="ms-pro-img"><img
+                              src="/assets/img/uploads/<%=usersCartData[i]?.productId?.images[0]%>" alt="product"></a>
+                      <div class="ms-pro-content">
+                          <a href="product-left-sidebar.html" class="cart-pro-title"><%=usersCartData[i]?.productId?.productName%></a>
+                          <span class="cart-price"><span><%=usersCartData[i]?.productId?.price%></span>x<%=usersCartData[i]?.productQuantity%></span>
+                        <button onclick="deleteItem('<%=usersCartData[i]._id%>')" class="remove">×</button>
+                      </div>
+                  </li>
+                  <% } %>
                 </ul>
             </div>
             <div class="ms-cart-bottom">
@@ -420,16 +399,8 @@
                     <table class="table cart-table">
                         <tbody>
                             <tr>
-                                <td class="text-left">Sub-Total :</td>
-                                <td class="text-right">$300.00</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left">VAT (20%) :</td>
-                                <td class="text-right">$60.00</td>
-                            </tr>
-                            <tr>
                                 <td class="text-left">Total :</td>
-                                <td class="text-right primary-color">$360.00</td>
+                                <td class="text-right primary-color">$<%=wholeTotal%></td>
                             </tr>
                         </tbody>
                     </table>
@@ -441,6 +412,49 @@
             </div>
         </div>
     </div>
+    <% } %>
+    <script>
+      async function deleteItem(id) {
+                      console.log("coming to the delete function");
+                      try {
+                        await Swal.fire({
+                          title: "Are you sure?",
+                          text: "You want to delete this!",
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Yes, delete it!",
+                        }).then(async (result) => {
+                          if (result.isConfirmed) {
+                            let response = await fetch(`/deleteCart/${id}`, {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                            });
+                            let res = await response.json();
+                            console.log(res);
+                            if (res.success) {
+                              Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success",
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Successfully deleted ",
+                              }).then((result) => {
+                                if (result.isConfirmed)
+                                  window.location.reload();
+                              });
+                            }
+                          }
+                        });
+
+                        // console.log(result);
+                      } catch (error) {
+                        console.log("something Went Wrong", error);
+                      }
+                    }
+    </script>
     <!-- Cart sidebar End -->
 
     <!-- Hero Slider Start -->

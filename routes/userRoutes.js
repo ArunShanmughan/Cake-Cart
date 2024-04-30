@@ -25,6 +25,7 @@ const {
   getDecQtyCart,
   getIncQtyCart,
   getCheckout,
+  selectedAddress,
 } = require("../controllers/usercontroller");
 
 const {
