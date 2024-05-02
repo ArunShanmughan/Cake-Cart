@@ -487,264 +487,194 @@
     </div>
     <!-- Breadcrumb end -->
 
+    <!-- add address -->
+    <style>
+      .button-link {
+        display: inline-block;
+        padding: 10px 20px;
+        border: 1px solid #4caf50;
+        border-radius: 5px;
+        background-color: #4bdf1a;
+      }
+    </style>
+
+    <a href="/addAddress"><button class="button-link">Add Address</button></a>
+    <!-- add address end -->
+
     <!-- Checkout section -->
     <section class="ms-checkout-section padding-tb-30">
-      <h2 class="d-none">Checkout Page</h2>
-      <div class="container">
-        <div class="row">
-          <div class="ms-checkout-leftside col-lg-8 col-md-12">
-            <!-- checkout content Start -->
-            <div class="ms-checkout-content">
-              <div class="ms-checkout-inner">
-                <div class="ms-checkout-wrap m-b-30 padding-bottom-3">
-                  <div class="ms-checkout-block ms-check-bill">
-                    <h3 class="ms-checkout-title">Billing Details</h3>
-                    <div class="ms-bl-block-content">
-                      <div class="ms-check-subtitle">Checkout Options</div>
-                      <style>
-                        .button-link {
-                          display: inline-block;
-                          padding: 10px 20px;
-                          border: 1px solid #4caf50;
-                          border-radius: 5px;
-                          background-color: #4bdf1a;
-                        }
-                      </style>
+      <form action="/orderPlaced" method="post">
+        <h2 class="d-none">Checkout Page</h2>
+        <div class="container">
+          <div class="row">
+            <div class="ms-checkout-leftside col-lg-8 col-md-12">
+              <!-- checkout content Start -->
+              <div class="ms-checkout-content">
+                <div class="ms-checkout-inner">
+                  <div class="ms-checkout-wrap m-b-30 padding-bottom-3">
+                    <div class="ms-checkout-block ms-check-bill">
+                      <h3 class="ms-checkout-title">Billing Details</h3>
+                      <div class="ms-bl-block-content">
+                        <div class="ms-check-subtitle">Checkout Options</div>
+                        <div class="address-box">
+                          <div style="display: flex; margin-left: 20px">
+                            <% locationData.forEach((address, i) => { %>
+                            <div
+                              class="user-box"
+                              style="
+                                margin: 20px;
+                                border: 1px solid #ccc;
+                                padding: 10px;
+                              "
+                            >
+                              <div class="user-details">
+                                <h3>Address:<%= i + 1 %></h3>
+                                <p>
+                                  <strong>Name:</strong> <%= address.firstName
+                                  %> <%= address.lastName %>
+                                </p>
+                                <p>
+                                  <strong>Line 1:</strong> <%=
+                                  address.addressLine1 %>
+                                </p>
+                                <p>
+                                  <strong>Line 2:</strong> <%=
+                                  address.addressLine2 %>
+                                </p>
+                                <p>
+                                  <strong>Phone Number:</strong> <%=
+                                  address.phone %>
+                                </p>
+                              </div>
+                              <input
+                                type="radio"
+                                id="radio_<%=address._id%>"
+                                name="selectedAddress"
+                                value="<%=address._id%>"
+                              />
+                              <label for="radio_<%=address._id%>">Select</label>
 
-                      <a href="/addAddress"
-                        ><button class="button-link">Add Address</button></a
-                      >
-                      <div class="address-box">
-                        <div style="display: flex; margin-left: 20px">
-                          <% locationData.forEach((address, i) => { %>
-                          <div
-                            class="user-box"
-                            style="
-                              margin: 20px;
-                              border: 1px solid #ccc;
-                              padding: 10px;
-                            "
-                          >
-                            <div class="user-details">
-                              <h3>Address:<%= i + 1 %></h3>
-                              <p>
-                                <strong>Name:</strong> <%= address.firstName %>
-                                <%= address.lastName %>
-                              </p>
-                              <p>
-                                <strong>Line 1:</strong> <%=
-                                address.addressLine1 %>
-                              </p>
-                              <p>
-                                <strong>Line 2:</strong> <%=
-                                address.addressLine2 %>
-                              </p>
-                              <p>
-                                <strong>Phone Number:</strong> <%= address.phone
-                                %>
-                              </p>
+                              <style>
+                                .select-btn {
+                                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                                  transition: background-color 0.2s ease-in-out;
+                                }
+
+                                .select-btn:hover {
+                                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+                                }
+                              </style>
                             </div>
-                            <input
-                              type="radio"
-                              id="radio_<%=address._id%>"
-                              name="selectedAddress"
-                              value="<%=address._id%>"
-                            />
-                            <label for="radio_<%=address._id%>">Select</label>
-
-                            <style>
-                              .select-btn {
-                                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                                transition: background-color 0.2s ease-in-out;
-                              }
-
-                              .select-btn:hover {
-                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-                              }
-                            </style>
+                            <% }) %>
                           </div>
-                          <% }) %>
                         </div>
-                      </div>
-                      <!-- <script>
-                        async function selectAddress(id) {
-                          try {
-                            let currentSelectedAddress = id;
-                            console.log(result);
-                            if (result) {
-                              window.location.reload();
-                            }
-                          } catch (error) {
-                            console.log("Something Went Wrong", error);
+                        <style>
+                          .address-box {
+                            border: 1px solid #ccc;
+                            padding: 10px;
+                            margin-bottom: 20px;
                           }
-                        }
-                      </script> -->
-                      <style>
-                        .address-box {
-                          border: 1px solid #ccc;
-                          padding: 10px;
-                          margin-bottom: 20px;
-                        }
-                        .address-btn {
-                          background-color: #4caf50;
-                          color: white;
-                          padding: 10px 20px;
-                          border: none;
-                          cursor: pointer;
-                          width: 100%;
-                        }
-                        .address-form {
-                          margin-top: 10px;
-                        }
-                      </style>
+                          .address-btn {
+                            background-color: #4caf50;
+                            color: white;
+                            padding: 10px 20px;
+                            border: none;
+                            cursor: pointer;
+                            width: 100%;
+                          }
+                          .address-form {
+                            margin-top: 10px;
+                          }
+                        </style>
+                      </div>
                     </div>
                   </div>
+                  <button type="submit">Place Order</button>
+                  <span class="ms-check-order-btn">
+                  </span>
                 </div>
-                <span class="ms-check-order-btn">
-                  <a class="ms-btn-2" href="#">Place Order</a>
-                </span>
               </div>
+              <!--cart content End -->
             </div>
-            <!--cart content End -->
-          </div>
-          <!-- Sidebar Area Start -->
-          <div class="ms-checkout-rightside col-lg-4 col-md-12 m-t-991">
-            <div class="ms-sidebar-wrap">
-              <!-- Sidebar Summary Block -->
-              <div class="ms-sidebar-block">
-                <div class="ms-sb-title">
-                  <h3 class="ms-sidebar-title">Summary</h3>
-                </div>
-                <div class="ms-sb-block-content">
-                  <div class="ms-checkout-summary">
-                    <div>
-                      <span class="text-left">Sub-Total</span>
-                      <span class="text-right">₹<%=grandTotal%></span>
-                    </div>
-                    <div>
-                      <span class="text-left">Delivery Charges</span>
-                      <span class="text-right">₹0.00</span>
-                    </div>
-                    <div>
-                      <span class="text-left">Coupon Discount</span>
-                      <span class="text-right"
-                        ><a class="ms-checkout-coupan">Apply Coupon</a></span
-                      >
-                    </div>
-                    <div class="ms-checkout-coupan-content">
-                      <form
-                        class="ms-checkout-coupan-form"
-                        name="ms-checkout-coupan-form"
-                        method="post"
-                        action="#"
-                      >
-                        <input
-                          class="ms-coupan"
-                          type="text"
-                          required=""
-                          placeholder="Enter Your Coupan Code"
-                          name="ms-coupan"
-                          value=""
-                        />
-                        <button
-                          class="ms-coupan-btn ms-btn-2"
-                          type="submit"
-                          name="subscribe"
-                          value=""
+            <!-- Sidebar Area Start -->
+            <div class="ms-checkout-rightside col-lg-4 col-md-12 m-t-991">
+              <div class="ms-sidebar-wrap">
+                <!-- Sidebar Summary Block -->
+                <div class="ms-sidebar-block">
+                  <div class="ms-sb-title">
+                    <h3 class="ms-sidebar-title">Summary</h3>
+                  </div>
+                  <div class="ms-sb-block-content">
+                    <div class="ms-checkout-summary">
+                      <div>
+                        <span class="text-left">Sub-Total</span>
+                        <span class="text-right">₹<%=grandTotal%></span>
+                      </div>
+                      <div>
+                        <span class="text-left">Delivery Charges</span>
+                        <span class="text-right">₹0.00</span>
+                      </div>
+                      <div>
+                        <span class="text-left">Coupon Discount</span>
+                        <span class="text-right"
+                          ><a class="ms-checkout-coupan">Apply Coupon</a></span
                         >
-                          Apply
-                        </button>
-                      </form>
-                    </div>
-                    <div class="ms-checkout-summary-total">
-                      <span class="text-left">Total Amount</span>
-                      <span class="text-right">₹<%=grandTotal%></span>
+                      </div>
+                      <!-- <div class="ms-checkout-coupan-content">
+                        <form
+                          class="ms-checkout-coupan-form"
+                          name="ms-checkout-coupan-form"
+                          method="post"
+                          action="#"
+                        >
+                          <input
+                            class="ms-coupan"
+                            type="text"
+                            required=""
+                            placeholder="Enter Your Coupan Code"
+                            name="ms-coupan"
+                            value=""
+                          />
+                          <button
+                            class="ms-coupan-btn ms-btn-2"
+                            type="submit"
+                            name="subscribe"
+                            value=""
+                          >
+                            Apply
+                          </button>
+                        </form>
+                      </div> -->
+                      <div class="ms-checkout-summary-total">
+                        <span class="text-left">Total Amount</span>
+                        <span class="text-right">₹<%=grandTotal%></span>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <!-- Sidebar Summary Block -->
               </div>
-              <!-- Sidebar Summary Block -->
-            </div>
-            <div class="ms-sidebar-wrap ms-checkout-pay-wrap">
-              <!-- Sidebar Payment Block -->
-              <div class="ms-sidebar-block">
-                <div class="ms-sb-title">
-                  <h3 class="ms-sidebar-title">Payment Method</h3>
-                </div>
-                <div class="ms-sb-block-content">
-                  <div class="ms-checkout-pay">
-                    <div class="ms-pay-desc">
-                      Please select the preferred payment method to use on this
-                      order.
-                    </div>
-                    <form action="#">
-                      <style>
-                        .ms-pay-option span {
-                          display: block;
-                        }
-                        form {
-                          font-family: Arial, sans-serif;
-                          margin: 0 auto;
-                          width: 400px;
-                        }
-
-                        .ms-pay-option {
-                          margin-bottom: 10px;
-                        }
-
-                        .ms-pay-option span {
-                          display: flex;
-                          align-items: center;
-                          margin-bottom: 5px;
-                        }
-
-                        .ms-pay-option input[type="radio"] {
-                          margin-right: 10px;
-                        }
-
-                        .ms-pay-commemt {
-                          margin-bottom: 10px;
-                        }
-
-                        .ms-pay-commemt textarea {
-                          width: 100%;
-                          padding: 10px;
-                          border: 1px solid #ccc;
-                          border-radius: 5px;
-                          resize: vertical;
-                        }
-
-                        .ms-pay-agree {
-                          display: flex;
-                          align-items: center;
-                          margin-bottom: 10px;
-                        }
-
-                        .ms-pay-agree input[type="checkbox"] {
-                          margin-right: 10px;
-                        }
-
-                        .ms-pay-agree a {
-                          color: #007bff;
-                          text-decoration: none;
-                        }
-
-                        .ms-pay-agree a:hover {
-                          text-decoration: underline;
-                        }
-
-                        .ms-pay-agree span {
-                          margin-left: 5px;
-                        }
-                      </style>
+              <div class="ms-sidebar-wrap ms-checkout-pay-wrap">
+                <!-- Sidebar Payment Block -->
+                <div class="ms-sidebar-block">
+                  <div class="ms-sb-title">
+                    <h3 class="ms-sidebar-title">Payment Method</h3>
+                  </div>
+                  <div class="ms-sb-block-content">
+                    <div class="ms-checkout-pay">
+                      <div class="ms-pay-desc">
+                        Please select the preferred payment method to use on
+                        this order.
+                      </div>
                       <span class="ms-pay-option">
                         <span>
-                          <input type="radio" id="pay1" name="radio-group" />
+                          <input
+                            type="radio"
+                            id="pay1"
+                            name="paymentMethod"
+                            value="COD"
+                          />
                           <label for="pay1">Cash On Delivery</label>
-                        </span>
-                        <span>
-                          <input type="radio" id="pay2" name="radio-group" />
-                          <label for="pay2">Credit Card/Debit Card</label>
                         </span>
                       </span>
                       <span class="ms-pay-commemt">
@@ -752,7 +682,7 @@
                           >Add Comments About Your Order</span
                         >
                         <textarea
-                          name="your-commemt"
+                          name="Comments"
                           placeholder="Comments"
                         ></textarea>
                       </span>
@@ -763,15 +693,14 @@
                           <span>Terms & Conditions.</span>
                         </label>
                       </span>
-                    </form>
+                    </div>
                   </div>
                 </div>
+                <!-- Sidebar Payment Block -->
               </div>
+              <!-- <div class="ms-sidebar-wrap ms-check-pay-img-wrap"> -->
               <!-- Sidebar Payment Block -->
-            </div>
-            <!-- <div class="ms-sidebar-wrap ms-check-pay-img-wrap"> -->
-            <!-- Sidebar Payment Block -->
-            <!-- <div class="ms-sidebar-block">
+              <!-- <div class="ms-sidebar-block">
                             <div class="ms-sb-title">
                                 <h3 class="ms-sidebar-title">Payment Method</h3>
                             </div>
@@ -783,11 +712,12 @@
                                 </div>
                             </div>
                         </div> -->
-            <!-- Sidebar Payment Block -->
-            <!-- </div> -->
+              <!-- Sidebar Payment Block -->
+              <!-- </div> -->
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </section>
     <!-- Checkout section End -->
 

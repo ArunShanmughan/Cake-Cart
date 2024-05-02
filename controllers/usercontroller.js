@@ -6,6 +6,7 @@ const categoryModel = require("../models/categoryModel")
 const addressModel = require("../models/addressModel");
 const { postAddProduct } = require("./productcontroller");
 const cartModel = require("../models/cartModel")
+const orderModel = require("../models/orderModel")
 
 const getlandingpage = async(req, res) => {
   try {
@@ -391,6 +392,14 @@ const getCheckout = async(req, res) => {
   try {
     if(req.session.isLogged){
       let addressData = await addressModel.find({userId:req.session.userInfo._id}).populate("addressModel");
+      req.session.currentOrder = await orderModel.create({
+        userId: req.session.userInfo._id,
+        orderNumber: (await orderModel.countDocuments()) + 1,
+        orderDate: new Date(),
+        addressChoosen: JSON.parse(JSON.stringify(addressData[0])),
+        cartData: await wholeTotal(req),
+        grandTotalCost: req.session.wholeTotal,
+      });
       await wholeTotal(req);
       res.render("users/checkout",{islogin:req.session.isLogged,locationData:addressData,grandTotal:req?.session?.wholeTotal});
       }else{
@@ -401,6 +410,27 @@ const getCheckout = async(req, res) => {
   }
 };
 
+const postOrderPlaced = async(req,res)=>{
+  try {
+    console.log("this is the postOrderplaced status: ",req.body);
+    //for COD
+    await orderModel.updateOne({_id:req.session.currentOrder._id},{$set:{paymentId:"GeneratedAtDelivery",paymentType:"Cash on Delivery"}})
+    let cartData = await cartModel.find({_id:req.session.userInfo._id}).populate("productId");
+
+    for (const product of cartData) {
+      product.productId.quantity -= product.productQuantity; // we use for reducing Qyantity
+      product.productId.stockSold += 1;  //stocjSolf ++
+      await product.productId.save();
+    }
+
+    let k = await cartModel.findByIdAndUpdate({_id:req.session.currentOrder._id}).populate("productId")
+    let orderDetails = await orderModel.find({_id:req.session.currentOrder._id})
+    console.log(orderDetails)
+    res.render("users/orderinfo",{islogin:req.session.isLogged,presentOrder:orderDetails})
+  } catch (error) {
+    console.log("something went wrong",error)
+  }
+}
 // const selectedAddress = async(req,res)=>{
 //   try {
 //     let currentSelectedAdd  = await addressModel.updateMany({deliveryAddress:true},{$set:{deliveryAddress:false}})
@@ -442,4 +472,5 @@ module.exports={
   getDecQtyCart,
   getIncQtyCart,
   getCheckout,
+  postOrderPlaced
 }

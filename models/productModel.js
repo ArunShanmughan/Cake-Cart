@@ -24,6 +24,10 @@ const productSchema = new mongoose.Schema({
     images: {
       type: Array,
     },
+    stockSold: {
+      type: Number,
+      default: 0,
+    },
     isListed: {
       type: Boolean,
       default: true,
