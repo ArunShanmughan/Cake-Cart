@@ -8,6 +8,8 @@ const { postAddProduct } = require("./productcontroller");
 const cartModel = require("../models/cartModel")
 const orderModel = require("../models/orderModel")
 
+
+
 const getlandingpage = async(req, res) => {
   try {
     const categoryInfo = await categoryModel.find()
@@ -59,6 +61,7 @@ const postLogin = async(req,res)=>{
 }
 
 
+
 const getOtp = async(req,res)=>{
   try {
     if(req.session.otpRequest){
@@ -82,6 +85,7 @@ const getOtp = async(req,res)=>{
   }
 }
 
+
 const postOtp = async(req,res)=>{
   try {
     if(req.session.OTP==req.body.otp){
@@ -102,6 +106,7 @@ const getSignup = (req,res)=>{
     console.log("Something Went Wrong",error)
   }
 };
+
 
 const postSignup = async(req,res)=>{
   try {
@@ -130,6 +135,7 @@ const postSignup = async(req,res)=>{
   }
 }
 
+
 const getMyAccount = async(req,res)=>{
   try {
     if(req.session.isLogged){
@@ -142,6 +148,7 @@ const getMyAccount = async(req,res)=>{
   }
 }
 
+
 const getOrderHistory = async(req,res)=>{
   try {
     if(req.sesion.isLogged){
@@ -153,6 +160,7 @@ const getOrderHistory = async(req,res)=>{
     console.log("Something Went wrong",error);
   }
 }
+
 
 const getMyAddress = async(req,res)=>{
   try {
@@ -168,6 +176,7 @@ const getMyAddress = async(req,res)=>{
   }
 }
 
+
 const getAddAddress = async(req,res)=>{
   try {
     if(req.session.isLogged){
@@ -180,6 +189,7 @@ const getAddAddress = async(req,res)=>{
     console.log("Something Went Wrong",error);
   }
 }
+
 
 const postAddAddress = async(req,res)=>{
   try {
@@ -205,6 +215,7 @@ const postAddAddress = async(req,res)=>{
   }
 }
 
+
 const getEditAddress = async(req,res)=>{
   try {
     console.log(req.query);
@@ -218,6 +229,7 @@ const getEditAddress = async(req,res)=>{
     console.log("Something Went Wrong",error);
   }
 }
+
 
 const postEditAddress = async (req,res)=>{
   try {
@@ -236,6 +248,7 @@ const postEditAddress = async (req,res)=>{
   }
 }
 
+
 const getDeleteAddress = async(req,res)=>{
   try {
     if(req.session.isLogged){
@@ -249,6 +262,7 @@ const getDeleteAddress = async(req,res)=>{
   }
 }
 
+
 const getChangePassword = async(req,res)=>{
   try {
     if(req.session.isLogged){
@@ -260,6 +274,7 @@ const getChangePassword = async(req,res)=>{
     console.log("Something Went Wrong",error);
   }
 }
+
 
 const postChangePassword = async(req,res)=>{
   try {
@@ -303,6 +318,7 @@ const getAddToCart = async(req, res) => {
 };
 
 
+
 async function wholeTotal(req){
   try {
     let usersCartData = await cartModel.find({userId:req.session.userInfo?._id}).populate("productId");
@@ -336,6 +352,7 @@ const getCart = async(req,res)=>{
   }
 }
 
+
 const postDeleteCart = async(req,res)=>{
   try {
     await cartModel.findOneAndDelete({_id:req.params.id});
@@ -344,6 +361,7 @@ const postDeleteCart = async(req,res)=>{
     console.log("Something Went Wrong",error);
   }
 }
+
 
 const getDecQtyCart = async(req,res)=>{
   try {
@@ -388,6 +406,7 @@ const getIncQtyCart = async(req,res)=>{
   }
 }
 
+
 const getCheckout = async(req, res) => {
   try {
     if(req.session.isLogged){
@@ -410,37 +429,43 @@ const getCheckout = async(req, res) => {
   }
 };
 
+
 const postOrderPlaced = async(req,res)=>{
   try {
     console.log("this is the postOrderplaced status: ",req.body);
+    console.log(req.session.wholeTotal)
+    let checkCart = await cartModel.find({userId:req.session.userInfo._id});
+
+    if(checkCart.length>=0){
     //for COD
-    await orderModel.updateOne({_id:req.session.currentOrder._id},{$set:{paymentId:"GeneratedAtDelivery",paymentType:"Cash on Delivery"}})
+    await orderModel.updateOne({_id:req.session.currentOrder._id},{$set:{paymentId:"GeneratedAtDelivery",paymentType:"Cash on Delivery",grandTotalcost:req.session.wholeTotal}})
     let cartData = await cartModel.find({_id:req.session.userInfo._id}).populate("productId");
 
     for (const product of cartData) {
-      product.productId.quantity -= product.productQuantity; // we use for reducing Qyantity
+      product.productId.quantity -= product.productQuantity; // we use for reducing Quantity
       product.productId.stockSold += 1;  //stocjSolf ++
-      await product.productId.save();
+      await product.productId.save()
     }
-
     let k = await cartModel.findByIdAndUpdate({_id:req.session.currentOrder._id}).populate("productId")
-    let orderDetails = await orderModel.find({_id:req.session.currentOrder._id})
-    console.log(orderDetails)
-    res.render("users/orderinfo",{islogin:req.session.isLogged,presentOrder:orderDetails})
+    res.redirect("/orderinfo")
+  }else{
+    res.re
+  }
   } catch (error) {
     console.log("something went wrong",error)
   }
 }
-// const selectedAddress = async(req,res)=>{
-//   try {
-//     let currentSelectedAdd  = await addressModel.updateMany({deliveryAddress:true},{$set:{deliveryAddress:false}})
-//      currentSelectedAdd = await addressModel.updateOne({_id:req.query.id},{$set:{deliveryAddress:true}});
-//     req.session.selectedAddress = currentSelectedAdd;
-//     res.send({success:true})
-//   } catch (error) {
-//     console.log("Something Went Wrong",error);
-//   }
-// }
+
+
+const getOrderInfo = async(req,res)=>{
+  try {
+    let orderDetails = await orderModel.find({_id:req.session.currentOrder._id})
+  res.render("users/orderinfo",{islogin:req.session.isLogged,presentOrder:orderDetails})
+  await cartModel.deleteMany({userId:req.session.userInfo._id})
+  } catch (error) {
+    console.log("Something Went Wrong",error)
+  }
+}
 
 const getLogout = (req,res)=>{
   req.session.isLogged=false;
@@ -472,5 +497,6 @@ module.exports={
   getDecQtyCart,
   getIncQtyCart,
   getCheckout,
-  postOrderPlaced
+  postOrderPlaced,
+  getOrderInfo,
 }

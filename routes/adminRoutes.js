@@ -30,6 +30,11 @@ const {
   postEditProduct,
 } = require("../controllers/productcontroller.js");
 
+const {
+  getOrderManagment,
+  getChangeOrderStatus,
+}= require("../controllers/orderController.js")
+
 //admin Routers
 admRouter.get("/admin", getAdmin);
 admRouter.post("/adminlog", postAdmin);
@@ -54,5 +59,9 @@ admRouter.get("/addProduct", getAddProduct);
 admRouter.post("/addProducts", upload.any(), postAddProduct);
 admRouter.get("/editProduct", getEditProduct);
 admRouter.post("/editProducts/:id", upload.any(), postEditProduct);
+
+//Order Managment Routers
+admRouter.get("/ordermanagment",getOrderManagment);
+admRouter.get("/orderStatusChange/:ordId",getChangeOrderStatus)
 
 module.exports = admRouter;

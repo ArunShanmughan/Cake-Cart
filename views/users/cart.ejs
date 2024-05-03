@@ -759,9 +759,11 @@
               <div class="col-lg-12">
                 <div class="ms-cart-update-bottom">
                   <a href="/products">Continue Shopping</a>
+                  <%if(userCartData.length>0){ %>
                   <button class="ms-btn-2">
                     <a href="/checkout">Check Out</a>
                   </button>
+                  <% } %>
                 </div>
               </div>
             </div>

@@ -42,5 +42,5 @@ const LogInSchema = new mongoose.Schema({
   }
 });
 
-const collection = new mongoose.model("UserDB", LogInSchema);
+const collection =  mongoose.model("UserDB", LogInSchema);
 module.exports = collection;
