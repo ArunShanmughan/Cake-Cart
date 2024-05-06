@@ -151,8 +151,10 @@ const getMyAccount = async(req,res)=>{
 
 const getOrderHistory = async(req,res)=>{
   try {
-    if(req.sesion.isLogged){
-    res.render("users/orderHistory",{islogin:req.session.isLogged,userData:req.session.userInfo});
+    if(req.session.isLogged){
+      let userOrderData = await orderModel.find({userId:req.session.userInfo._id}).populate("userId")
+      console.log(userOrderData);
+     res.render("users/myOrders",{islogin:req.session.isLogged,userData:req.session.userInfo,orderDetails:userOrderData});
     }else{
       res.redirect("/views/users/login")
     }
@@ -411,14 +413,6 @@ const getCheckout = async(req, res) => {
   try {
     if(req.session.isLogged){
       let addressData = await addressModel.find({userId:req.session.userInfo._id}).populate("addressModel");
-      req.session.currentOrder = await orderModel.create({
-        userId: req.session.userInfo._id,
-        orderNumber: (await orderModel.countDocuments()) + 1,
-        orderDate: new Date(),
-        addressChoosen: JSON.parse(JSON.stringify(addressData[0])),
-        cartData: await wholeTotal(req),
-        grandTotalCost: req.session.wholeTotal,
-      });
       await wholeTotal(req);
       res.render("users/checkout",{islogin:req.session.isLogged,locationData:addressData,grandTotal:req?.session?.wholeTotal});
       }else{
@@ -432,8 +426,15 @@ const getCheckout = async(req, res) => {
 
 const postOrderPlaced = async(req,res)=>{
   try {
-    console.log("this is the postOrderplaced status: ",req.body);
-    console.log(req.session.wholeTotal)
+    let addressData = await addressModel.find({userId:req.session.userInfo._id}).populate("addressModel");
+      req.session.currentOrder = await orderModel.create({
+      userId: req.session.userInfo._id,
+      orderNumber: (await orderModel.countDocuments()) + 1,
+      orderDate: new Date(),
+      addressChoosen: JSON.parse(JSON.stringify(addressData[0])),
+      cartData: await wholeTotal(req),
+      grandTotalCost: req.session.wholeTotal,
+    });
     let checkCart = await cartModel.find({userId:req.session.userInfo._id});
 
     if(checkCart.length>=0){
@@ -442,14 +443,12 @@ const postOrderPlaced = async(req,res)=>{
     let cartData = await cartModel.find({_id:req.session.userInfo._id}).populate("productId");
 
     for (const product of cartData) {
-      product.productId.quantity -= product.productQuantity; // we use for reducing Quantity
-      product.productId.stockSold += 1;  //stocjSolf ++
+      product.productId.quantity -= product.productQuantity; 
+      product.productId.stockSold += 1; 
       await product.productId.save()
     }
     let k = await cartModel.findByIdAndUpdate({_id:req.session.currentOrder._id}).populate("productId")
     res.redirect("/orderinfo")
-  }else{
-    res.re
   }
   } catch (error) {
     console.log("something went wrong",error)
@@ -466,6 +465,28 @@ const getOrderInfo = async(req,res)=>{
     console.log("Something Went Wrong",error)
   }
 }
+
+const getCancelOrder = async(req,res)=>{
+  try {
+    console.log("coming to this cancel order")
+    await orderModel.findOneAndUpdate({_id:req.query.cancelId},{$set:{orderStatus:"cancelled"}});
+    res.redirect("/orderHistory")
+  } catch (error) {
+    console.log("Something Went Wrong",error);
+  }
+}
+
+const getSingleOrder = async(req,res)=>{
+  try {
+    let orderInfo = await orderModel.findOne({_id:req.query.viewOrd});
+    console.log(orderInfo);
+    let addressInfo = await addressModel.findOne({_id:orderInfo.addressChoosen}).populate("userId");
+    res.render("users/singleorder",{orderInfo,addressInfo,islogin:req.session.isLogged})
+  } catch (error) {
+    console.log("Something Went wrong",error);
+  }
+}
+
 
 const getLogout = (req,res)=>{
   req.session.isLogged=false;
@@ -499,4 +520,6 @@ module.exports={
   getCheckout,
   postOrderPlaced,
   getOrderInfo,
+  getCancelOrder,
+  getSingleOrder,
 }

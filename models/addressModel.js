@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const addressSchema = new mongoose.Schema(
   {
-    userId:{type:mongoose.Types.ObjectId,required:true,ref:"collection"},
+    userId:{type:mongoose.Types.ObjectId,required:true,ref:"UserDB"},
     addressHead:{type:String,required:true},
     firstName:{type:String,required:true},
     lastName:{type:String,required:true},

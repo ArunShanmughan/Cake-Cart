@@ -27,6 +27,8 @@ const {
   getCheckout,
   postOrderPlaced,
   getOrderInfo,
+  getCancelOrder,
+  getSingleOrder,
 } = require("../controllers/usercontroller");
 
 const {
@@ -63,6 +65,9 @@ router.put("/cart/incQty/:id",getIncQtyCart);
 router.get("/checkout",getCheckout);
 router.post("/orderPlaced",postOrderPlaced)
 router.get("/orderinfo",getOrderInfo);
+router.get("/cancelOrder",getCancelOrder);
+router.get("/singleOrder",getSingleOrder)
+
 //user side product Controllers
 router.get("/products", getProducts);
 router.get("/singleProduct", getSingleProduct);

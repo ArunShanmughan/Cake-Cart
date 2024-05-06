@@ -1,4 +1,5 @@
 const orderModel = require("../models/orderModel");
+const addressModel = require("../models/addressModel")
 
 
 const getOrderManagment = async(req,res)=>{
@@ -17,8 +18,6 @@ const getOrderManagment = async(req,res)=>{
 
 const getChangeOrderStatus = async(req,res)=>{
   console.log(req.params);
-
-  
   console.log("this is happening in the change order status processs",req.query)
   try {
     if(req.session.adminLogged){
@@ -30,5 +29,17 @@ const getChangeOrderStatus = async(req,res)=>{
   }
 }
 
+const getSingleOrder = async(req,res)=>{
+  try {
+    if(req.session.adminLogged){
+      let orderDet = await orderModel.findOne({_id:req.query.singleOrd});
+      console.log(orderDet);
+      let addressDet = await addressModel.findOne({_id:orderDet.addressChoosen});
+      res.render("admin/currentOrder",{orderDet,addressDet})
+    }
+  } catch (error) {
+    console.log("Something Went wrong",error);
+  }
+}
 
-module.exports={getOrderManagment,getChangeOrderStatus}
+module.exports={getOrderManagment,getChangeOrderStatus,getSingleOrder}

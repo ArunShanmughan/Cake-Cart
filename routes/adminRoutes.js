@@ -33,6 +33,7 @@ const {
 const {
   getOrderManagment,
   getChangeOrderStatus,
+  getSingleOrder,
 }= require("../controllers/orderController.js")
 
 //admin Routers
@@ -63,5 +64,6 @@ admRouter.post("/editProducts/:id", upload.any(), postEditProduct);
 //Order Managment Routers
 admRouter.get("/ordermanagment",getOrderManagment);
 admRouter.get("/orderStatusChange/:ordId",getChangeOrderStatus)
+admRouter.get("/viewOrder",getSingleOrder)
 
 module.exports = admRouter;
