@@ -138,11 +138,7 @@ const postSignup = async(req,res)=>{
 
 const getMyAccount = async(req,res)=>{
   try {
-    if(req.session.isLogged){
     res.render("users/myAccount",{islogin:req.session.isLogged,userData:req.session.userInfo});
-    }else{
-      res.redirect("/views/users/login")
-    }
   } catch (error) {
     console.log("Something Went Wrong",error);
   }
@@ -151,13 +147,9 @@ const getMyAccount = async(req,res)=>{
 
 const getOrderHistory = async(req,res)=>{
   try {
-    if(req.session.isLogged){
       let userOrderData = await orderModel.find({userId:req.session.userInfo._id}).populate("userId")
       console.log(userOrderData);
      res.render("users/myOrders",{islogin:req.session.isLogged,userData:req.session.userInfo,orderDetails:userOrderData});
-    }else{
-      res.redirect("/views/users/login")
-    }
   } catch (error) {
     console.log("Something Went wrong",error);
   }

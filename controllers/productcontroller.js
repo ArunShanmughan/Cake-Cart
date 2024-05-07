@@ -4,16 +4,10 @@ const productModel = require("../models/productModel");
 
 const getProductManagment = async (req, res) => {
   try {
-    if (req.session.adminLogged) {
       const productdetails = await productModel.find().populate("category");
-      // const categorydetails = await categoryModel.find({
-      //   _id: productdetails._id,
-      // })
       res.render("admin/productManagment", {
         productData: productdetails,
-        // categoryModel: categorydetails,
       });
-    }
   } catch (error) {
     console.log("Something Went Wrong", error);
   }
@@ -48,10 +42,8 @@ const productUnBlock = async (req, res) => {
 
 const getAddProduct = async (req, res) => {
   try {
-    if (req.session.adminLogged) {
       const categorydetails = await categoryModel.find();
       res.render("admin/addproduct", { categoryModel: categorydetails });
-    }
   } catch (error) {
     console.log("Something Went Wrong", error);
   }
@@ -61,7 +53,6 @@ const getAddProduct = async (req, res) => {
 const postAddProduct = async(req,res)=>{
   // console.log(req.files)
   try {
-    if(req.session.adminLogged){
     let images = [];
     for(let i=0;i<req.files.length;i++){
       images[i]=req.files[i].filename;
@@ -85,7 +76,6 @@ const postAddProduct = async(req,res)=>{
             res.send({ success: true })
             addproduct.save()
         }
-      }
   } catch (error) {
     console.log("Something Went Wrong",error)
   }

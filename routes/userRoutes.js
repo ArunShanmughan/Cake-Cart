@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const userAuth = require("../middlewares/userAuth")
+
 const {
   getlandingpage,
   getLogin,
@@ -38,7 +40,7 @@ const {
   getSortData,
 } = require("../controllers/userProductController");
 
-router.get("/", getlandingpage);
+router.get("/",userAuth, getlandingpage);
 router.get("/views/users/login", getLogin);
 router.post("/views/users/login", postLogin);
 router.get("/signup", getSignup);
@@ -47,31 +49,31 @@ router.get("/views/users/otp", getOtp);
 router.post("/views/users/otp", postOtp);
 router.get("/resendOTP", getOtp);
 router.get("/views/users/logout", getLogout);
-router.get("/myAccount", getMyAccount);
-router.get("/orderHistory", getOrderHistory);
-router.get("/myAddress", getMyAddress);
-router.get("/addAddress", getAddAddress);
-router.post("/addAddress", postAddAddress);
-router.get("/editAddress", getEditAddress);
-router.post("/editAddress", postEditAddress);
-router.get("/deleteAddress", getDeleteAddress);
-router.get("/changePassword", getChangePassword);
-router.post("/changePassword",postChangePassword);
-router.post("/addToCart/:id",getAddToCart);
-router.get("/cart",getCart);
-router.post("/deleteCart/:id",postDeleteCart);
-router.put("/cart/decQty/:id",getDecQtyCart);
-router.put("/cart/incQty/:id",getIncQtyCart);
-router.get("/checkout",getCheckout);
-router.post("/orderPlaced",postOrderPlaced)
-router.get("/orderinfo",getOrderInfo);
-router.get("/cancelOrder",getCancelOrder);
-router.get("/singleOrder",getSingleOrder)
+router.get("/myAccount",userAuth, getMyAccount);
+router.get("/orderHistory",userAuth, getOrderHistory);
+router.get("/myAddress",userAuth, getMyAddress);
+router.get("/addAddress",userAuth, getAddAddress);
+router.post("/addAddress",userAuth, postAddAddress);
+router.get("/editAddress",userAuth, getEditAddress);
+router.post("/editAddress",userAuth, postEditAddress);
+router.get("/deleteAddress",userAuth, getDeleteAddress);
+router.get("/changePassword",userAuth, getChangePassword);
+router.post("/changePassword",userAuth,postChangePassword);
+router.post("/addToCart/:id",userAuth, getAddToCart);
+router.get("/cart",userAuth,getCart);
+router.post("/deleteCart/:id",userAuth,postDeleteCart);
+router.put("/cart/decQty/:id",userAuth,getDecQtyCart);
+router.put("/cart/incQty/:id",userAuth,getIncQtyCart);
+router.get("/checkout",userAuth,getCheckout);
+router.post("/orderPlaced",userAuth,postOrderPlaced)
+router.get("/orderinfo",userAuth,getOrderInfo);
+router.get("/cancelOrder",userAuth,getCancelOrder);
+router.get("/singleOrder",userAuth,getSingleOrder)
 
 //user side product Controllers
-router.get("/products", getProducts);
-router.get("/singleProduct", getSingleProduct);
-router.post("/searchProducts", getSearchProduct);
-router.get("/products/sort/sortValue", getSortData);
+router.get("/products",userAuth, getProducts);
+router.get("/singleProduct",userAuth, getSingleProduct);
+router.post("/searchProducts",userAuth, getSearchProduct);
+router.get("/products/sort/sortValue",userAuth, getSortData);
 
 module.exports = router;

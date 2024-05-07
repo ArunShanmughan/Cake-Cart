@@ -29,11 +29,7 @@ const postAdmin = (req, res) => {
 
 const getAdminDash = (req, res) => {
   try {
-    if (req.session.adminLogged) {
       res.render("admin/admindash");
-    } else {
-      res.redirect("/admin");
-    }
   } catch (error) {
     console.log("Something Went Wrong", error);
   }
@@ -41,10 +37,8 @@ const getAdminDash = (req, res) => {
 
 const getUserManagment = async (req, res) => {
   try {
-    if (req.session.adminLogged) {
       const userdetails = await userdata.find();
       res.render("admin/userManagment", { userinfo: userdetails });
-    }
   } catch (error) {
     console.log("Something went Wrong", error);
   }
