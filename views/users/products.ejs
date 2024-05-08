@@ -39,6 +39,9 @@
     <link rel="stylesheet" href="/assets/css/plugins/slick.min.css" />
     <link rel="stylesheet" href="/assets/css/plugins/nouislider.css" />
 
+    <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Main Style -->
     <link rel="stylesheet" id="main_style" href="/assets/css/style.css" />
     <link rel="stylesheet" href="/assets/css/responsive.css" />
@@ -69,10 +72,21 @@
                 <div class="header-search">
                   <div class="input-group">
                     <div class="form-outline" data-mdb-input-init>
-                      <input type="search" name="searchValue" style="height: 40px;" id="searchValue"
-                        placeholder="Search Products..." class="form-control" />
+                      <input
+                        type="search"
+                        name="searchValue"
+                        style="height: 40px"
+                        id="searchValue"
+                        placeholder="Search Products..."
+                        class="form-control"
+                      />
                     </div>
-                    <button type="button" onclick="fnSearch()" class="search_submit" data-mdb-ripple-init>
+                    <button
+                      type="button"
+                      onclick="fnSearch()"
+                      class="search_submit"
+                      data-mdb-ripple-init
+                    >
                       <i class="fas fa-search"></i>
                       <img
                         src="/assets/img/icons/search.svg"
@@ -85,19 +99,21 @@
               </div>
               <script>
                 async function fnSearch() {
-                  const searchValue = document.getElementById('searchValue').value
-                  let response = await fetch('/searchProducts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ searchElement: searchValue })
-                  })
+                  const searchValue =
+                    document.getElementById("searchValue").value;
+                  let response = await fetch("/searchProducts", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ searchElement: searchValue }),
+                  });
                   console.log("Response from server:", response);
-    
-                  let result = await response.json()
+
+                  let result = await response.json();
                   console.log("Parsed result:", result);
-    
+
                   if (result.searchProduct) {
-                    window.location.href = '/products?searchId='+ encodeURIComponent(searchValue);
+                    window.location.href =
+                      "/products?searchId=" + encodeURIComponent(searchValue);
                   } else {
                     await Swal.fire({
                       icon: "error",
@@ -112,72 +128,70 @@
               <div class="align-self-center">
                 <div class="ms-header-bottons">
                   <!-- Header User Start -->
-                  
+
                   <% if(islogin==true){ %>
-                    <div class="ms-acc-drop">
-                      <a
-                        href="javascript:void(0)"
-                        class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
-                        title="Account"
-                      >
-                        <div class="header-icon">
-                          <img
-                            src="assets/img/icons/user.svg"
-                            class="svg_img header_svg"
-                            alt=""
-                          />
-                        </div>
-                        <div class="ms-btn-desc">
-                          <span class="ms-btn-title">Account</span>
-                          <span class="ms-btn-stitle">Log-Out</span>
-                        </div>
-                      </a>
-                      <ul class="ms-dropdown-menu">
-                        <li>
-                          <a class="dropdown-item" href="/views/users/myaccount"
-                            >My Account</a
-                          >
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="/views/users/logout"
-                            >Log-Out</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
-                    
+                  <div class="ms-acc-drop">
+                    <a
+                      href="javascript:void(0)"
+                      class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
+                      title="Account"
+                    >
+                      <div class="header-icon">
+                        <img
+                          src="assets/img/icons/user.svg"
+                          class="svg_img header_svg"
+                          alt=""
+                        />
+                      </div>
+                      <div class="ms-btn-desc">
+                        <span class="ms-btn-title">Account</span>
+                        <span class="ms-btn-stitle">Log-Out</span>
+                      </div>
+                    </a>
+                    <ul class="ms-dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="/views/users/myaccount"
+                          >My Account</a
+                        >
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="/views/users/logout"
+                          >Log-Out</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+
                   <% }else{ %>
-                    <div class="ms-acc-drop">
-                      <a
-                        href="javascript:void(0)"
-                        class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
-                        title="Account"
-                      >
-                        <div class="header-icon">
-                          <img
-                            src="assets/img/icons/user.svg"
-                            class="svg_img header_svg"
-                            alt=""
-                          />
-                        </div>
-                        <div class="ms-btn-desc">
-                          <span class="ms-btn-title">Account</span>
-                          <span class="ms-btn-stitle">Login</span>
-                        </div>
-                      </a>
-                      <ul class="ms-dropdown-menu">
-                        <li>
-                          <a class="dropdown-item" href="/signup"
-                            >Signup</a
-                          >
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="/views/users/login"
-                            >Login</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
+                  <div class="ms-acc-drop">
+                    <a
+                      href="javascript:void(0)"
+                      class="ms-header-btn ms-header-user dropdown-toggle ms-user-toggle"
+                      title="Account"
+                    >
+                      <div class="header-icon">
+                        <img
+                          src="assets/img/icons/user.svg"
+                          class="svg_img header_svg"
+                          alt=""
+                        />
+                      </div>
+                      <div class="ms-btn-desc">
+                        <span class="ms-btn-title">Account</span>
+                        <span class="ms-btn-stitle">Login</span>
+                      </div>
+                    </a>
+                    <ul class="ms-dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="/signup">Signup</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="/views/users/login"
+                          >Login</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
                   <% } %>
                   <!-- Header User End -->
                   <!-- Header wishlist Start -->
@@ -557,7 +571,12 @@
               </div>
               <div class="col-md-6 ms-sort-select">
                 <div class="ms-select-inner">
-                  <select name="ms-select" id="ms-sort" onchange="sortProducts(event)" class="form-control">
+                  <select
+                    name="ms-select"
+                    id="ms-sort"
+                    onchange="sortProducts(event)"
+                    class="form-control"
+                  >
                     <option selected disabled>Sort by</option>
                     <option value="1">Name, A to Z</option>
                     <option value="2">Name, Z to A</option>
@@ -568,24 +587,27 @@
                 </div>
               </div>
               <script>
-                async function sortProducts(e){
-                   let response= await fetch(`/products/sort/sortValue?sortId=${e.target.value}`,{
-                     method:'GET'
-                   })
-                   const result=await response.json()
-                   if(result.ascSort){
-                     window.location.reload()
-                   }else if(result.desSort){
-                     window.location.reload()
-                   }else if(result.highValueSort){
-                     window.location.reload()
-                   }else if(result.lowValueSort){
-                     window.location.reload()
-                   }else if(result.newArrive){
-                    window.location.reload()
-                   }
-                 }
-               </script>
+                async function sortProducts(e) {
+                  let response = await fetch(
+                    `/products/sort/sortValue?sortId=${e.target.value}`,
+                    {
+                      method: "GET",
+                    }
+                  );
+                  const result = await response.json();
+                  if (result.ascSort) {
+                    window.location.reload();
+                  } else if (result.desSort) {
+                    window.location.reload();
+                  } else if (result.highValueSort) {
+                    window.location.reload();
+                  } else if (result.lowValueSort) {
+                    window.location.reload();
+                  } else if (result.newArrive) {
+                    window.location.reload();
+                  }
+                }
+              </script>
             </div>
             <!-- Shop Top End -->
 
@@ -600,7 +622,10 @@
                     <div class="ms-product-inner">
                       <div class="ms-pro-image-outer">
                         <div class="ms-pro-image">
-                          <a href="/singleProduct?id=<%=product._id%>" class="image">
+                          <a
+                            href="/singleProduct?id=<%=product._id%>"
+                            class="image"
+                          >
                             <span class="label veg">
                               <span class="dot"></span>
                             </span>
@@ -616,16 +641,19 @@
                             />
                           </a>
                           <% if(product.isListed){ %>
-                          <span class="flags" style="color: #2bff4a;">
+                          <span class="flags" style="color: #2bff4a">
                             <span class="sale">On Sale</span>
                           </span>
                           <% }else{ %>
-                            <span class="flags" style="color: red;">
-                              <span class="sale">Off Sale</span>
-                            </span>
-                            <% } %>
+                          <span class="flags" style="color: red">
+                            <span class="sale">Off Sale</span>
+                          </span>
+                          <% } %>
                           <div class="ms-pro-actions">
-                            <a class="ms-btn-group wishlist" title="Wishlist"
+                            <a
+                              class="ms-btn-group wishlist"
+                              title="Wishlist"
+                              onclick="addToWishlist('<%=product._id%>')"
                               ><img
                                 src="/assets/img/icons/pro_wishlist.svg"
                                 class="svg_img pro_svg"
@@ -703,7 +731,7 @@
                           data-bs-dismiss="modal"
                           aria-label="Close"
                         ></button>
-                        <div class="modal-body" style="opacity: 25;">
+                        <div class="modal-body" style="opacity: 25">
                           <div class="row">
                             <div class="col-md-5 col-sm-12 col-xs-12">
                               <div class="qty-product-cover">
@@ -755,7 +783,12 @@
                                 </div>
 
                                 <div class="ms-quickview-desc">
-                                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis explicabo odio obcaecati labore non quasi quisquam? Numquam, corporis nobis eius accusamus assumenda autem repellat? Quis praesentium iste ut soluta mollitia.
+                                  Lorem ipsum dolor sit amet consectetur
+                                  adipisicing elit. Officiis explicabo odio
+                                  obcaecati labore non quasi quisquam? Numquam,
+                                  corporis nobis eius accusamus assumenda autem
+                                  repellat? Quis praesentium iste ut soluta
+                                  mollitia.
                                 </div>
                                 <div class="ms-quickview-price">
                                   <span class="new-price"
@@ -837,19 +870,50 @@
                   <% }) %>
                 </div>
               </div>
+              <script>
+                async function addToWishlist(wishedItem) {
+                  try {
+                    let response = await fetch(`/addToWishList/${wishedItem}`, {
+                      method: "POST",
+                    });
+                    let result = await response.json();
+
+                    if (result.success) {
+                      await Swal.fire({
+                        title: "Added to wishlist",
+                        text: "Item has been added to the wishlist",
+                        icon: "success",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Go To Wishlist",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          window.location.href = "/wishlist"
+                        }
+                      });
+                    }
+                  } catch (error) {
+                    console.log("Something went Wrong", error)
+                  }
+                }
+              </script>
               <!-- Pagination Start -->
               <div class="ms-pro-pagination">
                 <span>"Showing 4 items"</span>
-              <% for (let i = 0; i < totalPagesArray.length; i++) { %>
+                <% for (let i = 0; i < totalPagesArray.length; i++) { %>
                 <ul class="ms-pro-pagination-inner">
-                  <li><a class="active" href="/products?pageNo=<%=i+1%>"><%=i+1%></a></li>
                   <li>
+                    <a class="active" href="/products?pageNo=<%=i+1%>"
+                      ><%=i+1%></a
+                    >
                   </li>
+                  <li></li>
                 </ul>
-                  
+
                 <% } %>
               </div>
-                
+
               <!-- Pagination End -->
             </div>
             <!--Shop content End -->

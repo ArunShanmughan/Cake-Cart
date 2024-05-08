@@ -230,26 +230,12 @@
                     <div class="ms-main-menu">
                       <ul>
                         <li class="non-drop">
-                          <a href="homePage.ejs">Home</a>
+                          <a href="/">Home</a>
                         </li>
                         <li class="dropdown drop-list">
-                          <a href="javascript:void(0)" class="dropdown-arrow"
+                          <a href="/products" class="dropdown-arrow"
                             >Products</a
                           >
-                        </li>
-                        <li class="dropdown drop-list">
-                          <a href="javascript:void(0)" class="dropdown-arrow"
-                            >Others<i class="msicon msi-angle-right"></i
-                          ></a>
-                          <ul class="sub-menu">
-                            <li><a href="about-us.ejs">About Us</a></li>
-                            <li><a href="contact-us.ejs">Contact Us</a></li>
-                            <li><a href="/views/users/login.ejs">Login</a></li>
-                            <li><a href="/signup.ejs">Signup</a></li>
-                            <li>
-                              <a href="privacy-policy.ejs">Privacy Policy</a>
-                            </li>
-                          </ul>
                         </li>
                       </ul>
                     </div>
@@ -423,71 +409,102 @@
     </div>
 
     <style>
-      .order-container {
-        display: flex;
-        flex-wrap: wrap;
-        margin-left: 20px;
+      .order-table {
+        border-collapse: collapse;
+        width: 100%;
       }
 
-      .order-box {
-        width: 300px;
-        background-color: #fff;
-        border-radius: 5px;
+      .order-table th,
+      .order-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+
+      .order-table th {
+        background-color: #f0f0f0;
+      }
+
+      .order-table tr:hover {
+        background-color: #f5f5f5;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        margin: 20px;
-        padding: 20px;
       }
 
-      .order-details {
-        display: flex;
-        flex-direction: column;
+      .order-table tr:nth-child(even) {
+        background-color: #fff;
       }
 
-      .order-details h3 {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 10px;
+      .order-table.btn {
+        margin: 5px;
+        display: inline-block;
       }
 
-      .order-details p {
-        font-size: 14px;
-        margin-bottom: 10px;
-      }
-
-      .order-details strong {
+      .order-status {
         font-weight: bold;
       }
 
-      .order-details button {
-        margin-top: 10px;
+      .order-status.pending {
+        color: #ffc107; 
+      }
+
+      .order-status.shipped {
+        color: #28a745; 
+      }
+
+      .order-status.delivered {
+        color: #007bff; 
+      }
+
+      .order-status.cancelled {
+        color: #dc3545; 
       }
     </style>
 
-    <div class="order-container">
-      <% orderDetails.forEach((order) => { %>
-      <div class="order-box">
-        <div class="order-details">
-          <h3>Order #<%= order._id %></h3>
-          <p><strong>Total Cost:</strong> <%= order.grandTotalcost %></p>
-          <p><strong>Status:</strong> <%= order.orderStatus %></p>
-          <p><strong>Payment Method:</strong> <%= order.paymentType %></p>
-          <% if (order.orderStatus !== "cancelled") { %>
-          <button class="btn btn-danger">
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th>OrderID #</th>
+          <th>Total Cost</th>
+          <th>Status</th>
+          <th>Payment Method</th>
+          <th>View</th>
+          <th>Cancel/No Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orderDetails.forEach((order) => { %>
+        <tr>
+          <td>#<%= order._id %></td>
+          <td><%= order.grandTotalcost %></td>
+          <td>
+            <span class="order-status <%= order.orderStatus.toLowerCase() %>">
+              <%= order.orderStatus %>
+            </span>
+          </td>
+          <td><%= order.paymentType %></td>
+          <td>
+            <a
+              href="/singleOrder?viewOrd=<%= order._id %>"
+              class="btn btn-primary"
+              >View</a
+            >
+          </td>
+          <td>
+            <% if (order.orderStatus === "cancelled") { %>
+            <button class="btn btn-secondary" disabled>Cancelled</button>
+            <% } else { %>
             <a
               href="/cancelOrder?cancelId=<%= order._id %>"
+              class="btn btn-danger"
               onclick="return confirm('Do you want to cancel?')"
+              >Cancel</a
             >
-              Cancel
-            </a>
-          </button>
-          <% } %>
-          <button >
-            <a href="/singleOrder?viewOrd=<%= order._id %>">View</a>
-          </button>
-        </div>
-      </div>
-      <% }) %>
-    </div>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
 
     <!-- Footer Start -->
     <footer class="ms-footer m-t-30">

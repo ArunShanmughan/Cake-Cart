@@ -230,26 +230,12 @@
                     <div class="ms-main-menu">
                       <ul>
                         <li class="non-drop">
-                          <a href="homePage.ejs">Home</a>
+                          <a href="/">Home</a>
                         </li>
                         <li class="dropdown drop-list">
-                          <a href="javascript:void(0)" class="dropdown-arrow"
+                          <a href="/products" class="dropdown-arrow"
                             >Products</a
                           >
-                        </li>
-                        <li class="dropdown drop-list">
-                          <a href="javascript:void(0)" class="dropdown-arrow"
-                            >Others<i class="msicon msi-angle-right"></i
-                          ></a>
-                          <ul class="sub-menu">
-                            <li><a href="about-us.ejs">About Us</a></li>
-                            <li><a href="contact-us.ejs">Contact Us</a></li>
-                            <li><a href="/views/users/login.ejs">Login</a></li>
-                            <li><a href="/signup.ejs">Signup</a></li>
-                            <li>
-                              <a href="privacy-policy.ejs">Privacy Policy</a>
-                            </li>
-                          </ul>
                         </li>
                       </ul>
                     </div>
@@ -421,83 +407,67 @@
     </div>
 
     <style>
-      .user-box {
-        border: 1px solid black;
-        padding: 20px;
-        margin-bottom: 20px;
-        width: 300px;
+      .user-addresses {
+        border-collapse: collapse;
+        width: 100%;
       }
 
-      .user-details {
-        margin-bottom: 10px;
+      .user-addresses th,
+      .user-addresses td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
       }
 
-      .user-details p {
-        margin: 0;
-        margin-bottom: 5px;
+      .user-addresses th {
+        background-color: #f0f0f0;
       }
 
-      .user-details strong {
-        font-size: 1.2em;
+      .user-addresses td {
+        vertical-align: top;
       }
 
-      .edit-button {
-        background-color: blue;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      .delete-button {
-        background-color: red;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      .edit-button:hover {
-        background-color: darkblue;
-      }
-
-      .delete-button:hover {
-        background-color: darkred;
+      .user-addresses.btn {
+        margin: 5px;
       }
     </style>
-    <div style="display: flex; margin-left: 20px">
-      <% userAdd.forEach((address,i) => { %>
-      <div class="user-box" style="margin: 20px">
-        <div class="user-details">
-          <h3><%=address.addressHead%></h3>
-          <p>
-            <strong>Name:</strong> <%=address.firstName %> <%=address.lastName
-            %>
-          </p>
-          <p><strong>Line 1:</strong> <%=address.addressLine1%></p>
-          <p><strong>line 2:</strong> <%=address.addressLine2%></p>
-          <p><strong>Phone Number:</strong> <%=address.phone%></p>
-        </div>
 
-        <button id="unblock<%i%>" type="submit" style="color: blue">
-          <a class="btn btn-success" href="/editAddress?addId=<%=address._id%>">Edit
-          </a>
-        </button>
-
-        <button style="color: red;">
-          <a
-          class="btn btn-sm btn-danger"
-          onclick="return confirm('Do you want to delete?')"
-          href="/deleteAddress?dltId=<%=address._id%>"
-          >Delete
-          </a>
-        </button>
-        
-      </div>
-      <% }) %>
-    </div>
+    <table class="user-addresses">
+      <thead>
+        <tr>
+          <th>Address Head</th>
+          <th>Name</th>
+          <th>Line 1</th>
+          <th>Line 2</th>
+          <th>Phone Number</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% userAdd.forEach((address, i) => { %>
+        <tr>
+          <td><%= address.addressHead %></td>
+          <td><%= address.firstName %> <%= address.lastName %></td>
+          <td><%= address.addressLine1 %></td>
+          <td><%= address.addressLine2 %></td>
+          <td><%= address.phone %></td>
+          <td>
+            <a
+              href="/editAddress?addId=<%= address._id %>"
+              class="btn btn-success"
+              >Edit</a
+            >
+            <a
+              href="/deleteAddress?dltId=<%= address._id %>"
+              class="btn btn-danger"
+              onclick="return confirm('Do you want to delete?')"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
 
     <!-- Footer Start -->
     <footer class="ms-footer m-t-30">

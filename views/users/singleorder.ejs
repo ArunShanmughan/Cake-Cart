@@ -394,52 +394,119 @@
     </div>
     <!-- Breadcrumb end -->
     <style>
-      .order-box {
-        /* Outer div styles */
-        width: 600px; /* adjust the width as needed */
-        background-color: #f7f7f7;
-        border: 1px solid #ddd;
+      .order-container {
+        max-width: 800px;
+        margin: 40px auto;
         padding: 20px;
-        margin: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
 
-      .order-details {
-        /* Inner div styles */
-        padding: 20px;
-      }
-
-      .order-details h3 {
-        /* Order ID styles */
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-
-      .order-details p {
-        /* Order details styles */
-        font-size: 14px;
-        margin-bottom: 10px;
-      }
-
-      .order-details strong {
-        /* Strong text styles */
+      .section-title {
+        margin-top: 0;
         font-weight: bold;
         color: #333;
       }
 
-      .order-details br {
-        /* Line break styles */
-        margin-bottom: 5px;
+      /* Order Summary styles */
+
+      #order-summary {
+        background-color: #f2f2f2;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      #order-summary p {
+        margin-bottom: 10px;
+      }
+
+      /* Order Items styles */
+
+      #order-items {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      #order-items p {
+        margin-bottom: 10px;
+      }
+
+      /* Order Date styles */
+
+      #order-date {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      #order-date p {
+        margin-bottom: 10px;
+      }
+
+      /* Shipping Address styles */
+
+      #shipping-address {
+        padding: 10px;
+      }
+
+      #shipping-address p {
+        margin-bottom: 10px;
+      }
+
+      /* Strong text styles */
+
+      strong {
+        font-weight: bold;
+        color: #666;
+      }
+
+      /* Order Status styles */
+
+      .order-status {
+        font-weight: bold;
+      }
+
+      .order-status.pending {
+        color: #ffc107; /* Yellow for pending */
+      }
+
+      .order-status.shipped {
+        color: #28a745; /* Green for shipped */
+      }
+
+      .order-status.delivered {
+        color: #007bff; /* Blue for delivered */
+      }
+
+      .order-status.cancelled {
+        color: #dc3545; /* Red for cancelled */
       }
     </style>
 
-    <div class="order-box">
-      <div class="order-details">
-        <p><strong>Order:</strong> #<%=orderInfo._id %></p>
-        <p><strong>Order Items:</strong> <%=orderInfo.orderItems %></p>
+    <div class="order-container" id="order-box">
+      <div class="summary-section" id="order-summary">
+        <h4 class="section-title">Order Summary</h4>
+        <p><strong>Order ID:</strong> #<%=orderInfo._id %></p>
         <p><strong>Total Amount:</strong> <%=orderInfo.grandTotalcost %></p>
-        <p><strong>Ordered date:</strong> <%=orderInfo.orderDate.toDateString()%></p>
+        <span class="order-status <%=orderInfo.orderStatus.toLowerCase()%>">
+          <%=orderInfo.orderStatus %>
+        </span>
+      </div>
+
+      <div class="items-section" id="order-items">
+        <h4 class="section-title">Order Items</h4>
+        <p><strong>Order Items:</strong> <%=orderInfo.orderItems %></p>
+      </div>
+
+      <div class="date-section" id="order-date">
+        <h4 class="section-title">Order Date</h4>
+        <p>
+          <strong>Ordered date:</strong> <%=orderInfo.orderDate.toDateString()%>
+        </p>
+      </div>
+
+      <div class="address-section" id="shipping-address">
+        <h4 class="section-title">Shipping Address</h4>
         <p>
           <strong>Selected Address:</strong>
           <br />
@@ -449,7 +516,6 @@
           <br />
           <%= addressInfo.phone%>
         </p>
-        <p><strong>Order Status:</strong> <%=orderInfo.orderStatus %></p>
       </div>
     </div>
 

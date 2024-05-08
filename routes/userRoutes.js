@@ -40,7 +40,13 @@ const {
   getSortData,
 } = require("../controllers/userProductController");
 
-router.get("/",userAuth, getlandingpage);
+const{
+  postAddToWishlist,
+  getWishlist,
+  getWishlistRemover,
+} = require("../controllers/wishListController")
+
+router.get("/", getlandingpage);
 router.get("/views/users/login", getLogin);
 router.post("/views/users/login", postLogin);
 router.get("/signup", getSignup);
@@ -75,5 +81,10 @@ router.get("/products",userAuth, getProducts);
 router.get("/singleProduct",userAuth, getSingleProduct);
 router.post("/searchProducts",userAuth, getSearchProduct);
 router.get("/products/sort/sortValue",userAuth, getSortData);
+
+//user Side Wishlist controller
+router.post("/addToWishList/:wishedItem",userAuth,postAddToWishlist)
+router.get("/wishlist",userAuth,getWishlist);
+router.get("/removeFromWishList/:item",userAuth,getWishlistRemover)
 
 module.exports = router;
