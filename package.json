@@ -21,6 +21,7 @@
     "nodemon": "^3.1.0",
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0",
+    "paypal-rest-sdk": "^1.8.1",
     "session": "^0.1.0",
     "sweetalert": "^2.1.2"
   }

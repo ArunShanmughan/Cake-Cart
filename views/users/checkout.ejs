@@ -503,7 +503,7 @@
 
     <!-- Checkout section -->
     <section class="ms-checkout-section padding-tb-30">
-      <form action="/orderPlaced" method="post">
+      <form id="orderItems">
         <h2 class="d-none">Checkout Page</h2>
         <div class="container">
           <div class="row">
@@ -668,7 +668,7 @@
                         Please select the preferred payment method to use on
                         this order.
                       </div>
-                      <span class="ms-pay-option">
+                      <span class="ms-pay-option" >
                         <span>
                           <input
                             type="radio"
@@ -677,6 +677,15 @@
                             value="COD"
                           />
                           <label for="pay1">Cash On Delivery</label>
+                        </span>
+                        <span>
+                          <input
+                            type="radio"
+                            id="pay2"
+                            name="paymentMethod"
+                            value="COD"
+                          />
+                          <label for="pay2">PayPal</label>
                         </span>
                       </span>
                       <span class="ms-pay-commemt">
@@ -721,6 +730,37 @@
         </div>
       </form>
     </section>
+    <script>
+      $("#orderItems").validate({
+        submitHandler: async (form, event) => {
+          event.preventDefault();
+          // Create a new FormData object
+          // const formData = new FormData(form);
+          // console.log(form);
+
+          let selectedPayment1 = document.getElementById("pay1");
+          let selectedPayment2 = document.getElementById("pay2");
+          let realMethod = 0;
+          if(selectedPayment1==null){
+            realMethod = selectedPayment2
+          }else{
+            realMethod = selectedPayment1;
+          }
+          
+          let obj = {
+            Address:form.selectedAddress.value,
+            paymentMethod:realMethod,
+            comments:form.Comments.value
+          };
+
+          let response = await fetch("/orderPlaced", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(obj),
+          });
+        }
+      })
+    </script>
     <!-- Checkout section End -->
 
     <!-- New product section -->

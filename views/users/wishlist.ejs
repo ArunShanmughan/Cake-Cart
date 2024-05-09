@@ -41,6 +41,9 @@
       referrerpolicy="no-referrer"
     />
 
+    <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- css All Plugins Files -->
     <link rel="stylesheet" href="/assets/css/plugins/animate.css" />
     <link rel="stylesheet" href="/assets/css/plugins/bootstrap.css" />
@@ -381,7 +384,7 @@
     <!-- Breadcrumb end -->
 
     <h4 style="text-align: center">
-      <i class="fa-solid fa-user-check fa-xl"></i>My Wishlist
+      <i class="fa-solid fa-heart"></i>My Wishlist
     </h4>
     <style>
       .wishlist-table {
@@ -412,6 +415,32 @@
         padding: 5px 10px;
         font-size: 12px;
       }
+      .remove-item {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        &:hover {
+          background-color: #bd2130;
+          border-color: #bd2130;
+        }
+      }
+
+      .badge-success {
+        background-color: #34c759; /* a bright green color */
+        color: #ffffff; /* white text color */
+        font-weight: bold;
+        padding: 0.25em 0.5em;
+        border-radius: 10px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .badge-danger {
+        background-color: #ffc080; /* a deep orange color */
+        color: #ffffff; /* white text color */
+        font-weight: bold;
+        padding: 0.25em 0.5em;
+        border-radius: 10px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      }
     </style>
     <table class="wishlist-table table table-hover">
       <thead>
@@ -421,6 +450,7 @@
           <th>Product Price</th>
           <th>In Stock</th>
           <th>Add to Cart</th>
+          <th>Remove</th>
         </tr>
       </thead>
       <tbody>
@@ -438,9 +468,9 @@
           <td><%= item.productId.price%></td>
           <td>
             <% if (item.productId.isListed) { %>
-            <span class="badge badge-success badge-pill">In Stock</span>
+            <span class="badge badge-success badge-pill">Available</span>
             <% } else { %>
-            <span class="badge badge-danger badge-pill">Out of Stock</span>
+            <span class="badge badge-danger badge-pill">Not Available</span>
             <% } %>
           </td>
           <td>
@@ -448,6 +478,7 @@
             <form action="/addToCart" method="post">
               <input type="hidden" name="productId" value="<%= item._id %>" />
               <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-cart-shopping"></i>
                 Add to Cart
               </button>
             </form>
@@ -457,10 +488,41 @@
             </button>
             <% } %>
           </td>
+          <td>
+            <button
+              class="btn btn-danger btn-sm remove-item"
+              onclick="removeWishlist('<%=item._id%>')"
+            >
+              <i class="fa-solid fa-trash"></i>
+              Remove
+            </button>
+          </td>
         </tr>
         <% }) %>
       </tbody>
     </table>
+    <script>
+      async function removeWishlist(item) {
+        try {
+          let response = await fetch(`/removeFromWishList/${item}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+          let result = await response.json();
+
+          if (result.success) {
+            await Swal.fire({
+              title: "Done",
+              text: "Item removed from WishList",
+              icon: "success",
+            });
+            window.location.reload();
+          }
+        } catch (error) {
+          console.log("something Went wrong", error);
+        }
+      }
+    </script>
     <!-- Footer Start -->
     <footer class="ms-footer m-t-30">
       <div class="footer-container">

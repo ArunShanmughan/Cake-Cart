@@ -8,6 +8,8 @@ const { postAddProduct } = require("./productcontroller");
 const cartModel = require("../models/cartModel");
 const orderModel = require("../models/orderModel");
 const wishListCollection = require("../models/wishListModel");
+const paypal = require('paypal-rest-sdk');
+
 
 const getlandingpage = async (req, res) => {
   try {
@@ -467,6 +469,7 @@ const getCheckout = async (req, res) => {
 
 const postOrderPlaced = async (req, res) => {
   try {
+    console.log("............this the data is coming from the post order method input's..........",req.body)
     let addressData = await addressModel
       .find({ userId: req.session.userInfo._id })
       .populate("addressModel");
