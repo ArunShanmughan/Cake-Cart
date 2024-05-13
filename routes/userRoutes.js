@@ -46,6 +46,8 @@ const{
   getWishlistRemover,
 } = require("../controllers/wishListController")
 
+// const{onlinePayment}=require("../controllers/paymentController")
+
 router.get("/", getlandingpage);
 router.get("/views/users/login", getLogin);
 router.post("/views/users/login", postLogin);
@@ -86,5 +88,9 @@ router.get("/products/sort/sortValue",userAuth, getSortData);
 router.post("/addToWishList/:wishedItem",userAuth,postAddToWishlist)
 router.get("/wishlist",userAuth,getWishlist);
 router.get("/removeFromWishList/:item",userAuth,getWishlistRemover)
+
+//payment controller of paypal
+// router.post("/payPalPayment",userAuth,onlinePayment)
+
 
 module.exports = router;

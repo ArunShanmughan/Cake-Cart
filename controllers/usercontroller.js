@@ -489,8 +489,9 @@ const postOrderPlaced = async (req, res) => {
         { _id: req.session.currentOrder._id },
         {
           $set: {
-            paymentId: "GeneratedAtDelivery",
-            paymentType: "Cash on Delivery",
+            paymentId: req.body.Address,
+            paymentType: req.body.paymentMethod,
+            comments:req.body.comments,
             grandTotalcost: req.session.wholeTotal,
           },
         }

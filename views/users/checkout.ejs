@@ -23,6 +23,25 @@
     <!-- css Icon Font -->
     <link rel="stylesheet" href="assets/css/vendor/msicons.min.css" />
 
+    <!-- jquery-validate -->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+      integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"
+      integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
     <!-- css All Plugins Files -->
     <link rel="stylesheet" href="assets/css/plugins/animate.css" />
     <link rel="stylesheet" href="assets/css/plugins/bootstrap.css" />
@@ -683,7 +702,7 @@
                             type="radio"
                             id="pay2"
                             name="paymentMethod"
-                            value="COD"
+                            value="payPal"
                           />
                           <label for="pay2">PayPal</label>
                         </span>
@@ -737,27 +756,28 @@
           // Create a new FormData object
           // const formData = new FormData(form);
           // console.log(form);
-
-          let selectedPayment1 = document.getElementById("pay1");
-          let selectedPayment2 = document.getElementById("pay2");
-          let realMethod = 0;
-          if(selectedPayment1==null){
-            realMethod = selectedPayment2
-          }else{
-            realMethod = selectedPayment1;
-          }
-          
+          console.log(form)
           let obj = {
             Address:form.selectedAddress.value,
-            paymentMethod:realMethod,
+            paymentMethod:form.paymentMethod.value,
             comments:form.Comments.value
           };
-
-          let response = await fetch("/orderPlaced", {
+          console.log(obj)
+          if(form.paymentMethod.value=="payPal"){
+            let response = await fetch("/payPalPayment",{
+              method:"POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(obj),
+            })
+          }else if(form.paymentMethod.value=="COD"){
+            let response = await fetch("/orderPlaced", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(obj),
           });
+          }
+          let result = await response.json();
+
         }
       })
     </script>
