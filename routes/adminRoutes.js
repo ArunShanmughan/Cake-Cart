@@ -37,7 +37,7 @@ const {
   getSingleOrder,
 }= require("../controllers/orderController.js")
 
-const {getOfferManagment}=require("../controllers/offerController.js")
+const {getOfferManagment,postNewOffer}=require("../controllers/offerController.js")
 
 //admin Routers
 admRouter.get("/admin", getAdmin);
@@ -70,5 +70,6 @@ admRouter.get("/orderStatusChange/:ordId",admAuth,getChangeOrderStatus)
 admRouter.get("/viewOrder",admAuth, getSingleOrder)
 
 admRouter.get("/offerManagment",admAuth,getOfferManagment)
+admRouter.post("/addOffer",admAuth,postNewOffer)
 
 module.exports = admRouter;
