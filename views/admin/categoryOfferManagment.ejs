@@ -597,9 +597,67 @@
           background-color: #1976d2;
         }
       </style>
+
+      <!-- style for edit modal -->
+      <style>
+        #editOffer {
+          background-color: #f5f5f5;
+          border-radius: 10px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #editOffer .modal-dialog {
+          max-width: 600px;
+          margin: 30px auto;
+        }
+
+        #editOffer .modal-header {
+          background-color: #e5e5e5;
+          border-bottom-color: #ddd;
+        }
+
+        #editOffer .modal-title {
+          color: #333;
+        }
+
+        #editOffer .modal-body {
+          padding: 20px;
+        }
+
+        #editOffer .modal-footer {
+          background-color: #e5e5e5;
+          border-top-color: #ddd;
+        }
+
+        #editOffer .modal-footer button {
+          margin: 0 5px;
+        }
+
+        #editOffer .modal-footer .btn-primary {
+          background-color: #4caf50;
+          color: #fff;
+        }
+
+        #editOffer .modal-footer .btn-primary:hover {
+          background-color: #45a049;
+        }
+
+        #editOffer .modal-footer .btn-secondary {
+          background-color: #f44336;
+
+          color: #fff;
+        }
+
+        #editOffer .modal-footer .btn-secondary:hover {
+          background-color: #da190b;
+        }
+      </style>
+      <!-- style for edit modal ends -->
       <div class="card custom-card">
         <div class="card-header custom-card-header">
-          <h2 class="card-title custom-card-title">Offer Management</h2>
+          <h2 class="card-title custom-card-title">
+            Category Offer Management
+          </h2>
           <button
             type="button"
             class="btn btn-add-offer"
@@ -613,35 +671,43 @@
           <table class="table custom-table">
             <thead>
               <tr>
-                <th>product No</th>
-                <th scope="col" class="custom-serial-th">Product Name</th>
+                <th>Category No</th>
+                <th scope="col" class="custom-serial-th">Category Name</th>
                 <th scope="col" class="custom-avatar-th">Offer</th>
                 <th scope="col" class="custom-id-th">Start Date</th>
                 <th scope="col" class="custom-name-th">Expiry Date</th>
                 <th scope="col" class="custom-name-th">Status</th>
-                <th scope="col" class="custom-status-th">Update</th>
+                <th scope="col" class="custom-status-th">Action</th>
               </tr>
             </thead>
             <tbody>
-              <% for( let i = 0; i < productOffers.length; i++ ) { %>
+              <% for( let i = 0; i < categoryOffers.length; i++ ) { %>
               <tr>
                 <td><%=i+1%></td>
                 <td class="custom-serial-td">
-                  <%=productOffers[i].productName%>
+                  <%=categoryOffers[i].category.categoryName%>
                 </td>
                 <td class="custom-name-td">
-                  <%=productOffers[i].productOfferPercentage%>%
+                  <%=categoryOffers[i].offerpercentage%>%
                 </td>
                 <td class="custom-product-td">
-                  <%=productOffers[i].startDateFormated %>
+                  <%=categoryOffers[i].startDate.toLocaleString() %>
                 </td>
                 <td class="custom-quantity-td">
-                  <%=productOffers[i].endDateFormated %>
+                  <%=categoryOffers[i].endDate.toLocaleString() %>
                 </td>
-                <% if(productOffers[i].currentStatus){ %>
-                <td>Active</td>
+                <% if(categoryOffers[i].isAvailable){ %>
+                <td>
+                  <a onclick="changeStatus('<%categoryOffers[i]._id%>')"
+                    >Active</a
+                  >
+                </td>
                 <% }else{ %>
-                <td>InActive</td>
+                <td>
+                  <a onclick="changeStatus('<%categoryOffer[i]._id%>')"
+                    >InActive</a
+                  >
+                </td>
                 <% } %>
                 <td class="custom-id-td">
                   <button
@@ -653,6 +719,96 @@
                     Edit
                     <i class="far fa-edit"></i>
                   </button>
+                  <div
+                    class="modal fade"
+                    id="editOffer<%=i%>"
+                    tabindex="-1"
+                    aria-labelledby="offerModalLabel"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="offerModalLabel">Edit Catgory Offer</h5>
+                          <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                          >
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form id="editCategoryOfferForm<%=i%>">
+                            <div class="form-group">
+                              <label for="offerPercentage">Category Name</label>
+                              <input
+                                type="text"
+                                class="hidden"
+                                name="offerId"
+                                id="categoryName<%=i%>"
+                                value="<%=categoryOffers[i]._id%>"
+                              />
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="CategoryName"
+                                id="categoryName<%=i%>"
+                                value="<%=categoryOffers[i].category.CategoryName%>"
+                              />
+                            </div>
+                            <div class="form-group">
+                              <label for="offerPercentage">Offer Percentage</label>
+                              <input
+                                type="number"
+                                class="form-control"
+                                name="categoryOfferPercentage"
+                                id="categoryOfferPercentage<%=i%>"
+                                placeholder="Enter offer percentage"
+                                value="<%=categoryOffers[i].OfferPercentage%>"
+                              />
+                            </div>
+                            <div class="form-group">
+                              <label for="startDate">Start Date</label>
+                              <input
+                                type="date"
+                                name="startDate"
+                                class="form-control"
+                                id="startDate<%=i%>"
+                                placeholder="Enter start date"
+                                value="<%=categoryOffers[i].startDate.toISOString().split('T')[0]%>"
+                              />
+                            </div>
+                            <div class="form-group">
+                              <label for="endDate">End Date</label>
+                              <input
+                                type="date"
+                                name="endDate"
+                                class="form-control"
+                                id="endDate<%=i%>"
+                                placeholder="Enter end date"
+                                value="<%=categoryOffers[i].endDate.toISOString().split('T')[0]%>"
+                              />
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                              Save Changes
+                            </button>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- edit modal ends -->
                 </td>
               </tr>
               <% } %>
@@ -660,6 +816,23 @@
           </table>
         </div>
       </div>
+
+      <script>
+        async function changeStatus(id) {
+          let response = await fetch(`/categoryOfferStatus/${id}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          });
+          let result = await response.json();
+          if (result.success) {
+            await Swal.fire({
+              title: "Updated",
+              text: "Offer status updated successfully",
+              icon: "success",
+            }).then(()=>location.reload());
+          }
+        }
+      </script>
       <!-- Modal -->
       <!-- add offer modal -->
       <style>
@@ -803,7 +976,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="addOfferModalLabel">Add Offer</h5>
+              <h5 class="modal-title" id="addOfferModalLabel">Add Category Offer</h5>
               <button
                 type="button"
                 class="btn-close"
@@ -812,18 +985,18 @@
               ></button>
             </div>
             <div class="modal-body">
-              <form id="addNewOffer">
+              <form id="categoryNewOffer">
                 <div class="mb-3">
-                  <label for="productSelect" class="form-label">Product</label>
+                  <label for="productSelect" class="form-label">category</label>
                   <select
                     class="form-select"
                     id="productSelect"
-                    name="productName"
+                    name="categoryName"
                   >
                     <option selected>Choose...</option>
-                    <% for (let i = 0; i < productData.length; i++) {%>
-                    <option value="<%=productData[i].productName%>">
-                      <%=productData[i].productName%>
+                    <% for (let i = 0; i < categories.length; i++) {%>
+                    <option value="<%=categories[i].categoryName%>">
+                      <%=categories[i].categoryName%>
                     </option>
                     <% } %>
                   </select>
@@ -837,7 +1010,7 @@
                     class="form-control"
                     id="offerPercentage"
                     placeholder="Enter offer percentage"
-                    name="productOfferPercentage"
+                    name="categoryOfferPercentage"
                   />
                 </div>
                 <div class="mb-3">
@@ -846,7 +1019,7 @@
                     type="date"
                     class="form-control"
                     id="startDate"
-                    name="startDate"
+                    name="categorystartDate"
                   />
                 </div>
                 <div class="mb-3">
@@ -855,7 +1028,7 @@
                     type="date"
                     class="form-control"
                     id="expiryDate"
-                    name="endDate"
+                    name="categoryendDate"
                   />
                 </div>
                 <button type="submit" class="btn btn-primary">
@@ -877,20 +1050,20 @@
       </div>
       <!-- add offer model End -->
       <script>
-        $("#addNewOffer").validate({
+        $("#categoryNewOffer").validate({
           rules: {
-            productName: {
+            categoryName: {
               required: true,
             },
-            productOfferPercentage: {
+            categoryOfferPercentage: {
               required: true,
               min: 5,
               max: 90,
             },
-            startDate: {
+            categorystartDate: {
               required: true,
             },
-            endDate: {
+            categoryendDate: {
               required: true,
             },
           },
@@ -899,13 +1072,13 @@
             event.preventDefault();
             // Create a new FormData object
             let obj = {
-              productName: form.productName.value,
-              productOfferPercentage: form.productOfferPercentage.value,
-              startDate: form.startDate.value,
-              endDate: form.endDate.value,
+              category: form.categoryName.value,
+              categoryOfferPercentage: form.categoryOfferPercentage.value,
+              startDate: form.categorystartDate.value,
+              endDate: form.categoryendDate.value,
             };
 
-            let response = await fetch("/addOffer", {
+            let response = await fetch("/newcategoryOffer", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(obj),
@@ -915,161 +1088,27 @@
             if (result.success) {
               await Swal.fire({
                 title: "Offer Added",
-                text: "Offer successfully added",
+                text: "Category Offer added successfully ",
                 icon: "success",
               });
-            } else {
+            } else if(result.exist){
               await Swal.fire({
                 title: "Offer exists",
                 text: "This offer already exists ",
                 icon: "warning",
+              });
+            }else{
+              await Swal.fire({
+                title: "something went wrong",
+                text: "couldn't add the offer",
+                icon: "error",
               });
             }
           },
         });
       </script>
       <!-- style for edit modal -->
-      <style>
-        #editOffer {
-          background-color: #f5f5f5;
-          border-radius: 10px;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        #editOffer .modal-dialog {
-          max-width: 600px;
-          margin: 30px auto;
-        }
-
-        #editOffer .modal-header {
-          background-color: #e5e5e5;
-          border-bottom-color: #ddd;
-        }
-
-        #editOffer .modal-title {
-          color: #333;
-        }
-
-        #editOffer .modal-body {
-          padding: 20px;
-        }
-
-        #editOffer .modal-footer {
-          background-color: #e5e5e5;
-          border-top-color: #ddd;
-        }
-
-        #editOffer .modal-footer button {
-          margin: 0 5px;
-        }
-
-        #editOffer .modal-footer .btn-primary {
-          background-color: #4caf50;
-          color: #fff;
-        }
-
-        #editOffer .modal-footer .btn-primary:hover {
-          background-color: #45a049;
-        }
-
-        #editOffer .modal-footer .btn-secondary {
-          background-color: #f44336;
-
-          color: #fff;
-        }
-
-        #editOffer .modal-footer .btn-secondary:hover {
-          background-color: #da190b;
-        }
-      </style>
-      <% productOffers.forEach(function (product,index) { %>
-      <div
-        class="modal fade"
-        id="editOffer<%=index%>"
-        tabindex="-1"
-        aria-labelledby="offerModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="offerModalLabel">Edit Offer</h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form id="editProductOfferForm<%=index%>" role="form">
-                <div class="form-group">
-                  <label for="productName">Product Name</label>
-                  <select
-                    class="form-control"
-                    id="productName<%=index%>"
-                    name="productName"
-                  >
-                    <% productData.forEach( function(productDataItem) { %>
-                     <%if(productDataItem.productName==product.productName){ %>
-                    <option selected><%=productDataItem.productName%></option>
-                    <% }else{ %>
-                    <option><%= productDataItem.productName%></option>
-                    <% } %> <% }) %>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="offerPercentage">Offer Percentage</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    name="productOfferPercentage"
-                    id="productOfferPercentage<%=index%>"
-                    placeholder="Enter offer percentage"
-                    value="<%=product.productOfferPercentage%>"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="startDate">Start Date</label>
-                  <input
-                    type="date"
-                    name="startDate"
-                    class="form-control"
-                    id="startDate<%=index%>"
-                    placeholder="Enter start date"
-                    value="<%=product.startDateFormated%>"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="endDate">End Date</label>
-                  <input
-                    type="date"
-                    name="endDate"
-                    class="form-control"
-                    id="endDate<%=index%>"
-                    placeholder="Enter end date"
-                    value="<%=product.endDateFormated%>"
-                  />
-                </div>
-                <button type="submit" class="btn btn-primary">
-                  Save Changes
-                </button>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      
       <script>
         var today = new Date().toISOString().split("T")[0];
 
@@ -1090,16 +1129,19 @@
             let endDateValue = endDateElement.value;
             startDateElement.setAttribute("max", endDateValue);
           });
-        }); 
+        });
       </script>
 
       <script>
-        $("#editProductOfferForm<%=index%>").validate({
+        $("#editCategoryOfferForm<%=i%>").validate({
           rules: {
-            productName: {
+            offerId:{
+              required:true
+            },
+            CategoryName: {
               required: true,
             },
-            productOfferPercentage: {
+            categoryOfferPercentage: {
               required: true,
               min: 5,
               max: 90,
@@ -1110,18 +1152,18 @@
             endDate: {
               required: true,
             },
-          },
+        },
 
           submitHandler: async (form, event) => {
             event.preventDefault();
             let formData = {
-              productName: form.productName.value,
-              productOfferPercentage: form.productOfferPercentage.value,
+              id: form.offerId.value,
+              OfferPercentage: form.categoryOfferPercentage.value,
               startDate: form.startDate.value,
               endDate: form.endDate.value,
             };
 
-            let response = await fetch("/editCurrentOffer/<%= product._id %>", {
+            let response = await fetch("/editCategoryOffer", {
               method: "PUT",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(formData),
@@ -1145,7 +1187,6 @@
           },
         });
       </script>
-      <% }); %>
       <!-- edit modal End -->
 
       <!-- </body> -->
