@@ -3,7 +3,7 @@ const formatDate = require("../services/formatDate");
 const productModel = require("../models/productModel");
 const categoryModel = require("../models/categoryModel");
 const categoryOfferModel = require("../models/categoryOfferModel");
-const applyCategoryOffer = require("../services/applyCategoryOffer");
+const applyCategoryOffer = require("../services/applyCategoryOffer").applyCategoryOffer;
 const applyProductOffers =
   require("../services/applyProductOffer").applyProductOffer;
 
@@ -129,19 +129,19 @@ const ChangeCategoryOfferStatus = async (req, res) => {
     let presentCategory = await categoryOfferModel.findOne({
       _id: req.params.id,
     });
-    console.log(presentCategory);
+    console.log("this is in the change status offer status function",presentCategory);
     if (presentCategory.isAvailable) {
-      await categoryOfferModel.findByIdAndUpdate(
+     await categoryOfferModel.findByIdAndUpdate(
         { _id: presentCategory._id },
         { $set: { isAvailable: false } }
-      );
+      )
     } else {
       await categoryOfferModel.findByIdAndUpdate(
         { _id: presentCategory._id },
         { $set: { isAvailable: true } }
-      );
+      )
     }
-    await categoryOfferModel.save();
+
     res.send({ success: true });
   } catch (error) {
     console.log(
@@ -153,7 +153,7 @@ const ChangeCategoryOfferStatus = async (req, res) => {
 
 const postNewCategoryOffer = async(req,res)=>{
   try {
-    console.log("this is in the body of postNewCategoryOffer",req.body);
+    // console.log("this is in the body of postNewCategoryOffer",req.body);
     const {category,categoryOfferPercentage,startDate,endDate} = req.body;
 
     const offerExist = await categoryOfferModel.findOne({category});
@@ -175,6 +175,19 @@ const postNewCategoryOffer = async(req,res)=>{
   }
 }
 
+const editCategoryOffer = async(req,res)=>{
+  try {
+    // console.log("This is the req.body coming into the editCategoryOffer:",req.body);
+    const {id,offerPercentage,startDate,endDate}=req.body;
+
+    const offer = await categoryOfferModel.findByIdAndUpdate(id,{offerPercentage,startDate,endDate});
+    res.send({success:true});
+  } catch (error) {
+    res.send({success:false});
+    console.log("Something went wrong in the editCategoryOffer controller",error);
+  }
+}
+
 module.exports = {
   getOfferManagment,
   postNewOffer,
@@ -182,4 +195,5 @@ module.exports = {
   getCategoryOffer,
   ChangeCategoryOfferStatus,
   postNewCategoryOffer,
+  editCategoryOffer,
 };

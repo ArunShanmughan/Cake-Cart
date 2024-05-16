@@ -688,7 +688,7 @@
                   <%=categoryOffers[i].category.categoryName%>
                 </td>
                 <td class="custom-name-td">
-                  <%=categoryOffers[i].offerpercentage%>%
+                  <%=categoryOffers[i].offerPercentage%>%
                 </td>
                 <td class="custom-product-td">
                   <%=categoryOffers[i].startDate.toLocaleString() %>
@@ -698,13 +698,13 @@
                 </td>
                 <% if(categoryOffers[i].isAvailable){ %>
                 <td>
-                  <a onclick="changeStatus('<%categoryOffers[i]._id%>')"
+                  <a onclick="changeStatus('<%=categoryOffers[i]._id%>')" style="colo"
                     >Active</a
                   >
                 </td>
                 <% }else{ %>
                 <td>
-                  <a onclick="changeStatus('<%categoryOffer[i]._id%>')"
+                  <a onclick="changeStatus('<%=categoryOffers[i]._id%>')"
                     >InActive</a
                   >
                 </td>
@@ -729,7 +729,9 @@
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title" id="offerModalLabel">Edit Catgory Offer</h5>
+                          <h5 class="modal-title" id="offerModalLabel">
+                            Edit Catgory Offer
+                          </h5>
                           <button
                             type="button"
                             class="close"
@@ -744,29 +746,31 @@
                             <div class="form-group">
                               <label for="offerPercentage">Category Name</label>
                               <input
-                                type="text"
+                              type="text"
+                              class="form-control"
+                              name="CategoryName"
+                              id="categoryName<%=i%>"
+                              value="<%=categoryOffers[i].category.categoryName%>"
+                              />
+                              <input
+                                type="hidden"
                                 class="hidden"
                                 name="offerId"
                                 id="categoryName<%=i%>"
                                 value="<%=categoryOffers[i]._id%>"
                               />
-                              <input
-                                type="text"
-                                class="form-control"
-                                name="CategoryName"
-                                id="categoryName<%=i%>"
-                                value="<%=categoryOffers[i].category.CategoryName%>"
-                              />
                             </div>
                             <div class="form-group">
-                              <label for="offerPercentage">Offer Percentage</label>
+                              <label for="offerPercentage"
+                                >Offer Percentage</label
+                              >
                               <input
                                 type="number"
                                 class="form-control"
                                 name="categoryOfferPercentage"
                                 id="categoryOfferPercentage<%=i%>"
                                 placeholder="Enter offer percentage"
-                                value="<%=categoryOffers[i].OfferPercentage%>"
+                                value="<%=categoryOffers[i].offerPercentage%>"
                               />
                             </div>
                             <div class="form-group">
@@ -823,13 +827,14 @@
             method: "POST",
             headers: { "Content-Type": "application/json" },
           });
+          console.log("calling this changeStatus function",id)
           let result = await response.json();
           if (result.success) {
             await Swal.fire({
               title: "Updated",
               text: "Offer status updated successfully",
               icon: "success",
-            }).then(()=>location.reload());
+            }).then(() => location.reload());
           }
         }
       </script>
@@ -976,7 +981,9 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="addOfferModalLabel">Add Category Offer</h5>
+              <h5 class="modal-title" id="addOfferModalLabel">
+                Add Category Offer
+              </h5>
               <button
                 type="button"
                 class="btn-close"
@@ -995,7 +1002,7 @@
                   >
                     <option selected>Choose...</option>
                     <% for (let i = 0; i < categories.length; i++) {%>
-                    <option value="<%=categories[i].categoryName%>">
+                    <option value="<%=categories[i]._id%>">
                       <%=categories[i].categoryName%>
                     </option>
                     <% } %>
@@ -1090,14 +1097,14 @@
                 title: "Offer Added",
                 text: "Category Offer added successfully ",
                 icon: "success",
-              });
-            } else if(result.exist){
+              }).then(()=>location.reload());
+            } else if (result.exist) {
               await Swal.fire({
                 title: "Offer exists",
                 text: "This offer already exists ",
                 icon: "warning",
               });
-            }else{
+            } else {
               await Swal.fire({
                 title: "something went wrong",
                 text: "couldn't add the offer",
@@ -1106,86 +1113,80 @@
             }
           },
         });
-      </script>
-      <!-- style for edit modal -->
-      
-      <script>
+
         var today = new Date().toISOString().split("T")[0];
+        for (let i = 0; i < categories.length; i++) {
+          document.addEventListener("DOMContentLoaded", function () {
+            let startDateInput = document.getElementById("startDate" + i);
+            let endDateInput = document.getElementById("endDate" + i);
 
-        document.addEventListener("DOMContentLoaded", function () {
-          let startDateElement = document.getElementById(
-            "startDate<%=index %>"
-          );
-          let endDateElement = document.getElementById("endDate<%=index %>");
-          startDateElement.setAttribute("min", today);
-          endDateElement.setAttribute("min", today);
+            endDateInput.setAttribute("min", today);
 
-          startDateElement.addEventListener("change", function () {
-            let startDateValue = startDateElement.value;
-            endDateElement.setAttribute("min", startDateValue);
-          });
-
-          endDateElement.addEventListener("change", function () {
-            let endDateValue = endDateElement.value;
-            startDateElement.setAttribute("max", endDateValue);
-          });
-        });
-      </script>
-
-      <script>
-        $("#editCategoryOfferForm<%=i%>").validate({
-          rules: {
-            offerId:{
-              required:true
-            },
-            CategoryName: {
-              required: true,
-            },
-            categoryOfferPercentage: {
-              required: true,
-              min: 5,
-              max: 90,
-            },
-            startDate: {
-              required: true,
-            },
-            endDate: {
-              required: true,
-            },
-        },
-
-          submitHandler: async (form, event) => {
-            event.preventDefault();
-            let formData = {
-              id: form.offerId.value,
-              OfferPercentage: form.categoryOfferPercentage.value,
-              startDate: form.startDate.value,
-              endDate: form.endDate.value,
-            };
-
-            let response = await fetch("/editCategoryOffer", {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(formData),
+            startDateInput.addEventListener("change", function () {
+              var startDate = startDateInput.value;
+              endDateInput.setAttribute("min", startDate);
             });
 
-            let result = await response.json();
+            endDateInput.addEventListener("change", function () {
+              var endDate = endDateInput.value;
+              startDateInput.setAttribute("max", endDate);
+            });
+          });
 
-            if (result.success) {
-              await Swal.fire({
-                title: "Offer Updated",
-                text: "Your offer has been updated successfully",
-                icon: "success",
-              }).then(() => location.reload());
-            } else if (result.success) {
-              await Swal.fire({
-                title: "Offer not Updated",
-                text: "something went wrong please check again",
-                icon: "info",
+          $("#editCategoryOfferForm"+i).validate({
+            rules: {
+              offerId: {
+                required: true,
+              },
+              CategoryName: {
+                required: true,
+              },
+              categoryOfferPercentage: {
+                required: true,
+                min: 5,
+                max: 90,
+              },
+              startDate: {
+                required: true,
+              },
+              endDate: {
+                required: true,
+              },
+            },
+
+            submitHandler: async (form, event) => {
+              event.preventDefault();
+              let formData = {
+                id: form.offerId.value,
+                OfferPercentage: form.categoryOfferPercentage.value,
+                startDate: form.startDate.value,
+                endDate: form.endDate.value,
+              };
+
+              let response = await fetch("/editCategoryOffer", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
               });
-            }
-          },
-        });
+
+              let result = await response.json();
+
+              if (result.success) {
+                await Swal.fire({
+                  title: "Offer Updated",
+                  text: "Your offer has been updated successfully",
+                  icon: "success",
+                }).then(() => location.reload());
+              } else if (result.success) {
+                await Swal.fire({
+                  title: "Offer not Updated",
+                  text: "something went wrong please check again",
+                  icon: "warning",
+                });
+              }
+            },
+          });
+        }
       </script>
       <!-- edit modal End -->
 

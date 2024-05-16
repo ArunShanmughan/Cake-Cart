@@ -44,6 +44,7 @@ const {
   getCategoryOffer,
   ChangeCategoryOfferStatus,
   postNewCategoryOffer,
+  editCategoryOffer,
 } = require("../controllers/offerController.js");
 
 //admin Routers
@@ -82,6 +83,7 @@ admRouter.post("/addOffer", admAuth, postNewOffer);
 admRouter.put("/editCurrentOffer/:id", admAuth, putEditOffer);
 admRouter.get("/categoryOfferManagment",admAuth,getCategoryOffer);
 admRouter.post("/categoryOfferStatus/:id",admAuth,ChangeCategoryOfferStatus)
-admRouter.post("/newcategoryOffer",admAuth,postNewCategoryOffer)
+admRouter.post("/newcategoryOffer",admAuth,postNewCategoryOffer);
+admRouter.put("/editCategoryOffer",admAuth,editCategoryOffer)
 
 module.exports = admRouter;

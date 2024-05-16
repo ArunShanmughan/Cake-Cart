@@ -11,8 +11,9 @@ const applyCategoryOffer = async () => {
       const today = new Date();
   
       const offers = await CategoryOfferModel.find({ isAvailable: true });
-  
+      console.log("this is in the applycategoryoffer function in srvc and all category offermodels->",offers)
       const allProducts = await ProductModel.find();
+      console.log("this is in the applycategoryoffer function in srvc and all products->",allProducts)
   
       for (const prod of allProducts) {
         const currentOffer = offers.find(
