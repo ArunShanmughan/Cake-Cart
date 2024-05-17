@@ -22,7 +22,6 @@ const applyCategoryOffer = async () => {
   
         if (
           currentOffer &&
-          currentOffer.startDate <= today &&
           currentOffer.endDate >= today
         ) {
           await ProductModel.findByIdAndUpdate(prod._id, {

@@ -407,6 +407,23 @@
 
       <!-- <body> -->
       <style>
+        .btn-add-offer {
+          background-color: #4caf50; 
+          color: #ffffff; 
+          border: none;
+          border-radius: 5px;
+          padding: 10px 20px;
+          font-size: 16px;
+          cursor: pointer; 
+        }
+
+        .btn-add-offer:hover {
+          background-color: #3e8e41;
+          color: #ffffff; 
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
+          transform: translateY(-2px); 
+        }
+
         .custom-card {
           /* Customize the background color of the card */
           background-color: #fff;
@@ -613,13 +630,13 @@
           <table class="table custom-table">
             <thead>
               <tr>
-                <th>product No</th>
-                <th scope="col" class="custom-serial-th">Product Name</th>
-                <th scope="col" class="custom-avatar-th">Offer</th>
-                <th scope="col" class="custom-id-th">Start Date</th>
-                <th scope="col" class="custom-name-th">Expiry Date</th>
-                <th scope="col" class="custom-name-th">Status</th>
-                <th scope="col" class="custom-status-th">Update</th>
+                <th><strong>product No</strong></th>
+                <th scope="col" class="custom-serial-th"><strong>Product Name</strong></th>
+                <th scope="col" class="custom-avatar-th"><strong>Offer</strong></th>
+                <th scope="col" class="custom-id-th"><strong>Start Date</strong></th>
+                <th scope="col" class="custom-name-th"><strong>Expiry Date</strong></th>
+                <th scope="col" class="custom-name-th"> <strong>Status</strong></th>
+                <th scope="col" class="custom-status-th"><strong>Update</strong></th>
               </tr>
             </thead>
             <tbody>
@@ -917,7 +934,7 @@
                 title: "Offer Added",
                 text: "Offer successfully added",
                 icon: "success",
-              });
+              }).then(()=>location.reload());
             } else {
               await Swal.fire({
                 title: "Offer exists",

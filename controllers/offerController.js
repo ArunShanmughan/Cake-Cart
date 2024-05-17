@@ -18,7 +18,7 @@ const getOfferManagment = async (req, res) => {
         { _id: i._id },
         {
           $set: {
-            currentStatus: i.endDate >= new Date() && i.startDate <= new Date(),
+            currentStatus: i.endDate >= new Date(),
           },
         }
       );

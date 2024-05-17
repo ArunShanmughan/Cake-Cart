@@ -6,7 +6,7 @@ const productOfferSchema= new mongoose.Schema({
   productOfferPercentage: { type: Number, min: 5, max: 90, required: true},
   startDate: { type: Date, required: true, default: new Date().toLocaleString() },
   endDate: { type: Date, required: true },
-  currentStatus: { type: Boolean, required: false, default: true }
+  currentStatus: { type: Boolean, default: true }
 },{ timestamps: true})
 
 const productOfferModel = mongoose.model('productOffer',productOfferSchema);

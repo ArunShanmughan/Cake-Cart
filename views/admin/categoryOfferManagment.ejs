@@ -407,6 +407,23 @@
 
       <!-- <body> -->
       <style>
+        .btn-add-offer {
+          background-color: #4caf50; 
+          color: #ffffff; 
+          border: none;
+          border-radius: 5px;
+          padding: 10px 20px;
+          font-size: 16px;
+          cursor: pointer; 
+        }
+
+        .btn-add-offer:hover {
+          background-color: #3e8e41;
+          color: #ffffff; 
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
+          transform: translateY(-2px); 
+        }
+
         .custom-card {
           /* Customize the background color of the card */
           background-color: #fff;
@@ -698,13 +715,17 @@
                 </td>
                 <% if(categoryOffers[i].isAvailable){ %>
                 <td>
-                  <a onclick="changeStatus('<%=categoryOffers[i]._id%>')" style="colo"
+                  <a
+                    onclick="changeStatus('<%=categoryOffers[i]._id%>')"
+                    style="color: lightgreen"
                     >Active</a
                   >
                 </td>
                 <% }else{ %>
                 <td>
-                  <a onclick="changeStatus('<%=categoryOffers[i]._id%>')"
+                  <a
+                    onclick="changeStatus('<%=categoryOffers[i]._id%>')"
+                    style="color: red"
                     >InActive</a
                   >
                 </td>
@@ -746,11 +767,11 @@
                             <div class="form-group">
                               <label for="offerPercentage">Category Name</label>
                               <input
-                              type="text"
-                              class="form-control"
-                              name="CategoryName"
-                              id="categoryName<%=i%>"
-                              value="<%=categoryOffers[i].category.categoryName%>"
+                                type="text"
+                                class="form-control"
+                                name="CategoryName"
+                                id="categoryName<%=i%>"
+                                value="<%=categoryOffers[i].category.categoryName%>"
                               />
                               <input
                                 type="hidden"
@@ -827,7 +848,7 @@
             method: "POST",
             headers: { "Content-Type": "application/json" },
           });
-          console.log("calling this changeStatus function",id)
+          console.log("calling this changeStatus function", id);
           let result = await response.json();
           if (result.success) {
             await Swal.fire({
@@ -1097,7 +1118,7 @@
                 title: "Offer Added",
                 text: "Category Offer added successfully ",
                 icon: "success",
-              }).then(()=>location.reload());
+              }).then(() => location.reload());
             } else if (result.exist) {
               await Swal.fire({
                 title: "Offer exists",
@@ -1133,7 +1154,7 @@
             });
           });
 
-          $("#editCategoryOfferForm"+i).validate({
+          $("#editCategoryOfferForm" + i).validate({
             rules: {
               offerId: {
                 required: true,
