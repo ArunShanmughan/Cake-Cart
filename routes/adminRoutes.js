@@ -47,6 +47,12 @@ const {
   editCategoryOffer,
 } = require("../controllers/offerController.js");
 
+const {
+  getCouponManagment,
+  getCreateCoupon,
+  postDeleteCoupon,
+} = require("../controllers/couponController.js");
+
 //admin Routers
 admRouter.get("/admin", getAdmin);
 admRouter.post("/adminlog", postAdmin);
@@ -81,9 +87,14 @@ admRouter.get("/viewOrder", admAuth, getSingleOrder);
 admRouter.get("/offerManagment", admAuth, getOfferManagment);
 admRouter.post("/addOffer", admAuth, postNewOffer);
 admRouter.put("/editCurrentOffer/:id", admAuth, putEditOffer);
-admRouter.get("/categoryOfferManagment",admAuth,getCategoryOffer);
-admRouter.post("/categoryOfferStatus/:id",admAuth,ChangeCategoryOfferStatus)
-admRouter.post("/newcategoryOffer",admAuth,postNewCategoryOffer);
-admRouter.put("/editCategoryOffer",admAuth,editCategoryOffer)
+admRouter.get("/categoryOfferManagment", admAuth, getCategoryOffer);
+admRouter.post("/categoryOfferStatus/:id", admAuth, ChangeCategoryOfferStatus);
+admRouter.post("/newcategoryOffer", admAuth, postNewCategoryOffer);
+admRouter.put("/editCategoryOffer", admAuth, editCategoryOffer);
+
+//Coupon Managment routes
+admRouter.get("/couponManagment", admAuth, getCouponManagment);
+admRouter.post("/newCouponCreate", admAuth, getCreateCoupon);
+admRouter.post("/deleteCoupon/:couponId", admAuth, postDeleteCoupon);
 
 module.exports = admRouter;
