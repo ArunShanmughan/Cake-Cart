@@ -1,6 +1,7 @@
 const userdata = require("../models/userDB");
 const categoryModel = require("../models/categoryModel");
 const productModel = require("../models/productModel");
+const productCollection = require("../models/productModel");
 
 const getProductManagment = async (req, res) => {
   try {
@@ -43,7 +44,8 @@ const productUnBlock = async (req, res) => {
 const getAddProduct = async (req, res) => {
   try {
       const categorydetails = await categoryModel.find();
-      res.render("admin/addproduct", { categoryModel: categorydetails });
+      const productdetails = await productCollection.find()
+      res.render("admin/addproduct", { categoryModel: categorydetails,productDetails});
   } catch (error) {
     console.log("Something Went Wrong", error);
   }

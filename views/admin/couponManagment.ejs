@@ -637,20 +637,20 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                          <form id="editCategoryOfferForm<%=i%>">
+                          <form id="editCouponForm<%=i%>">
                             <div class="form-group">
                               <label for="offerPercentage">Coupon Code</label>
                               <input
                                 type="text"
                                 class="form-control"
-                                name="CategoryName"
+                                name="CouponCode"
                                 id="categoryName<%=i%>"
                                 value="<%=totalCoupons[i].couponCode%>"
                               />
                               <input
                                 type="hidden"
                                 class="hidden"
-                                name="offerId"
+                                name="couponId"
                                 id="categoryName<%=i%>"
                                 value="<%=totalCoupons[i]._id%>"
                               />
@@ -662,7 +662,7 @@
                               <input
                                 type="number"
                                 class="form-control"
-                                name="categoryOfferPercentage"
+                                name="couponDiscountPercentage"
                                 id="categoryOfferPercentage<%=i%>"
                                 placeholder="Enter offer percentage"
                                 value="<%=totalCoupons[i].discountPercentage%>"
@@ -697,7 +697,7 @@
                               <input
                                 type="number"
                                 class="form-control"
-                                name="categoryOfferPercentage"
+                                name="minimumPurchase"
                                 id="categoryOfferPercentage<%=i%>"
                                 placeholder="Enter offer percentage"
                                 value="<%=totalCoupons[i].minimumPurchase%>"
@@ -710,7 +710,7 @@
                               <input
                                 type="number"
                                 class="form-control"
-                                name="categoryOfferPercentage"
+                                name="maximumDiscount"
                                 id="categoryOfferPercentage<%=i%>"
                                 placeholder="Enter offer percentage"
                                 value="<%=totalCoupons[i].maximumDiscount%>"
@@ -736,6 +736,70 @@
                   <!-- edit modal ends -->
                 </td>
               </tr>
+              <script>
+                $("#editCouponForm<%=i%>").validate({
+                  rules: {
+                    CouponCode: {
+                      required: true,
+                    },
+                    couponId: {
+                      required: true,
+                    },
+                    couponDiscountPercentage: {
+                      required: true,
+                      min: 5,
+                      max: 90,
+                    },
+                    startDate: {
+                      required: true,
+                    },
+                    endDate: {
+                      required: true,
+                    },
+                    minimumPurchase:{
+                      required:true,
+                    },
+                    maximumDiscount:{
+                      required:true,
+                    }
+                  },
+
+                  submitHandler: async (form, event) => {
+                    event.preventDefault();
+                    let editData = {
+                      id: form.couponId.value,
+                      couponCode:form.CouponCode.value,
+                      discountPercentage: form.couponDiscountPercentage.value,
+                      startDate: form.startDate.value,
+                      endDate: form.endDate.value,
+                      minimumPurchase:form.minimumPurchase.value,
+                      maximumDiscount:form.maximumDiscount.value,
+                    };
+
+                    let response = await fetch("/editCoupon/<%=totalCoupons[i]._id%>", {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(editData),
+                    });
+
+                    let result = await response.json();
+
+                    if (result.success) {
+                      await Swal.fire({
+                        title: "Offer Updated",
+                        text: "Your offer has been updated successfully",
+                        icon: "success",
+                      }).then(() => location.reload());
+                    } else if (result.exist) {
+                      await Swal.fire({
+                        title: "Coupon already exist",
+                        text: "This same Coupon Code already exist",
+                        icon: "warning",
+                      });
+                    }
+                  },
+                });
+              </script>
               <% } %>
             </tbody>
           </table>
@@ -1080,60 +1144,6 @@
           startDateInput.setAttribute("max", expiryDate);
         });
 
-        $("#editCategoryOfferForm" + i).validate({
-          rules: {
-            offerId: {
-              required: true,
-            },
-            CategoryName: {
-              required: true,
-            },
-            categoryOfferPercentage: {
-              required: true,
-              min: 5,
-              max: 90,
-            },
-            startDate: {
-              required: true,
-            },
-            endDate: {
-              required: true,
-            },
-          },
-
-          submitHandler: async (form, event) => {
-            event.preventDefault();
-            let formData = {
-              id: form.offerId.value,
-              OfferPercentage: form.categoryOfferPercentage.value,
-              startDate: form.startDate.value,
-              endDate: form.endDate.value,
-            };
-
-            let response = await fetch("/editCategoryOffer", {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(formData),
-            });
-
-            let result = await response.json();
-
-            if (result.success) {
-              await Swal.fire({
-                title: "Offer Updated",
-                text: "Your offer has been updated successfully",
-                icon: "success",
-              }).then(() => location.reload());
-            } else if (result.success) {
-              await Swal.fire({
-                title: "Offer not Updated",
-                text: "something went wrong please check again",
-                icon: "warning",
-              });
-            }
-          },
-        });
-
         //for deleting the coupon
         async function deleteCoupon(couponId) {
           try {
@@ -1165,16 +1175,19 @@
                     if (result.isConfirmed) window.location.reload();
                   });
                 }
-              }else{
+              } else {
                 await Swal.fire({
-                title: "Coupon not Deleted!",
-                text: "Couldn't Delete the coupon",
-                icon: "error",
-              })
+                  title: "Coupon not Deleted!",
+                  text: "Couldn't Delete the coupon",
+                  icon: "error",
+                });
               }
             });
           } catch (error) {
-            console.log("Something Went wrong while deleting the Coupon",error);
+            console.log(
+              "Something Went wrong while deleting the Coupon",
+              error
+            );
           }
         }
       </script>

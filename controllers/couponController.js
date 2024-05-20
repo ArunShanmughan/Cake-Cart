@@ -57,4 +57,33 @@ const postDeleteCoupon = async(req,res)=>{
   }
 }
 
-module.exports = { getCouponManagment, getCreateCoupon, postDeleteCoupon };
+
+const putEditCoupon = async(req,res)=>{
+  try {
+    console.log("coming to the editCoupon controller with the body data",req.body);
+    console.log("coming to the editCoupon controller with the params data",req.params);
+    let existingCoupon = await couponmodel.findOne({
+      couponCode: { $regex: new RegExp(req.body.couponCode, "i")}
+    })
+
+    if(!existingCoupon || existingCoupon._id == req.params.id){
+      let updateData = {
+        couponCode: req.body.couponCode,
+        discountPercentage: req.body.discountPercentage,
+        startDate: new Date(req.body.startDate),
+        expiryDate: new Date(req.body.endDate),
+        minimumPurchase: req.body.minimumPurchase,
+        maximumDiscount: req.body.maximumDiscount,
+      };
+
+      await  couponmodel.findOneAndUpdate({_id:req.params.id},{$set:updateData});
+      res.send({success:true})
+    }else{
+      res.send({exist:true})
+    }
+  } catch (error) {
+    console.log("something went wrong in the update controller",error);
+  }
+}
+
+module.exports = { getCouponManagment, getCreateCoupon, postDeleteCoupon, putEditCoupon };

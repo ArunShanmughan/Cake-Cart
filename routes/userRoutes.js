@@ -12,6 +12,7 @@ const {
   postOtp,
   getLogout,
   getMyAccount,
+  postEditUserInfo,
   getOrderHistory,
   getMyAddress,
   getAddAddress,
@@ -58,6 +59,7 @@ router.post("/views/users/otp", postOtp);
 router.get("/resendOTP", getOtp);
 router.get("/views/users/logout", getLogout);
 router.get("/myAccount",userAuth, getMyAccount);
+router.post("/editUserInfo",userAuth,postEditUserInfo)
 router.get("/orderHistory",userAuth, getOrderHistory);
 router.get("/myAddress",userAuth, getMyAddress);
 router.get("/addAddress",userAuth, getAddAddress);

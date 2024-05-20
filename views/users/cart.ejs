@@ -633,6 +633,8 @@
                           document.getElementById(
                             "totalCostPerProduct" + index
                           );
+                        let grandTotalOfCart =
+                          document.getElementById("grandTotalAmount");
 
                         if (Number(productQuantityCart.innerText) == 1) {
                           return Swal.fire({
@@ -650,7 +652,9 @@
                         productQuantityCart.innerText =
                           result.cartFindData.productQuantity;
                         totalCostPerProductElement.innerText =
-                          "₹" + (result.cartFindData.totalCostPerProduct);
+                          "₹" + result.cartFindData.totalCostPerProduct;
+                        grandTotalOfCart.innerText =
+                          "₹"+result.wholeTotal;
                         // window.location.reload();
                       } catch (error) {
                         console.log("Something Went Wrong", error);
@@ -666,7 +670,9 @@
                           document.getElementById(
                             "totalCostPerProduct" + index
                           );
-                          console.log("<%=items?.productId?.quantity%>")
+                        let grandTotalOfCart =
+                          document.getElementById("grandTotalAmount");
+                        console.log("this is the grandtotalofCart",grandTotalOfCart);
                         if (
                           Number(productQuantityCart.innerText) >=
                           "<%=items?.productId?.quantity%>"
@@ -689,6 +695,8 @@
                           result.cartFindData.productQuantity;
                         totalCostPerProductElement.innerText =
                           "₹" + result.cartFindData.totalCostPerProduct;
+                        grandTotalOfCart.innerText =
+                          "₹"+result.wholeTotal;
                         // window.location.reload();
                       } catch (error) {
                         console.log("Something Went wrong", error);
@@ -740,16 +748,6 @@
                 </tbody>
               </table>
             </div>
-            <style>
-              .grand-total-box {
-                width: 150px;
-                border: 1px solid #ccc;
-                padding: 10px;
-                display: inline-block;
-                margin: 10px;
-                text-align: center;
-              }
-            </style>
             <div class="grand-total-box">
               <p style="font-weight: bold">Grand Total:</p>
               <p id="grandTotalAmount">₹:<%=wholeTotal%></p>

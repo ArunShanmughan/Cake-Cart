@@ -51,6 +51,7 @@ const {
   getCouponManagment,
   getCreateCoupon,
   postDeleteCoupon,
+  putEditCoupon,
 } = require("../controllers/couponController.js");
 
 //admin Routers
@@ -96,5 +97,6 @@ admRouter.put("/editCategoryOffer", admAuth, editCategoryOffer);
 admRouter.get("/couponManagment", admAuth, getCouponManagment);
 admRouter.post("/newCouponCreate", admAuth, getCreateCoupon);
 admRouter.post("/deleteCoupon/:couponId", admAuth, postDeleteCoupon);
+admRouter.put("/editCoupon/:id",admAuth,putEditCoupon)
 
 module.exports = admRouter;

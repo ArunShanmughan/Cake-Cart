@@ -8,8 +8,8 @@ const { postAddProduct } = require("./productcontroller");
 const cartModel = require("../models/cartModel");
 const orderModel = require("../models/orderModel");
 const wishListCollection = require("../models/wishListModel");
-const paypal = require('paypal-rest-sdk');
-
+const paypal = require("paypal-rest-sdk");
+const couponModel = require("../models/couponModel");
 
 const getlandingpage = async (req, res) => {
   try {
@@ -20,17 +20,22 @@ const getlandingpage = async (req, res) => {
     // console.log(req.session.isLogged)
     if (req.session.isLogged) {
       req.session.otpRequest = false;
-      const wishListData = await wishListCollection.find({
-        userId: req.session.userInfo._id,
-      }).populate("productId");
-      console.log("This is the wishlist data from the collection--> ",wishListData);
+      const wishListData = await wishListCollection
+        .find({
+          userId: req.session.userInfo._id,
+        })
+        .populate("productId");
+      console.log(
+        "This is the wishlist data from the collection--> ",
+        wishListData
+      );
       res.render("users/homePage", {
         islogin: req.session.isLogged,
         categoryInfo: categoryInfo,
         usersCartData: usersCartData,
         productInfo: ProductInfo,
         wholeTotal: req.session.wholeTotal,
-        wishListItems:wishListData,
+        wishListItems: wishListData,
       });
     } else {
       res.render("users/homePage", {
@@ -158,6 +163,30 @@ const getMyAccount = async (req, res) => {
     console.log("Something Went Wrong", error);
   }
 };
+
+
+const postEditUserInfo = async (req, res) => {
+  try {
+    console.log("coming to this postEditUserInfo controller");
+    console.log(req.body);
+    let currentdata = {
+      fName: req.body.fName,
+      lName: req.body.lName,
+      email: req.body.email,
+      mobile: req.body.mobile,
+    };
+
+    await userData.findByIdAndUpdate(
+      { _id: req.session.userInfo._id },
+      { $set: currentdata }
+    );
+    res.send({ success: true });
+  } catch (error) {
+    console.log("Something went wrong while editing user Info", error);
+    res.send({ success: false });
+  }
+};
+
 
 const getOrderHistory = async (req, res) => {
   try {
@@ -454,10 +483,12 @@ const getCheckout = async (req, res) => {
         .find({ userId: req.session.userInfo._id })
         .populate("addressModel");
       await wholeTotal(req);
+      let availableCoupons = await couponModel.find();
       res.render("users/checkout", {
         islogin: req.session.isLogged,
         locationData: addressData,
         grandTotal: req?.session?.wholeTotal,
+        validCoupons: availableCoupons,
       });
     } else {
       res.redirect("/views/users/login");
@@ -467,9 +498,14 @@ const getCheckout = async (req, res) => {
   }
 };
 
+
+//This is for CASH ON DELIVERY option order placed method
 const postOrderPlaced = async (req, res) => {
   try {
-    console.log("............this the data is coming from the post order method input's..........",req.body)
+    console.log(
+      "............this the data is coming from the post order method input's..........",
+      req.body
+    );
     let addressData = await addressModel
       .find({ userId: req.session.userInfo._id })
       .populate("addressModel");
@@ -485,13 +521,14 @@ const postOrderPlaced = async (req, res) => {
 
     if (checkCart.length >= 0) {
       //for COD
+      // if(req.body.paymentMethod==COD)
       await orderModel.updateOne(
         { _id: req.session.currentOrder._id },
         {
           $set: {
             paymentId: req.body.Address,
             paymentType: req.body.paymentMethod,
-            comments:req.body.comments,
+            comments: req.body.comments,
             grandTotalcost: req.session.wholeTotal,
           },
         }
@@ -577,6 +614,7 @@ module.exports = {
   getMyAccount,
   getOrderHistory,
   getMyAddress,
+  postEditUserInfo,
   getAddAddress,
   postAddAddress,
   getEditAddress,
