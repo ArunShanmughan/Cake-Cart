@@ -164,7 +164,6 @@ const getMyAccount = async (req, res) => {
   }
 };
 
-
 const postEditUserInfo = async (req, res) => {
   try {
     console.log("coming to this postEditUserInfo controller");
@@ -186,7 +185,6 @@ const postEditUserInfo = async (req, res) => {
     res.send({ success: false });
   }
 };
-
 
 const getOrderHistory = async (req, res) => {
   try {
@@ -476,6 +474,7 @@ const getIncQtyCart = async (req, res) => {
   }
 };
 
+
 const getCheckout = async (req, res) => {
   try {
     if (req.session.isLogged) {
@@ -483,7 +482,9 @@ const getCheckout = async (req, res) => {
         .find({ userId: req.session.userInfo._id })
         .populate("addressModel");
       await wholeTotal(req);
-      let availableCoupons = await couponModel.find();
+      let availableCoupons = await couponModel.find({
+        expiryDate: { $gte: new Date() },
+      });
       res.render("users/checkout", {
         islogin: req.session.isLogged,
         locationData: addressData,
@@ -498,6 +499,59 @@ const getCheckout = async (req, res) => {
   }
 };
 
+const postApplyCoupon = async (req, res) => {
+  try {
+    let { couponCode } = req.body;
+    const userId = await req.session.userInfo._id;
+    const couponData = await couponModel.findOne({ couponCode });
+
+    if (!couponData) {
+      res.send({ validCoupon: false });
+    }
+
+    if (couponData.userId.includes(userId)) {
+      res.send({ validCoupon: false, alreadyUsed: true });
+    }
+
+    console.log(
+      "This is the req.session.grandTotal result: ",
+      req.session.wholeTotal
+    );
+    console.log(couponData);
+    let currentgrandTotal  = req.session.wholeTotal;
+    console.log(currentgrandTotal)
+    let { minimumPurchase, expiryDate } = couponData;
+    let minimumChecker = minimumPurchase < currentgrandTotal;
+    let expiryDateCheck = new Date() < new Date(expiryDate);
+    console.log("This is the minimum checker and expirydate",minimumChecker,expiryDateCheck)
+
+    if (minimumChecker && expiryDateCheck) {
+      console.log(currentgrandTotal)
+      let { discountPercentage, maximumDiscount } = couponData;
+      let discountAmount =
+        (currentgrandTotal * discountPercentage) / 100 > maximumDiscount
+          ? maximumDiscount
+          : (currentgrandTotal * discountPercentage) / 100;
+
+      // req.session.currentOrder = await orderModel.create({
+      //   userId: req.session.userInfo._id,
+      //   orderNumber: (await orderModel.countDocuments()) + 1,
+      //   orderDate: new Date(),
+      //   addressChoosen: JSON.parse(JSON.stringify(addressData[0])),
+      //   cartData: await wholeTotal(req),
+      //   grandTotalcost: -discountAmount,
+      // });
+      console.log("This is the discount Amount:",discountAmount)
+      req.session.wholeTotal = currentgrandTotal-discountAmount ;
+      console.log("after assigning discount Amount to wholeTotal session:",req.session.wholeTotal)
+      res.send({ validCoupon: true, discountAmount });
+    } else {
+      res.send({ validCoupon: false });
+    }
+  } catch (error) {
+    console.log("Something went wrong", error);
+  }
+};
 
 //This is for CASH ON DELIVERY option order placed method
 const postOrderPlaced = async (req, res) => {
@@ -509,14 +563,20 @@ const postOrderPlaced = async (req, res) => {
     let addressData = await addressModel
       .find({ userId: req.session.userInfo._id })
       .populate("addressModel");
-    req.session.currentOrder = await orderModel.create({
-      userId: req.session.userInfo._id,
-      orderNumber: (await orderModel.countDocuments()) + 1,
-      orderDate: new Date(),
-      addressChoosen: JSON.parse(JSON.stringify(addressData[0])),
-      cartData: await wholeTotal(req),
-      grandTotalCost: req.session.wholeTotal,
-    });
+    if (!req.session.currentOrder) {
+      req.session.currentOrder = await orderModel.create({
+        userId: req.session.userInfo._id,
+        orderNumber: (await orderModel.countDocuments()) + 1,
+        orderDate: new Date(),
+        addressChoosen: JSON.parse(JSON.stringify(addressData[0])),
+        cartData: await wholeTotal(req),
+        grandTotalCost: req.session.wholeTotal,
+      });
+    }
+
+    if(discountAmount){
+      await orderModel.findByIdAndUpdate({_id:req.session.currentOrder._id},{$set:{totalCouponDeduction:discountAmount}})
+    }
     let checkCart = await cartModel.find({ userId: req.session.userInfo._id });
 
     if (checkCart.length >= 0) {
@@ -632,4 +692,5 @@ module.exports = {
   getOrderInfo,
   getCancelOrder,
   getSingleOrder,
+  postApplyCoupon,
 };

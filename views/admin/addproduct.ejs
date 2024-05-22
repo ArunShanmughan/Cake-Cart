@@ -474,7 +474,6 @@
               submitHandler: async (form, event) => {
       
                 event.preventDefault()
-                // Create a new FormData object
                 const formData = new FormData(form);
       
                 let response = await fetch('/addProducts', {
