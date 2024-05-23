@@ -499,39 +499,49 @@ const getCheckout = async (req, res) => {
   }
 };
 
-const postApplyCoupon = async (req, res) => {
+const postApplyCoupon = async(req,res)=>{
   try {
-    let { couponCode } = req.body;
-    const userId = await req.session.userInfo._id;
-    const couponData = await couponModel.findOne({ couponCode });
+    console.log(req.body);
+    let coupData = await couponModel.findOne({couponCode:req.body.couponCode});
+    res.send(coupData)
+  } catch (error) {
+    console.log("Something went wrong",error)
+  }
+}
 
-    if (!couponData) {
-      res.send({ validCoupon: false });
-    }
+// const postApplyCoupon = async (req, res) => {
+//   try {
+//     let { couponCode } = req.body;
+//     const userId = await req.session.userInfo._id;
+//     const couponData = await couponModel.findOne({ couponCode });
 
-    if (couponData.userId.includes(userId)) {
-      res.send({ validCoupon: false, alreadyUsed: true });
-    }
+//     if (!couponData) {
+//       res.send({ validCoupon: false });
+//     }
 
-    console.log(
-      "This is the req.session.grandTotal result: ",
-      req.session.wholeTotal
-    );
-    console.log(couponData);
-    let currentgrandTotal  = req.session.wholeTotal;
-    console.log(currentgrandTotal)
-    let { minimumPurchase, expiryDate } = couponData;
-    let minimumChecker = minimumPurchase < currentgrandTotal;
-    let expiryDateCheck = new Date() < new Date(expiryDate);
-    console.log("This is the minimum checker and expirydate",minimumChecker,expiryDateCheck)
+//     if (couponData.userId.includes(userId)&&req.session.couponApplied) {
+//       res.send({ validCoupon: false, alreadyUsed: true });
+//     }
 
-    if (minimumChecker && expiryDateCheck) {
-      console.log(currentgrandTotal)
-      let { discountPercentage, maximumDiscount } = couponData;
-      let discountAmount =
-        (currentgrandTotal * discountPercentage) / 100 > maximumDiscount
-          ? maximumDiscount
-          : (currentgrandTotal * discountPercentage) / 100;
+    // console.log(
+    //   "This is the req.session.grandTotal result: ",
+    //   req.session.wholeTotal
+    // );
+    // console.log(couponData);
+    // let currentgrandTotal  = req.session.wholeTotal;
+    // console.log(currentgrandTotal)
+    // let { minimumPurchase, expiryDate } = couponData;
+    // let minimumChecker = minimumPurchase < currentgrandTotal;
+    // let expiryDateCheck = new Date() < new Date(expiryDate);
+    // console.log("This is the minimum checker and expirydate",minimumChecker,expiryDateCheck)
+
+    // if (minimumChecker && expiryDateCheck) {
+    //   console.log(currentgrandTotal)
+    //   let { discountPercentage, maximumDiscount } = couponData;
+    //   let discountAmount =
+    //     (currentgrandTotal * discountPercentage) / 100 > maximumDiscount
+    //       ? maximumDiscount
+    //       : (currentgrandTotal * discountPercentage) / 100;
 
       // req.session.currentOrder = await orderModel.create({
       //   userId: req.session.userInfo._id,
@@ -541,17 +551,17 @@ const postApplyCoupon = async (req, res) => {
       //   cartData: await wholeTotal(req),
       //   grandTotalcost: -discountAmount,
       // });
-      console.log("This is the discount Amount:",discountAmount)
-      req.session.wholeTotal = currentgrandTotal-discountAmount ;
-      console.log("after assigning discount Amount to wholeTotal session:",req.session.wholeTotal)
-      res.send({ validCoupon: true, discountAmount });
-    } else {
-      res.send({ validCoupon: false });
-    }
-  } catch (error) {
-    console.log("Something went wrong", error);
-  }
-};
+//       console.log("This is the discount Amount:",discountAmount)
+//       req.session.wholeTotal = currentgrandTotal-discountAmount ;
+//       console.log("after assigning discount Amount to wholeTotal session:",req.session.wholeTotal)
+//       res.send({ validCoupon: true, discountAmount });
+//     } else {
+//       res.send({ validCoupon: false });
+//     }
+//   } catch (error) {
+//     console.log("Something went wrong", error);
+//   }
+// };
 
 //This is for CASH ON DELIVERY option order placed method
 const postOrderPlaced = async (req, res) => {

@@ -664,24 +664,35 @@
                             type="button"
                             name="subscribe"
                             id="applyCouponBtn"
+                            onclick="applyCoupon()"
                           >
                             Apply
                           </button>
+                          <button
+                            class="ms-coupan-btn ms-btn-2"
+                            type="button"
+                            id="removeCouponBtn"
+                            style="display: none"
+                            onclick="removeCoupon()"
+                          >
+                            Remove
+                          </button>
                         </form>
                       </div>
+
                       <div class="ms-available-coupons" style="display: none">
                         <h4 class="text-left">Available Coupons:</h4>
                         <ul>
-                          <% for( let i= 0; i < validCoupons.length; i++ ) { %>
-
+                          <% for(let i = 0; i < validCoupons.length; i++) { %>
                           <li>
-                            <%=i+1%> .
+                            <%=i+1%>.
                             <span
                               class="text-right coupon-code"
                               data-coupon-id="<%=validCoupons[i]%>"
-                              onclick="showDetails('<%=validCoupons[i].discountPercentage%>','<%=validCoupons[i].minimumPurchase%>','<%=grandTotal%>')"
-                              ><%=validCoupons[i].couponCode%></span
+                              onclick="showDetails('<%=validCoupons[i].discountPercentage%>', '<%=validCoupons[i].minimumPurchase%>', '<%=grandTotal%>')"
                             >
+                              <%=validCoupons[i].couponCode%>
+                            </span>
                           </li>
                           <p class="text-left">
                             you need to Purchase for minimum of
@@ -689,40 +700,16 @@
                           </p>
                           <% } %>
                         </ul>
-                        <script>
-                          async function showDetails(
-                            percentage,
-                            minimumPurchase,
-                            grandTotal
-                          ) {
-                            console.log(
-                              "calling this showdetails function",
-                              grandTotal
-                            );
-                            console.log(percentage);
-                            try {
-                              if (grandTotal > minimumPurchase) {
-                                await Swal.fire({
-                                  title: "Info",
-                                  text: `With this Coupon you will get ${percentage}%`,
-                                  icon: "info",
-                                });
-                              } else {
-                                await Swal.fire({
-                                  title: "Not Available",
-                                  text: "You are not eligible for this coupon",
-                                  icon: "warning",
-                                });
-                              }
-                            } catch (error) {
-                              console.log("something went wrong", error);
-                            }
-                          }
-                        </script>
                       </div>
+
                       <div class="ms-checkout-summary-total">
-                        <span class="text-left">Total Amount</span>
-                        <span class="text-right" id="presentGrandTotal">₹<%=grandTotal%></span>
+                        <span class="text-left">Total Amount </span>
+                        <span
+                          class="text-right"
+                          id="presentGrandTotal"
+                          value="<%= grandTotal %>"
+                          ><%=grandTotal%></span
+                        >
                       </div>
                     </div>
                   </div>
@@ -739,11 +726,11 @@
                         coupons.style.display === "block" ? "none" : "block";
                     });
                 </script>
-                <script>
-                  $(document).ready(function() {
-                    $("#applyCouponBtn").on("click", async function() {
+                <!-- <script>
+                  $(document).ready(function () {
+                    $("#applyCouponBtn").on("click", async function () {
                       const couponCode = $("#appliedCoupon").val().trim();
-              
+
                       if (!couponCode) {
                         await Swal.fire({
                           title: "No Coupon Code",
@@ -752,21 +739,23 @@
                         });
                         return;
                       }
-              
-                      console.log("coming to the coupon checker fetch method", { couponCode });
-              
+
+                      console.log("coming to the coupon checker fetch method", {
+                        couponCode,
+                      });
+
                       try {
                         let response = await fetch("/applyCoupon", {
                           method: "POST",
                           headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
                           },
-                          body: JSON.stringify({ couponCode })
+                          body: JSON.stringify({ couponCode }),
                         });
-              
+
                         let result = await response.json();
-              
-                        if (result.alreadyUsed) {
+
+                        if (result.alreadyUsed && result.validCoupon == false) {
                           await Swal.fire({
                             title: "Coupon Already Used",
                             text: "This coupon already used while ordering",
@@ -796,7 +785,7 @@
                       }
                     });
                   });
-                </script>
+                </script> -->
                 <!-- Sidebar Summary Block -->
               </div>
               <div class="ms-sidebar-wrap ms-checkout-pay-wrap">
@@ -852,22 +841,6 @@
                 </div>
                 <!-- Sidebar Payment Block -->
               </div>
-              <!-- <div class="ms-sidebar-wrap ms-check-pay-img-wrap"> -->
-              <!-- Sidebar Payment Block -->
-              <!-- <div class="ms-sidebar-block">
-                            <div class="ms-sb-title">
-                                <h3 class="ms-sidebar-title">Payment Method</h3>
-                            </div>
-                            <div class="ms-sb-block-content">
-                                <div class="ms-check-pay-img-inner">
-                                    <div class="ms-check-pay-img">
-                                        <img src="assets/img/hero-bg/payment.png" alt="payment">
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-              <!-- Sidebar Payment Block -->
-              <!-- </div> -->
             </div>
           </div>
         </div>
@@ -1422,6 +1395,74 @@
 
     <!-- Main Js -->
     <script src="assets/js/main.js"></script>
+
+    <script>
+
+      async function showDetails(percentage, minimumPurchase, grandTotal) {
+        try {
+          if (grandTotal > minimumPurchase) {
+            await Swal.fire({
+              title: "Info",
+              text: `With this Coupon you will get ${percentage}% off`,
+              icon: "info",
+            });
+          } else {
+            await Swal.fire({
+              title: "Not Available",
+              text: "You are not eligible for this coupon",
+              icon: "warning",
+            });
+          }
+        } catch (error) {
+          console.log("something went wrong", error);
+        }
+      }
+
+
+      async function applyCoupon() {
+        const couponCode = document.getElementById("appliedCoupon").value;
+        let obj = {
+          couponCode: couponCode,
+        };
+        let response = await fetch("/applyCoupon", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(obj),
+        });
+
+        let result = await response.json();
+        console.log("this is the result data from fetch", result);
+        console.log(result.discountPercentage);
+
+
+        if (result) {
+          document.getElementById("applyCouponBtn").disabled = true;
+          document.getElementById("removeCouponBtn").style.display = "inline-block";
+          console.log("comsing to this function", result.discountPercentage);
+          console.log(result.maximumDiscount);
+          let MaximumDiscount = result.MaximumDiscount;
+          let currPercentage = result.discountPercentage;
+          let grandTotal =
+            document.getElementById("presentGrandTotal").innerText;
+          console.log(grandTotal);
+          let discountAmount = (grandTotal * currPercentage) / 100;
+          console.log("before checking with the maximumDisocunt",discountAmount)
+          discountAmount =
+            discountAmount > maximumDiscount ? maximumDiscount : discountAmount;
+          grandTotal -= discountAmount;
+          console.log(grandTotal)
+          document.getElementById("presentGrandTotal").innerText = `₹${Number(grandTotal)}`;
+        }
+      }
+
+      function removeCoupon() {
+        document.getElementById("applyCouponBtn").disabled = false;
+        document.getElementById("removeCouponBtn").style.display = "none";
+        document.getElementById("appliedCoupon").value = "";
+        window.location.reload();
+      }
+
+    </script>
   </body>
 
   <!-- Mirrored from maraviyainfotech.com/wrapbootstrap/masterkart-html/masterkart-html/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 11 Mar 2024 10:02:15 GMT -->
