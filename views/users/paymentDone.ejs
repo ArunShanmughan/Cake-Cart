@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!-- Mirrored from maraviyainfotech.com/wrapbootstrap/masterkart-html/masterkart-html/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 11 Mar 2024 10:02:15 GMT -->
+  <!-- Mirrored from maraviyainfotech.com/wrapbootstrap/masterkart-html/masterkart-html/track-order.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 11 Mar 2024 10:02:13 GMT -->
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -9,7 +9,7 @@
       content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
     />
 
-    <title>Cake Cart</title>
+    <title>Masterkart - Multipurpose eCommerce HTML Template.</title>
     <meta
       name="keywords"
       content="Bootstrap 5.x, ecommerce, farming, food market, grocery market, grocery shop, grocery store, grocery supper market, multi vendor, organic food, supermarket, supermarket grocery"
@@ -22,28 +22,6 @@
 
     <!-- css Icon Font -->
     <link rel="stylesheet" href="assets/css/vendor/msicons.min.css" />
-
-    <!-- jquery-validate -->
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.js"
-      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
-      integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"
-      integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-
-    <!-- sweetalert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- css All Plugins Files -->
     <link rel="stylesheet" href="assets/css/plugins/animate.css" />
@@ -63,7 +41,7 @@
     <link rel="stylesheet" href="assets/css/responsive.css" />
   </head>
 
-  <body>
+  <body class="aboutus_page">
     <!-- Loader -->
     <div id="ms-overlay">
       <div class="loader"></div>
@@ -270,7 +248,6 @@
                         />
                       </div>
                       <div class="ms-btn-desc">
-                        <span class="ms-btn-title">Account</span>
                         <span class="ms-btn-stitle">Login</span>
                       </div>
                     </a>
@@ -287,49 +264,6 @@
                   </div>
                   <% } %>
                   <!-- Header User End -->
-                  <!-- Header wishlist Start -->
-                  <a
-                    href="javascript:void(0)"
-                    class="ms-header-btn ms-wish-toggle"
-                    title="Wishlist"
-                  >
-                    <div class="header-icon">
-                      <img
-                        src="assets/img/icons/wishlist.svg"
-                        class="svg_img header_svg"
-                        alt=""
-                      />
-                    </div>
-                    <div class="ms-btn-desc">
-                      <span class="ms-btn-title">Wishlist</span>
-                      <span class="ms-btn-stitle"
-                        ><b class="ms-wishlist-count">3</b>-items</span
-                      >
-                    </div>
-                  </a>
-                  <!-- Header wishlist End -->
-                  <!-- Header Cart Start -->
-                  <a
-                    href="javascript:void(0)"
-                    class="ms-header-btn ms-cart-toggle"
-                    title="Cart"
-                  >
-                    <div class="header-icon">
-                      <img
-                        src="assets/img/icons/cart_5.svg"
-                        class="svg_img header_svg"
-                        alt=""
-                      />
-                      <span class="main-label-note-new"></span>
-                    </div>
-                    <div class="ms-btn-desc">
-                      <span class="ms-btn-title">Cart</span>
-                      <span class="ms-btn-stitle"
-                        ><b class="ms-cart-count">3</b>-items</span
-                      >
-                    </div>
-                  </a>
-                  <!-- Header Cart End -->
                 </div>
               </div>
             </div>
@@ -364,7 +298,9 @@
                       <ul>
                         <li class="non-drop"><a href="/">Home</a></li>
                         <li class="dropdown drop-list">
-                          <a href="/products">Products</a>
+                          <a href="/products" class="dropdown-arrow"
+                            >Products</a
+                          >
                         </li>
                       </ul>
                     </div>
@@ -491,14 +427,15 @@
           <div class="col-12">
             <div class="row ms_breadcrumb_inner">
               <div class="col-md-6 col-sm-12">
-                <h2 class="ms-breadcrumb-title">Checkout</h2>
+                <h2 class="ms-breadcrumb-title">Order Status</h2>
               </div>
               <div class="col-md-6 col-sm-12">
                 <!-- ms-breadcrumb-list start -->
                 <ul class="ms-breadcrumb-list">
                   <li class="ms-breadcrumb-item"><a href="/">Home</a></li>
-                  <li class="ms-breadcrumb-item"><a href="/cart">Cart</a></li>
-                  <li class="ms-breadcrumb-item active">Checkout</li>
+                  <li class="ms-breadcrumb-item active">
+                    <a href="/cart">Cart</a>
+                  </li>
                 </ul>
                 <!-- ms-breadcrumb-list end -->
               </div>
@@ -509,324 +446,169 @@
     </div>
     <!-- Breadcrumb end -->
 
-    <!-- add address -->
     <style>
-      .button-link {
-        display: inline-block;
-        padding: 10px 20px;
-        border: 1px solid #4caf50;
-        border-radius: 5px;
-        background-color: #4bdf1a;
+      .outer-div {
+        width: 80%; /* adjust the width to your liking */
+        margin: 0 auto; /* center the outer div */
+        padding: 20px; /* add some padding for better visibility */
+        background-color: #f0f0f0; /* add a light gray background */
+      }
+
+      .inner-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%; /* make the inner div take up the full height of the outer div */
+        font-size: 1.2rem; /* adjust the font size to your liking */
+        color: #333; /* adjust the text color to your liking */
       }
     </style>
 
-    <a href="/addAddress"><button class="button-link">Add Address</button></a>
-    <!-- add address end -->
-    <style>
-      .select-btn {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.2s ease-in-out;
-      }
-
-      .select-btn:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-      }
-    </style>
-    <style>
-      .address-box {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 20px;
-      }
-      .address-btn {
-        background-color: #4caf50;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-      }
-      .address-form {
-        margin-top: 10px;
-      }
-    </style>
-
-    <!-- Checkout section -->
-    <section class="ms-checkout-section padding-tb-30">
-      <form id="orderItems">
-        <h2 class="d-none">Checkout Page</h2>
-        <div class="container">
-          <div class="row">
-            <div class="ms-checkout-leftside col-lg-8 col-md-12">
-              <!-- checkout content Start -->
-              <div class="ms-checkout-content">
-                <div class="ms-checkout-inner">
-                  <div class="ms-checkout-wrap m-b-30 padding-bottom-3">
-                    <div class="ms-checkout-block ms-check-bill">
-                      <h3 class="ms-checkout-title">Billing Details</h3>
-                      <div class="ms-bl-block-content">
-                        <div class="ms-check-subtitle">Checkout Options</div>
-                        <div class="address-box">
-                          <div style="display: flex; margin-left: 20px">
-                            <% locationData.forEach((address, i) => { %>
-                            <div
-                              class="user-box"
-                              style="
-                                margin: 20px;
-                                border: 1px solid #ccc;
-                                padding: 10px;
-                              "
-                            >
-                              <div class="user-details">
-                                <h3>Address:<%= i + 1 %></h3>
-                                <p>
-                                  <strong>Name:</strong> <%= address.firstName
-                                  %> <%= address.lastName %>
-                                </p>
-                                <p>
-                                  <strong>Line 1:</strong> <%=
-                                  address.addressLine1 %>
-                                </p>
-                                <p>
-                                  <strong>Line 2:</strong> <%=
-                                  address.addressLine2 %>
-                                </p>
-                                <p>
-                                  <strong>Phone Number:</strong> <%=
-                                  address.phone %>
-                                </p>
-                              </div>
-                              <input
-                                type="radio"
-                                id="radio_<%=address._id%>"
-                                name="selectedAddress"
-                                value="<%=address._id%>"
-                              />
-                              <label for="radio_<%=address._id%>">Select</label>
-                            </div>
-                            <% }) %>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <% if(locationData.length>0){ %>
-                  <button type="submit">Place Order</button>
-                  <span class="ms-check-order-btn"> </span>
-                  <% } %>
+    <!-- Track Order section -->
+    <section class="ms-track padding-tb-30">
+      <div class="container">
+        <div class="section-title-2">
+          <h2 class="ms-title">Order<span> Placed</span></h2>
+          <p>We delivering happiness and needs, Faster than you can think.</p>
+        </div>
+        <div class="row p-t-15">
+          <div class="container">
+            <div class="ms-track-box">
+              <!-- Details-->
+              <div class="outer-div">
+                <div class="inner-div">
+                  <h1>Order Payment Done Successfully!</h1>
+                  <p>Your payment has been processed successfully.</p>
                 </div>
               </div>
-              <!--cart content End -->
-            </div>
-            <!-- Sidebar Area Start -->
-            <div class="ms-checkout-rightside col-lg-4 col-md-12 m-t-991">
-              <div class="ms-sidebar-wrap">
-                <!-- Sidebar Summary Block -->
-                <div class="ms-sidebar-block">
-                  <div class="ms-sb-title">
-                    <h3 class="ms-sidebar-title">Summary</h3>
+              <!-- Progress-->
+              <div class="ms-steps">
+                <div class="ms-steps-body">
+                  <div class="ms-step ms-step-completed">
+                    <span class="ms-step-indicator">
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                    </span>
+                    <span class="ms-step-icon">
+                      <img
+                        src="assets/img/icons/track-1.svg"
+                        class="svg_img"
+                        alt="track"
+                      /> </span
+                    >Order<br />
+                    confirmed
                   </div>
-                  <div class="ms-sb-block-content">
-                    <div class="ms-checkout-summary">
-                      <div>
-                        <span class="text-left">Sub-Total</span>
-                        <span class="text-right">₹<%=grandTotal%></span>
-                      </div>
-                      <div>
-                        <span class="text-left">Delivery Charges</span>
-                        <span class="text-right">₹0.00</span>
-                      </div>
-                      <div>
-                        <span class="text-left">Coupon Discount</span>
-                        <span class="text-right">
-                          <a class="ms-checkout-coupan" id="showCoupons"
-                            >Apply Coupon</a
-                          >
-                        </span>
-                      </div>
-                      <div class="ms-checkout-coupan-content">
-                        <form
-                          class="ms-checkout-coupan-form"
-                          name="ms-checkout-coupan-form"
-                          id="couponChecker"
-                        >
-                          <input
-                            class="ms-coupan"
-                            id="appliedCoupon"
-                            type="text"
-                            required=""
-                            placeholder="Enter Your Coupon Code"
-                            name="couponCode"
-                          />
-                          <button
-                            class="ms-coupan-btn ms-btn-2"
-                            type="button"
-                            name="subscribe"
-                            id="applyCouponBtn"
-                            onclick="applyCoupon()"
-                          >
-                            Apply
-                          </button>
-                          <button
-                            class="ms-coupan-btn ms-btn-2"
-                            type="button"
-                            id="removeCouponBtn"
-                            style="display: none"
-                            onclick="removeCoupon()"
-                          >
-                            Remove
-                          </button>
-                        </form>
-                      </div>
 
-                      <div class="ms-available-coupons" style="display: none">
-                        <h4 class="text-left">Available Coupons:</h4>
-                        <ul>
-                          <% for(let i = 0; i < validCoupons.length; i++) { %>
-                          <li>
-                            <%=i+1%>.
-                            <span
-                              class="text-right coupon-code"
-                              data-coupon-id="<%=validCoupons[i]%>"
-                              onclick="showDetails('<%=validCoupons[i].discountPercentage%>', '<%=validCoupons[i].minimumPurchase%>', '<%=grandTotal%>')"
-                            >
-                              <%=validCoupons[i].couponCode%>
-                            </span>
-                          </li>
-                          <p class="text-left">
-                            you need to Purchase for minimum of
-                            $<%=validCoupons[i].minimumPurchase%>
-                          </p>
-                          <% } %>
-                        </ul>
-                      </div>
-
-                      <div class="ms-checkout-summary-total">
-                        <span class="text-left">Total Amount </span>
-                        <span
-                          class="text-right"
-                          id="presentGrandTotal"
-                          value="<%= grandTotal %>"
-                          ><%=grandTotal%></span
-                        >
-                      </div>
-                    </div>
+                  <div class="ms-step">
+                    <span class="ms-step-indicator">
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                    </span>
+                    <span class="ms-step-icon">
+                      <img
+                        src="assets/img/icons/track-2.svg"
+                        class="svg_img"
+                        alt="track"
+                      /> </span
+                    >Processing<br />
+                    order
+                  </div>
+                  <div class="ms-step">
+                    <span class="ms-step-indicator">
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                    </span>
+                    <span class="ms-step-icon">
+                      <img
+                        src="assets/img/icons/track-3.svg"
+                        class="svg_img"
+                        alt="track"
+                      /> </span
+                    >Quality<br />
+                    check
+                  </div>
+                  <div class="ms-step">
+                    <span class="ms-step-indicator">
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                    </span>
+                    <span class="ms-step-icon">
+                      <img
+                        src="assets/img/icons/track-4.svg"
+                        class="svg_img"
+                        alt="track"
+                      /> </span
+                    >Product<br />
+                    dispatched
+                  </div>
+                  <div class="ms-step">
+                    <span class="ms-step-indicator">
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                    </span>
+                    <span class="ms-step-icon">
+                      <img
+                        src="assets/img/icons/track-5.svg"
+                        class="svg_img"
+                        alt="track"
+                      /> </span
+                    >Product<br />
+                    delivered
                   </div>
                 </div>
-
-                <script>
-                  document
-                    .getElementById("showCoupons")
-                    .addEventListener("click", function () {
-                      var coupons = document.querySelector(
-                        ".ms-available-coupons"
-                      );
-                      coupons.style.display =
-                        coupons.style.display === "block" ? "none" : "block";
-                    });
-                </script>
-                <!-- Sidebar Summary Block -->
-              </div>
-              <div class="ms-sidebar-wrap ms-checkout-pay-wrap">
-                <!-- Sidebar Payment Block -->
-                <div class="ms-sidebar-block">
-                  <div class="ms-sb-title">
-                    <h3 class="ms-sidebar-title">Payment Method</h3>
-                  </div>
-                  <div class="ms-sb-block-content">
-                    <div class="ms-checkout-pay">
-                      <div class="ms-pay-desc">
-                        Please select the preferred payment method to use on
-                        this order.
-                      </div>
-                      <span class="ms-pay-option">
-                        <span>
-                          <input
-                            type="radio"
-                            id="pay1"
-                            name="paymentMethod"
-                            value="COD"
-                          />
-                          <label for="pay1">Cash On Delivery</label>
-                        </span>
-                        <span>
-                          <input
-                            type="radio"
-                            id="pay2"
-                            name="paymentMethod"
-                            value="payPal"
-                          />
-                          <label for="pay2">PayPal</label>
-                        </span>
-                      </span>
-                      <span class="ms-pay-commemt">
-                        <span class="ms-pay-opt-head"
-                          >Add Comments About Your Order</span
-                        >
-                        <textarea
-                          name="Comments"
-                          placeholder="Comments"
-                        ></textarea>
-                      </span>
-                      <span class="ms-pay-agree">
-                        <input type="checkbox" id="agree" />
-                        <label for="agree">
-                          I have read and agree to the
-                          <span>Terms & Conditions.</span>
-                        </label>
-                      </span>
-                    </div>
+                <div class="ms-steps-header">
+                  <div class="progress">
+                    <div
+                      class="progress-bar"
+                      role="progressbar"
+                      style="width: 10%"
+                      aria-valuenow="20"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    ></div>
                   </div>
                 </div>
-                <!-- Sidebar Payment Block -->
               </div>
             </div>
           </div>
         </div>
-      </form>
+      </div>
     </section>
-    <script>
-      $("#orderItems").validate({
-        submitHandler: async (form, event) => {
-          event.preventDefault();
-          // Create a new FormData object
-          // const formData = new FormData(form);
-          // console.log(form);
-          const grandTotal =
-            document.getElementById("presentGrandTotal").innerText;
-          console.log("this while submitting form", grandTotal);
-          console.log(form);
-          let obj = {
-            address: form.selectedAddress.value,
-            paymentMethod: form.paymentMethod.value,
-            presentTotal:grandTotal,
-            comments: form.Comments.value,
-          };
-          console.log(obj);
-          if (form.paymentMethod.value == "payPal") {
-            let response = await fetch(`/payPalPayment/?total=${grandTotal}`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(obj),
-            });
+    <!-- Track Order section End -->
 
-            let data = await response.json();
+    <!-- next step sidebar -->
+    <style>
+      .continue-shopping-container {
+        display: flex;
+        justify-content: flex-end;
+        padding: 20px;
+      }
 
-            if (data.url) {
-              window.location.href = data.url;
-            }
-          } else if (form.paymentMethod.value == "COD") {
-            let response = await fetch("/orderPlaced", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(obj),
-            });
-          }
-          let result = await response.json();
-        },
-      });
-    </script>
-    <!-- Checkout section End -->
+      .continue-shopping {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 30px;
+        background-color: #ffc107;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: bold;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      .continue-shopping:hover {
+        background-color: #ffa07a;
+      }
+
+      .continue-shopping::before {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z'/%3E%3C/svg%3E");
+        background-size: 20px 20px;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+    </style>
+    <div class="continue-shopping-container">
+      <a href="/" class="continue-shopping">Continue Shopping</a>
+    </div>
 
     <!-- Footer Start -->
     <footer class="ms-footer m-t-30">
@@ -1064,213 +846,6 @@
     </footer>
     <!-- Footer Area End -->
 
-    <!-- Quickview Modal -->
-    <div
-      class="modal fade quickview-modal"
-      id="ms_quickview_modal"
-      tabindex="-1"
-      role="dialog"
-    >
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <button
-            type="button"
-            class="btn-close qty_close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-5 col-sm-12 col-xs-12">
-                <div class="qty-product-cover">
-                  <div class="qty-slide">
-                    <img
-                      class="img-responsive"
-                      src="assets/img/product-images/1_1.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div class="qty-slide">
-                    <img
-                      class="img-responsive"
-                      src="assets/img/product-images/2_1.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div class="qty-slide">
-                    <img
-                      class="img-responsive"
-                      src="assets/img/product-images/3_1.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div class="qty-slide">
-                    <img
-                      class="img-responsive"
-                      src="assets/img/product-images/4_1.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div class="qty-slide">
-                    <img
-                      class="img-responsive"
-                      src="assets/img/product-images/5_1.jpg"
-                      alt=""
-                    />
-                  </div>
-                </div>
-                <div class="qty-nav-thumb">
-                  <div class="qty-slide">
-                    <img
-                      class="img-responsive"
-                      src="assets/img/product-images/1_1.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div class="qty-slide">
-                    <img
-                      class="img-responsive"
-                      src="assets/img/product-images/2_1.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div class="qty-slide">
-                    <img
-                      class="img-responsive"
-                      src="assets/img/product-images/3_1.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div class="qty-slide">
-                    <img
-                      class="img-responsive"
-                      src="assets/img/product-images/4_1.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div class="qty-slide">
-                    <img
-                      class="img-responsive"
-                      src="assets/img/product-images/5_1.jpg"
-                      alt=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-7 col-sm-12 col-xs-12">
-                <div class="quickview-pro-content">
-                  <h5 class="ms-quick-title">
-                    <a href="product-left-sidebar.html"
-                      >premium quality organic trail mix dried fruit pack</a
-                    >
-                  </h5>
-                  <div class="ms-quickview-rating">
-                    <i class="msicon msi-star fill"></i>
-                    <i class="msicon msi-star fill"></i>
-                    <i class="msicon msi-star fill"></i>
-                    <i class="msicon msi-star fill"></i>
-                    <i class="msicon msi-star"></i>
-                  </div>
-
-                  <div class="ms-quickview-desc">
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry. Lorem Ipsum has been the industry's
-                    standard dummy text ever since the 1500s,
-                  </div>
-                  <div class="ms-quickview-price">
-                    <span class="new-price">$150.00</span>
-                    <span class="old-price">$200.00</span>
-                  </div>
-
-                  <div class="ms-pro-variation">
-                    <div
-                      class="ms-pro-variation-inner ms-pro-variation-size ms-pro-size"
-                    >
-                      <span>Size</span>
-                      <div class="ms-pro-variation-content">
-                        <ul class="ms-opt-size">
-                          <li class="active">
-                            <a
-                              href="javascript:void(0)"
-                              class="ms-opt-sz"
-                              data-tooltip="Small"
-                              >250g</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              href="javascript:void(0)"
-                              class="ms-opt-sz"
-                              data-tooltip="Medium"
-                              >500g</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              href="javascript:void(0)"
-                              class="ms-opt-sz"
-                              data-tooltip="Large"
-                              >1kg</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              href="javascript:void(0)"
-                              class="ms-opt-sz"
-                              data-tooltip="Extra Large"
-                              >2kg</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="ms-quickview-qty">
-                    <div class="qty-plus-minus">
-                      <input
-                        class="qty-input"
-                        type="text"
-                        name="ms_qtybtn"
-                        value="1"
-                      />
-                    </div>
-                    <div class="ms-quickview-cart">
-                      <button class="ms-btn-3">
-                        <img
-                          src="assets/img/icons/pro_cart.svg"
-                          class="svg_img pro_svg"
-                          alt=""
-                        />
-                        Add To Cart
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Quickview Modal end -->
-
-    <!-- Add to Cart Notify -->
-    <div class="ms-cart-notify">
-      <a href="javascript:void(0)" class="ms-cart-toggle"
-        ><img
-          src="assets/img/icons/pro_cart.svg"
-          class="svg_img"
-          alt="cart"
-        /><span>3</span></a
-      >
-    </div>
-
-    <!-- Add to Wishlist Notify  -->
-    <div class="ms-wish-notify"></div>
-
-    <!-- Add to Compare list Notify  -->
-    <div class="ms-compare-notify"></div>
-
     <!-- Back to top  -->
     <a class="ms-back-to-top"></a>
 
@@ -1344,72 +919,7 @@
 
     <!-- Main Js -->
     <script src="assets/js/main.js"></script>
-
-    <script>
-      async function showDetails(percentage, minimumPurchase, grandTotal) {
-        try {
-          if (grandTotal > minimumPurchase) {
-            await Swal.fire({
-              title: "Info",
-              text: `With this Coupon you will get ${percentage}% off`,
-              icon: "info",
-            });
-          } else {
-            await Swal.fire({
-              title: "Not Available",
-              text: "You are not eligible for this coupon",
-              icon: "warning",
-            });
-          }
-        } catch (error) {
-          console.log("something went wrong", error);
-        }
-      }
-
-      async function applyCoupon() {
-        const couponCode = document.getElementById("appliedCoupon").value;
-        let obj = {
-          couponCode: couponCode,
-        };
-        let response = await fetch("/applyCoupon", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(obj),
-        });
-
-        let result = await response.json();
-        console.log("this is the result data from fetch", result);
-        console.log(result.discountPercentage);
-
-        if (result) {
-          document.getElementById("applyCouponBtn").disabled = true;
-          document.getElementById("removeCouponBtn").style.display =
-            "inline-block";
-          let maximumDiscount = result.maximumDiscount;
-          let currPercentage = result.discountPercentage;
-          let grandTotal =
-            document.getElementById("presentGrandTotal").innerText;
-          let discountAmount = (grandTotal * currPercentage) / 100;
-          if (discountAmount > maximumDiscount) {
-            discountAmount = maximumDiscount;
-          }
-
-          grandTotal = grandTotal - discountAmount;
-          document.getElementById(
-            "presentGrandTotal"
-          ).innerText = `₹${grandTotal}`;
-          console.log(grandTotal);
-        }
-      }
-
-      function removeCoupon() {
-        document.getElementById("applyCouponBtn").disabled = false;
-        document.getElementById("removeCouponBtn").style.display = "none";
-        document.getElementById("appliedCoupon").value = "";
-        window.location.reload();
-      }
-    </script>
   </body>
 
-  <!-- Mirrored from maraviyainfotech.com/wrapbootstrap/masterkart-html/masterkart-html/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 11 Mar 2024 10:02:15 GMT -->
+  <!-- Mirrored from maraviyainfotech.com/wrapbootstrap/masterkart-html/masterkart-html/track-order.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 11 Mar 2024 10:02:14 GMT -->
 </html>
