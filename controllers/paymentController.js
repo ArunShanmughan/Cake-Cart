@@ -18,6 +18,7 @@ const onlinePayments = async (req, res) => {
   console.log("req.session.userInfo details:", req.session.userInfo);
   req.session.presentOrderData = req.body;
   const total = req.query.total;
+  console.log("Total amount:", typeof(total));
   console.log("Total amount:", total);
 
   try {
@@ -115,12 +116,12 @@ const paymentDone = async(req,res)=>{
         req.session.presentOrderData
       );
       let addressData = await addressModel
-        .find({_id:req.session.presentOrderData.address})
+        .findOne({_id:req.session.presentOrderData.address})
         .populate("addressModel");
       if (!req.session.currentOrder) {
         req.session.currentOrder = await orderModel.create({
           userId: req.session.userInfo._id,
-          orderNumber: (await orderModel.countDocuments()) + 1,
+          orderNumber: Math.floor(Math.random() * (10000 - 100 + 1)) + 100,
           orderDate: new Date(),
           addressChoosen: JSON.parse(JSON.stringify(addressData)),
           cartData: await wholeTotal(req),
@@ -130,10 +131,11 @@ const paymentDone = async(req,res)=>{
       // if(discountAmount){
       //   await orderModel.findByIdAndUpdate({_id:req.session.currentOrder._id},{$set:{totalCouponDeduction:discountAmount}})
       // }
+      console.log(req.session.currentOrder)
       let checkCart = await cartModel.find({ userId: req.session.userInfo._id });
   
       if (checkCart.length >= 0) {
-        //for COD
+        //for paypal
         // if(req.body.paymentMethod==COD)
         await orderModel.updateOne(
           { _id: req.session.currentOrder._id },
@@ -155,10 +157,12 @@ const paymentDone = async(req,res)=>{
           product.productId.stockSold += 1;
           await product.productId.save();
         }
-        let k = await cartModel
-          .findByIdAndUpdate({ _id: req.session.currentOrder._id })
-          .populate("productId");
-        res.render("users/paymentDone",{islogin: req.session.isLogged})
+        // let k = await cartModel
+        //   .findByIdAndUpdate({ _id: req.session.currentOrder._id })
+        //   .populate("productId");
+        let currentOrderData = await orderModel.findOne({_id:req.session.currentOrder._id})
+        res.render("users/paymentDone",{islogin: req.session.isLogged,paymentId:req.session.paymentId,currentOrderData})
+        await cartModel.deleteMany({userId:req.session.userInfo._id});
       }
     } catch (error) {
       console.log("something went wrong", error);

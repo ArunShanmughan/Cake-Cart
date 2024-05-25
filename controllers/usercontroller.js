@@ -10,6 +10,7 @@ const orderModel = require("../models/orderModel");
 const wishListCollection = require("../models/wishListModel");
 const paypal = require("paypal-rest-sdk");
 const couponModel = require("../models/couponModel");
+const walletModel = require("../models/walletmodel");
 
 const getlandingpage = async (req, res) => {
   try {
@@ -474,7 +475,6 @@ const getIncQtyCart = async (req, res) => {
   }
 };
 
-
 const getCheckout = async (req, res) => {
   try {
     if (req.session.isLogged) {
@@ -499,69 +499,33 @@ const getCheckout = async (req, res) => {
   }
 };
 
-const postApplyCoupon = async(req,res)=>{
+const postApplyCoupon = async (req, res) => {
   try {
     console.log(req.body);
-    let coupData = await couponModel.findOne({couponCode:req.body.couponCode});
-    res.send(coupData)
+    let coupData = await couponModel.findOne({
+      couponCode: req.body.couponCode,
+    });
+    if (!coupData) {
+      res.send({ validCoupon: false });
+    }
+
+    if (coupData.userId.includes(userId) && req.session.couponApplied) {
+      res.send({ validCoupon: false, alreadyUsed: true });
+    }
+
+    let { expiryDate } = couponData;
+    let expiryDateCheck = new Date() < new Date(expiryDate);
+
+    if (expiryDateCheck) {
+      res.send({ validCoupon: true, coupData });
+      req.session.appliedCoupon = coupData;
+    } else {
+      res.send({ validCoupon: false });
+    }
   } catch (error) {
-    console.log("Something went wrong",error)
+    console.log("Something went wrong", error);
   }
-}
-
-// const postApplyCoupon = async (req, res) => {
-//   try {
-//     let { couponCode } = req.body;
-//     const userId = await req.session.userInfo._id;
-//     const couponData = await couponModel.findOne({ couponCode });
-
-//     if (!couponData) {
-//       res.send({ validCoupon: false });
-//     }
-
-//     if (couponData.userId.includes(userId)&&req.session.couponApplied) {
-//       res.send({ validCoupon: false, alreadyUsed: true });
-//     }
-
-    // console.log(
-    //   "This is the req.session.grandTotal result: ",
-    //   req.session.wholeTotal
-    // );
-    // console.log(couponData);
-    // let currentgrandTotal  = req.session.wholeTotal;
-    // console.log(currentgrandTotal)
-    // let { minimumPurchase, expiryDate } = couponData;
-    // let minimumChecker = minimumPurchase < currentgrandTotal;
-    // let expiryDateCheck = new Date() < new Date(expiryDate);
-    // console.log("This is the minimum checker and expirydate",minimumChecker,expiryDateCheck)
-
-    // if (minimumChecker && expiryDateCheck) {
-    //   console.log(currentgrandTotal)
-    //   let { discountPercentage, maximumDiscount } = couponData;
-    //   let discountAmount =
-    //     (currentgrandTotal * discountPercentage) / 100 > maximumDiscount
-    //       ? maximumDiscount
-    //       : (currentgrandTotal * discountPercentage) / 100;
-
-      // req.session.currentOrder = await orderModel.create({
-      //   userId: req.session.userInfo._id,
-      //   orderNumber: (await orderModel.countDocuments()) + 1,
-      //   orderDate: new Date(),
-      //   addressChoosen: JSON.parse(JSON.stringify(addressData[0])),
-      //   cartData: await wholeTotal(req),
-      //   grandTotalcost: -discountAmount,
-      // });
-//       console.log("This is the discount Amount:",discountAmount)
-//       req.session.wholeTotal = currentgrandTotal-discountAmount ;
-//       console.log("after assigning discount Amount to wholeTotal session:",req.session.wholeTotal)
-//       res.send({ validCoupon: true, discountAmount });
-//     } else {
-//       res.send({ validCoupon: false });
-//     }
-//   } catch (error) {
-//     console.log("Something went wrong", error);
-//   }
-// };
+};
 
 //This is for CASH ON DELIVERY option order placed method
 const postOrderPlaced = async (req, res) => {
@@ -576,7 +540,7 @@ const postOrderPlaced = async (req, res) => {
     if (!req.session.currentOrder) {
       req.session.currentOrder = await orderModel.create({
         userId: req.session.userInfo._id,
-        orderNumber: (await orderModel.countDocuments()) + 1,
+        orderNumber: Math.floor(Math.random() * (10000 - 100 + 1)) + 100,
         orderDate: new Date(),
         addressChoosen: JSON.parse(JSON.stringify(addressData[0])),
         cartData: await wholeTotal(req),
@@ -584,8 +548,11 @@ const postOrderPlaced = async (req, res) => {
       });
     }
 
-    if(discountAmount){
-      await orderModel.findByIdAndUpdate({_id:req.session.currentOrder._id},{$set:{totalCouponDeduction:discountAmount}})
+    if (discountAmount) {
+      await orderModel.findByIdAndUpdate(
+        { _id: req.session.currentOrder._id },
+        { $set: { totalCouponDeduction: discountAmount } }
+      );
     }
     let checkCart = await cartModel.find({ userId: req.session.userInfo._id });
 
@@ -612,10 +579,21 @@ const postOrderPlaced = async (req, res) => {
         product.productId.stockSold += 1;
         await product.productId.save();
       }
+
+      let orderData = await orderCollection.findOne({
+        _id: req.session.currentOrder._id,
+      });
+      if (orderData.paymentType == "") {
+        orderData.paymentType = "COD";
+        orderData.save();
+      }
       let k = await cartModel
-        .findByIdAndUpdate({ _id: req.session.currentOrder._id })
+        .findByIdAndUpdate({
+          _id: req.session.currentOrder._id,
+        })
         .populate("productId");
-      res.redirect("/orderinfo");
+      res.redirect("/orderinfo", { islogin: req.session.isLogged });
+      await cartModel.deleteMany({ userId: req.session.userInfo._id });
     }
   } catch (error) {
     console.log("something went wrong", error);
@@ -640,10 +618,25 @@ const getOrderInfo = async (req, res) => {
 const getCancelOrder = async (req, res) => {
   try {
     console.log("coming to this cancel order");
+    const orderData = await orderModel.findOne({ _id: req.query.cancelId });
     await orderModel.findOneAndUpdate(
       { _id: req.query.cancelId },
       { $set: { orderStatus: "cancelled" } }
     );
+    let walletTransaction = {
+      transactiondate: new Date(),
+      transactionAmount: orderData.grandTotalCost,
+      transactionType: "Online Payment Order Cancelled",
+    };
+    if (orderData.paymentType != "COD") {
+      await walletModel.findOneAndUpdate(
+        { userId: req.session.userInfo._id },
+        {
+          $inc: { walletBalance: orderData.grandTotalcost },
+          $push: { walletTransaction },
+        }
+      );
+    }
     res.redirect("/orderHistory");
   } catch (error) {
     console.log("Something Went Wrong", error);
