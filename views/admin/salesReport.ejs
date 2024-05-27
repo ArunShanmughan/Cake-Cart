@@ -51,7 +51,13 @@
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 
     <!-- cdn for font awsome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
     <link
       href="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.css"
@@ -150,7 +156,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-table-columns"></i>  Dashboard</a
+                <i class="fa-solid fa-table-columns"></i> Dashboard</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -160,7 +166,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-bag-shopping"></i>  Products</a
+                <i class="fa-solid fa-bag-shopping"></i> Products</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -170,7 +176,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-list"></i> Categories</a
+                <i class="fa-solid fa-list"></i> Categories</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -180,7 +186,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-users"></i>  User Managment</a
+                <i class="fa-solid fa-users"></i> User Managment</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -190,7 +196,8 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-cart-flatbed-suitcase"></i>  Order Managment</a
+                <i class="fa-solid fa-cart-flatbed-suitcase"></i> Order
+                Managment</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -200,7 +207,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-handshake"></i>  Offer Managment</a
+                <i class="fa-solid fa-handshake"></i> Offer Managment</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -210,7 +217,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-percent"></i> Category Offer Managment</a
+                <i class="fa-solid fa-percent"></i> Category Offer Managment</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -220,7 +227,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-ticket"></i>  Coupon Managment</a
+                <i class="fa-solid fa-ticket"></i> Coupon Managment</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -230,7 +237,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-chart-line"></i>  Sales Reports</a
+                <i class="fa-solid fa-chart-line"></i> Sales Reports</a
               >
             </li>
           </ul>
@@ -402,186 +409,7 @@
       <!-- Content -->
 
       <!-- <body> -->
-        <style>
-          .container {
-             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-             padding: 20px;
-             border-radius: 5px;
-             background-color: #f9f9f9;
-             margin-bottom: 40px;
-           }
-          .form-control {
-             border-radius: 5px;
-             border-color: #cccccc;
-           }
-          .btn-success {
-             border-radius: 5px;
-             background-color: #4caf50;
-             border-color: #4caf50;
-           }
-          .btn-success:hover {
-             background-color: #45a049;
-           }
-         </style>
-         
-         <div class="container mt-4">
-          <h1 class="text-center mb-4">EDIT PRODUCT</h1>
-          <form id="editproduct" enctype="multipart/form-data">
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Product Name</label>
-              <input
-                type="text"
-                value="<%=productInfo.productName%>"
-                name="productName"
-                class="form-control"
-                id="exampleFormControlInput1"
-                placeholder=""
-                maxlength="50"
-                style="max-width: 300px"
-              />
-            </div>
-            <br />
-            <select
-              name="parentCategory"
-              class="form-control form-control-md mb-4"
-              style="max-width: 300px"
-            >
-              <option disabled selected>Select Parent Category</option>
-              <% categorydetails.forEach(category => { %>
-  
-              <option value="<%=category._id %>"><%= category.categoryName%></option>
-              <% }) %>
-            </select>
-
-            <div class="form-group">
-              <span id="imageCount" style="margin-top: 5px;">
-                <% if (productInfo.images.length> 0) { %>
-                  <%=productInfo.images.length%> images exists
-                    <% } else { %>
-                      No image exists
-                      <% } %>
-              </span>
-            </div>
-
-            <% for(let i=0;i<productInfo.images.length;i++){ %>
-              <img src="assets/img/uploads/<%=productInfo.images[i]%>"
-                style="height: 60px; width: 60px; border-radius: 0;">
-              <% } %>
-  
-            <div class="form-group">
-              <label for="images">Add image</label>
-              <input
-                type="file"
-                name="images"
-                value = "productInfo.images[i]"
-                class="form-control-file"
-                id="images"
-                multiple
-              />
-            </div>
-  
-            <br />
-  
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Product Price</label>
-              <input
-                class="form-control"
-                value="<%=productInfo.price%>"
-                name="productPrice"
-                type="text"
-                placeholder=""
-                maxlength="50"
-                style="max-width: 300px"
-              />
-            </div>
-  
-            <div class="form-group">
-              <label for="exampleFormControlInput1">Product Stock</label>
-              <input
-                class="form-control"
-                value="<%=productInfo.quantity%>"
-                name="productStock"
-                type="text"
-                placeholder=""
-                maxlength="50"
-                style="max-width: 300px"
-              />
-            </div>
-  
-            <button type="submit" class="btn btn-success mt-4">Save</button>
-          </form>
-         </div>
-      <script>
-        $.validator.addMethod("startspace", function(value, element) {
-          return value.trim().charAt(0) !== " ";
-         }, "Product name should not start with a space.");
-
-        $.validator.addMethod("noMoreThanTwoSpaces", function(value, element) {
-           return value.trim().replace(/\s+/g, " ").match(/ {2,}/) === null;
-         }, "Product name should not have more than two spaces together.");
-        $("#editproduct").validate({
-          rules: {
-            productName: {
-              required: true,
-              minlength: 2,
-              maxlength: 50,
-              startspace: true,
-              noMoreThanTwoSpaces: true,
-           },
-            productPrice: {
-              required: true,
-              pattern: "[0-9]+",
-            },
-            productStock: {
-              required: true,
-              pattern: "[0-9]+",
-            },
-            parentCategory: {
-              required: true,
-            },
-          },
-          submitHandler: async (form, event) => {
-            event.preventDefault();
-            // Create a new FormData object
-            const formData = new FormData(form);
-
-            const fileInputs = form.querySelectorAll(
-              'input[type="file"][name="images"]'
-            );
-            fileInputs.forEach((input) => {
-              const files = input.files;
-              for (let i = 0; i < files.length; i++) {
-                formData.append("images", files[i]);
-              }
-            });
-
-            let response = await fetch("/editProducts/<%=productInfo._id%>", {
-              method: "POST",
-              body: formData,
-            });
-            let result = await response.json();
-            if (result.exists) {
-              await Swal.fire({
-                icon: "error",
-                title: "Product Already exists",
-              });
-            }
-            if (result.success) {
-              await Swal.fire({
-                icon: "success",
-                title: "Product Added",
-              });
-              window.location.href = "/productManagment";
-            }
-            if (result.noValue) {
-              await Swal.fire({
-                icon: "error",
-                title: "No Value in Product Name",
-              });
-            }
-          },
-        });
-      </script>
+      
       <!-- </body> -->
 
       <div class="clearfix"></div>
@@ -599,19 +427,6 @@
       <!-- /.site-footer -->
     </div>
     <!-- /#right-panel -->
-
-    <style>
-      .container {
-        margin: 0 auto;
-        /* Centers the container horizontally */
-        max-width: 600px;
-        /* Optional: Set maximum width of the container */
-      }
-
-      .error {
-        color: red;
-      }
-    </style>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

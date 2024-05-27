@@ -44,7 +44,7 @@ const productUnBlock = async (req, res) => {
 const getAddProduct = async (req, res) => {
   try {
       const categorydetails = await categoryModel.find();
-      const productdetails = await productCollection.find()
+      const productDetails = await productCollection.find()
       res.render("admin/addproduct", { categoryModel: categorydetails,productDetails});
   } catch (error) {
     console.log("Something Went Wrong", error);

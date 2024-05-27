@@ -26,8 +26,8 @@ const getChangeOrderStatus = async(req,res)=>{
 
 const getSingleOrder = async(req,res)=>{
   try {
-      let orderDet = await orderModel.findOne({_id:req.query.singleOrd});
-      console.log(orderDet);
+      let orderDet = await orderModel.findOne({_id:req.query.singleOrd}).populate("userId");
+      console.log("This is the array that has been passing from the orderDet.cartData -->",orderDet.cartData);
       let addressDet = await addressModel.findOne({_id:orderDet.addressChoosen});
       res.render("admin/currentOrder",{orderDet,addressDet})
   } catch (error) {

@@ -4,7 +4,7 @@ const transport = require("../services/sendOTP");
 const productModel = require("../models/productModel");
 const categoryModel = require("../models/categoryModel");
 const addressModel = require("../models/addressModel");
-const { postAddProduct } = require("./productcontroller");
+const { postAddProduct } = require("./productController");
 const cartModel = require("../models/cartModel");
 const orderModel = require("../models/orderModel");
 const wishListCollection = require("../models/wishListModel");
@@ -164,6 +164,15 @@ const getMyAccount = async (req, res) => {
     console.log("Something Went Wrong", error);
   }
 };
+
+const getMyWallet = async(req,res)=>{
+  try {
+    let myWallet = await walletModel.find();
+    res.render("users/myWallet",{myWallet,islogin: req.session.isLogged})
+  } catch (error) {
+    
+  }
+}
 
 const postEditUserInfo = async (req, res) => {
   try {
@@ -375,8 +384,10 @@ const getAddToCart = async (req, res) => {
   }
 };
 
+
 async function wholeTotal(req) {
   try {
+    if(req.session.userInfo){
     let usersCartData = await cartModel
       .find({ userId: req.session.userInfo?._id })
       .populate("productId");
@@ -394,10 +405,12 @@ async function wholeTotal(req) {
       .populate("productId");
     req.session.wholeTotal = wholeTotal;
     return JSON.parse(JSON.stringify(usersCartData));
+  }
   } catch (error) {
     console.log("Something Went Wrong", error);
   }
 }
+
 
 const getCart = async (req, res) => {
   try {
@@ -628,7 +641,10 @@ const getCancelOrder = async (req, res) => {
       transactionAmount: orderData.grandTotalCost,
       transactionType: "Online Payment Order Cancelled",
     };
+    console.log(orderData.paymentType)
+    let exist = await walletModel.findOne({userId:req.sesson.userInfo._id})
     if (orderData.paymentType != "COD") {
+      if(exist){
       await walletModel.findOneAndUpdate(
         { userId: req.session.userInfo._id },
         {
@@ -636,6 +652,13 @@ const getCancelOrder = async (req, res) => {
           $push: { walletTransaction },
         }
       );
+    }else{
+      await walletModel.create({
+        userId:req.session.userInfo._id,
+        walletBalance:orderData.grandTotalcost,
+        walletTransaction: [{ ...walletTransaction }]
+    })
+    }
     }
     res.redirect("/orderHistory");
   } catch (error) {
@@ -646,7 +669,7 @@ const getCancelOrder = async (req, res) => {
 const getSingleOrder = async (req, res) => {
   try {
     let orderInfo = await orderModel.findOne({ _id: req.query.viewOrd });
-    console.log(orderInfo);
+    console.log("this is CartData",orderInfo.cartData);
     let addressInfo = await addressModel
       .findOne({ _id: orderInfo.addressChoosen })
       .populate("userId");
@@ -675,6 +698,7 @@ module.exports = {
   postOtp,
   getLogout,
   getMyAccount,
+  getMyWallet,
   getOrderHistory,
   getMyAddress,
   postEditUserInfo,

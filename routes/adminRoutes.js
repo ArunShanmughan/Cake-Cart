@@ -11,7 +11,7 @@ const {
   userBlock,
   userUnBlock,
   admLogout,
-} = require("../controllers/admincontroller");
+} = require("../controllers/admincontroller.js");
 
 const {
   getCategoryManagment,
@@ -29,7 +29,7 @@ const {
   postAddProduct,
   getEditProduct,
   postEditProduct,
-} = require("../controllers/productcontroller.js");
+} = require("../controllers/productController.js");
 
 const {
   getOrderManagment,
@@ -53,6 +53,10 @@ const {
   postDeleteCoupon,
   putEditCoupon,
 } = require("../controllers/couponController.js");
+
+const {
+  getSalesReport
+}=require("../controllers/salesReportController.js");
 
 //admin Routers
 admRouter.get("/admin", getAdmin);
@@ -98,5 +102,9 @@ admRouter.get("/couponManagment", admAuth, getCouponManagment);
 admRouter.post("/newCouponCreate", admAuth, getCreateCoupon);
 admRouter.post("/deleteCoupon/:couponId", admAuth, postDeleteCoupon);
 admRouter.put("/editCoupon/:id",admAuth,putEditCoupon)
+
+//Sales report routes
+admRouter.get("/salesreport",admAuth,getSalesReport)
+
 
 module.exports = admRouter;

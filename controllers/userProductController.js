@@ -5,46 +5,61 @@ const categoryModel = require("../models/categoryModel");
 const getProducts = async (req, res) => {
   try {
     const categoryInfo = await categoryModel.find({ isListed: true });
-      let productsInOnePage = 4
-      let pageNo = req.query.pageNo ||  1
-      let skip= (pageNo-1) * productsInOnePage 
-      let limit= productsInOnePage;
-  let query = { isListed: true };
-  if (req.query.searchId) {
-    query.productName = { $regex: req.query.searchId, $options: "i" };
-  } else if (req.query.id) {
-    query.parentCategory = req.query.id;
-  }
 
-  const { ascSort } = req.session;
-  const { desSort } = req.session;
-  const { highValueSort } = req.session;
-  const { lowValueSort } = req.session;
-  const { newArrive } = req.session;
+    // Define variables for numbers
+    const productsPerPage = 4;
+    const pageNumber = parseInt(req.query.pageNo) || 1;
+    const skipIndex = (pageNumber - 1) * productsPerPage;
+    const query = { isListed: true };
 
-  req.session.ascSort = null;
-  req.session.desSort = null;
-  req.session.highValueSort = null;
-  req.session.lowValueSort = null;
-  req.session.newArrive = null;
-  const productDataWithPagination = await productModel.find(query).populate("category").skip(skip).limit(limit);
-  let productInfo = req.session.productsData || productDataWithPagination
+    if (req.query.searchId) {
+      query.productName = { $regex: req.query.searchId, $options: "i" };
+    } else if (req.query.id) {
+      query.parentCategory = req.query.id;
+    }
 
-  let totalPages=  Math.ceil(  await productModel.countDocuments() / productsInOnePage )
-      let totalPagesArray = new Array(totalPages).fill(null)
+    // Reset session variables
+    req.session.ascSort = null;
+    req.session.desSort = null;
+    req.session.highValueSort = null;
+    req.session.lowValueSort = null;
+    req.session.newArrive = null;
 
-  res.render("users/products", {
-    islogin: req.session.isLogged,
-    productInfo:
-      ascSort || desSort || highValueSort || lowValueSort || newArrive || productInfo,
-    categoryDet: categoryInfo,
-    totalPagesArray,
-  });
-  req.session.ProductsData = null;
+    const productDataWithPagination = await productModel
+      .find(query)
+      .populate("category")
+      .skip(skipIndex)
+      .limit(productsPerPage);
+
+    let productInfo = req.session.productsData || productDataWithPagination;
+
+    // Calculate total pages
+    const totalProducts = await productModel.countDocuments();
+    const totalPages = Math.ceil(totalProducts / productsPerPage);
+
+    // Create an array of page numbers
+    const totalPagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+    res.render("users/products", {
+      islogin: req.session.isLogged,
+      productInfo:
+        req.session.ascSort ||
+        req.session.desSort ||
+        req.session.highValueSort ||
+        req.session.lowValueSort ||
+        req.session.newArrive ||
+        productInfo,
+      categoryDet: categoryInfo,
+      totalPagesArray,
+    });
+
+    // Clear session variable
+    req.session.productsData = null;
   } catch (error) {
-    console.log("Something went Wrong",error);
+    console.log("Something went Wrong", error);
   }
 };
+
 
 const getSingleProduct = async (req, res) => {
   try {
@@ -62,6 +77,7 @@ const getSingleProduct = async (req, res) => {
   }
 };
 
+
 const getSearchProduct = async (req, res) => {
   try {
     const searchedProduct = await productModel.find({
@@ -76,6 +92,7 @@ const getSearchProduct = async (req, res) => {
     console.log("Something Went Wrong", error);
   }
 };
+
 
 const getSortData = async (req, res) => {
   try {

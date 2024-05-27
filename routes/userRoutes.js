@@ -15,6 +15,7 @@ const {
   postEditUserInfo,
   getOrderHistory,
   getMyAddress,
+  getMyWallet,
   getAddAddress,
   postAddAddress,
   getEditAddress,
@@ -33,7 +34,7 @@ const {
   getCancelOrder,
   getSingleOrder,
   postApplyCoupon,
-} = require("../controllers/usercontroller");
+} = require("../controllers/userController");
 
 const {
   getProducts,
@@ -63,6 +64,7 @@ router.get("/myAccount",userAuth, getMyAccount);
 router.post("/editUserInfo",userAuth,postEditUserInfo)
 router.get("/orderHistory",userAuth, getOrderHistory);
 router.get("/myAddress",userAuth, getMyAddress);
+router.get("/myWallet",userAuth, getMyWallet)
 router.get("/addAddress",userAuth, getAddAddress);
 router.post("/addAddress",userAuth, postAddAddress);
 router.get("/editAddress",userAuth, getEditAddress);
@@ -95,7 +97,7 @@ router.get("/removeFromWishList/:item",userAuth,getWishlistRemover)
 
 //payment controller of paypal
 router.post("/payPalPayment",userAuth,onlinePayments)
-router.get("/paymentDone",paymentDone);
+router.get("/paymentDone",userAuth,paymentDone);
 
 
 module.exports = router;

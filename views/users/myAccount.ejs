@@ -621,14 +621,34 @@
           referrerpolicy="no-referrer"
         ></script>
         <script>
+          $.validator.addMethod(
+            "startspace",
+            function (value, element) {
+              return value.trim().charAt(0) !== " ";
+            },
+            "Product name should not start with a space."
+          );
+          $.validator.addMethod(
+            "phoneRegex",
+            function (value, element) {
+              return /^[0-9]{10}$/.test(value);
+            },
+            "Please enter a valid 10-digit phone number."
+          );
           $(document).ready(function () {
             $("#editUserInfo").validate({
               rules: {
                 firstName: {
                   required: true,
+                  minlength: 2,
+                  maxlength: 50,
+                  startspace: true,
                 },
                 lastName: {
                   required: true,
+                  minlength: 2,
+                  maxlength: 50,
+                  startspace: true,
                 },
                 email: {
                   required: true,
@@ -637,6 +657,7 @@
                 phone: {
                   required: true,
                   digits: true,
+                  phoneRegex: true,
                 },
               },
               submitHandler: async (form, event) => {
@@ -660,7 +681,7 @@
                     title: "Updated",
                     text: "User Details Updated",
                     icon: "success",
-                  }).then(()=>location.reload());
+                  }).then(() => location.reload());
                 } else {
                   await Swal.fire({
                     title: "Not Updated",
@@ -684,12 +705,14 @@
           <a
             class="btn btn-primary m-5 custom-btn"
             href="/myAddress?UserId=<%=userData._id%>"
-            ><i class="fas fa-map-marker-alt" aria-hidden="true"></i> My
-            Address</a
+            ><i class="fa-solid fa-house" aria-hidden="true"></i> My Address</a
           >
           <a class="btn btn-primary m-5 custom-btn" href="/addAddress"
             ><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Add
             Address</a
+          >
+          <a class="btn btn-primary m-5 custom-btn" href="/myWallet"
+            ><i class="fa-solid fa-wallet" aria-hidden="true"></i>Wallet</a
           >
           <a class="btn btn-primary m-5 custom-btn" href="/changePassword"
             ><i class="fa fa-list" aria-hidden="true"></i>Change Password</a

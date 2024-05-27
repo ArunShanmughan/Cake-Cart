@@ -428,7 +428,6 @@
       </div>
 
      
-      <div>
         <table class="table">
           <thead>
             <tr>
@@ -481,7 +480,7 @@
 
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
+                                        data-bs-dismiss="modal">Close</button>
 
                                     <button type="submit" class="btn btn-primary">Save
                                         changes</button>
@@ -494,16 +493,24 @@
                 </div>
               </div> 
               <script>
-                $('#editCategory<%=i%>').validate({
-                  rules: {
-                      categoryEdit: {
-                          required: true,
-                      },
-                      categorydesEdit: {
-                          required: true
+                jQuery.validator.addMethod("lettersonly", function(value, element) {
+                    return value.match(/^[a-zA-Z\s]*$/);
+                      }, "Letters only please");
+                    $('#editCategory<%=i%>').validate({
+                      rules: {
+                        category: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 50,
+                        lettersonly: true
+                    },
+                    categorydes: {
+                        required: true,
+                        minlength: 10,
+                        maxlength: 200,
+                        lettersonly: true
                       }
-                  },
-                  
+                    },
                   submitHandler: async(form,event)=>{
                       event.preventDefault()
                       let formData = {
@@ -524,23 +531,18 @@
                                     await Swal.fire({
                                         icon: "success",
                                         title: "Category Edited"
-          
                                     });
                                     window.location.reload();
                                 } if(result.exists) {
                                     await Swal.fire({
                                         icon: "error",
                                         title: "Category Already Exists"
-          
-                                    });
-                                    window.location.reload();
+                                    }).then(()=>window.location.reload()) 
                                 } if(result.noValue){
                                      await Swal.fire({
                                         icon: "error",
                                         title: "Give any value"
-          
-                                    });
-                                     window.location.reload();
+                                    }).then(()=>window.location.reload())
                                 }
                   }
                 })
@@ -548,7 +550,6 @@
               <% } %>
           </tbody>
         </table>
-      </div>
       <!-- /body -->
 
       <div class="clearfix"></div>
@@ -607,47 +608,52 @@
     </script>
     
     <script>
+      jQuery.validator.addMethod("lettersonly", function(value, element) {
+        return value.match(/^[a-zA-Z\s]*$/);
+          }, "Letters only please");
        $('#addcategory').validate({
-               rules: {
-                   category: {
-                       required: true
-                   },
-                   categorydes: {
-                       required: true
-                   }
-               },
-               submitHandler:async(form,event)=>{
-                 event.preventDefault();
+          rules: {
+            category: {
+            required: true,
+            minlength: 3,
+            maxlength: 50,
+            lettersonly: true
+         },
+         categorydes: {
+            required: true,
+            minlength: 10,
+            maxlength: 200,
+            lettersonly: true
+          }
+        },
+      submitHandler:async(form,event)=>{
+        event.preventDefault();
 
-                 let formData = {
-                   category :form.category.value,
-                   categoryDes: form.categorydes.value,
-                 }
+        let formData = {
+          category :form.category.value,
+          categoryDes: form.categorydes.value,
+        }
 
-                 let response = await fetch('/addCategory', {
-                       method: 'POST',
-                       headers: { 'Content-Type': 'application/json' },
-                       body: JSON.stringify(formData)
-                   })
+        let response = await fetch('/addCategory', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData)
+          })
 
-                   let result = await response.json()
-                   if (result.success) {
-                       await Swal.fire({
-                           icon: "success",
-                           title: "Category Added"
-
-                       });
-                       window.location.reload();
-                   } else {
-                       await Swal.fire({
-                           icon: "error",
-                           title: "Category Already Exists"
-
-                       });
-                       window.location.reload();
-                   }
-               }
-             })
+          let result = await response.json()
+          if (result.success) {
+              await Swal.fire({
+                  icon: "success",
+                  title: "Category Added"
+              }).then(()=>window.location.reload())
+          } else {
+              await Swal.fire({
+                  icon: "error",
+                  title: "Category Already Exists"
+              }).then(()=>window.location.reload())
+          }
+      }
+    })
     </script>
     
   </body>
