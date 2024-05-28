@@ -124,6 +124,7 @@ const paymentDone = async(req,res)=>{
           orderNumber: Math.floor(Math.random() * (10000 - 100 + 1)) + 100,
           orderDate: new Date(),
           addressChoosen: JSON.parse(JSON.stringify(addressData)),
+          couponOffers:req.session.presentOrderData.couponOffers,
           cartData: await wholeTotal(req),
           grandTotalCost: req.session.presentOrderData.presentTotal,
         });

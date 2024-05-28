@@ -4,7 +4,7 @@ const transport = require("../services/sendOTP");
 const productModel = require("../models/productModel");
 const categoryModel = require("../models/categoryModel");
 const addressModel = require("../models/addressModel");
-const { postAddProduct } = require("./productController");
+const { postAddProduct } = require("./productcontroller");
 const cartModel = require("../models/cartModel");
 const orderModel = require("../models/orderModel");
 const wishListCollection = require("../models/wishListModel");
@@ -518,20 +518,20 @@ const postApplyCoupon = async (req, res) => {
     let coupData = await couponModel.findOne({
       couponCode: req.body.couponCode,
     });
+    console.log(coupData)
     if (!coupData) {
       res.send({ validCoupon: false });
     }
 
-    if (coupData.userId.includes(userId) && req.session.couponApplied) {
+    if (coupData.userId.includes(req.session.userInfo._id)) {
       res.send({ validCoupon: false, alreadyUsed: true });
     }
 
-    let { expiryDate } = couponData;
+    let { expiryDate } = coupData;
     let expiryDateCheck = new Date() < new Date(expiryDate);
 
     if (expiryDateCheck) {
       res.send({ validCoupon: true, coupData });
-      req.session.appliedCoupon = coupData;
     } else {
       res.send({ validCoupon: false });
     }
@@ -540,6 +540,18 @@ const postApplyCoupon = async (req, res) => {
   }
 };
 
+
+
+// const postRemoveCoupon = async (req,res)=>{
+//   try {
+//     res.send({success:true})
+//   } catch (error) {
+//     console.log("Something went wrong",error);
+//   }
+// }
+
+
+
 //This is for CASH ON DELIVERY option order placed method
 const postOrderPlaced = async (req, res) => {
   try {
@@ -547,6 +559,10 @@ const postOrderPlaced = async (req, res) => {
       "............this the data is coming from the post order method input's..........",
       req.body
     );
+    let appliedCoupon = null
+    if(req.body.couponOffers){
+      appliedCoupon = req.body.couponOffers;
+    }
     let addressData = await addressModel
       .find({ userId: req.session.userInfo._id })
       .populate("addressModel");
@@ -555,6 +571,7 @@ const postOrderPlaced = async (req, res) => {
         userId: req.session.userInfo._id,
         orderNumber: Math.floor(Math.random() * (10000 - 100 + 1)) + 100,
         orderDate: new Date(),
+        couponOffers:appliedCoupon,
         addressChoosen: JSON.parse(JSON.stringify(addressData[0])),
         cartData: await wholeTotal(req),
         grandTotalCost: req.session.wholeTotal,

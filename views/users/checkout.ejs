@@ -801,7 +801,9 @@
             paymentMethod: form.paymentMethod.value,
             presentTotal:grandTotal,
             comments: form.Comments.value,
+            couponOffers:appliedCoupon,
           };
+          console.log(appliedCoupon);
           console.log(obj);
           if (form.paymentMethod.value == "payPal") {
             let response = await fetch(`/payPalPayment/?total=${grandTotal}`, {
@@ -1346,6 +1348,7 @@
     <script src="assets/js/main.js"></script>
 
     <script>
+      var appliedCoupon = false;
       async function showDetails(percentage, minimumPurchase, grandTotal) {
         try {
           if (grandTotal > minimumPurchase) {
@@ -1379,33 +1382,43 @@
 
         let result = await response.json();
         console.log("this is the result data from fetch", result);
-        console.log(result.discountPercentage);
+        console.log(result.coupData.discountPercentage);
 
         if (result) {
           document.getElementById("applyCouponBtn").disabled = true;
           document.getElementById("removeCouponBtn").style.display =
             "inline-block";
-          let maximumDiscount = result.maximumDiscount;
-          let currPercentage = result.discountPercentage;
+          let maximumDiscount = result.coupData.maximumDiscount;
+          let currPercentage = result.coupData.discountPercentage;
           let grandTotal =
             document.getElementById("presentGrandTotal").innerText;
+            console.log(grandTotal);
           let discountAmount = (grandTotal * currPercentage) / 100;
+          console.log(discountAmount)
           if (discountAmount > maximumDiscount) {
             discountAmount = maximumDiscount;
           }
 
           grandTotal = grandTotal - discountAmount;
+          console.log(grandTotal);
           document.getElementById(
             "presentGrandTotal"
           ).innerText = `${grandTotal}`;
+          appliedCoupon = result.coupData._id;
           console.log(grandTotal);
         }
       }
 
-      function removeCoupon() {
+      async function removeCoupon() {
+          await Swal.fire({
+              title: "Coupon Removed",
+              text: `Your coupon has been removed`,
+              icon: "warning",
+            });
         document.getElementById("applyCouponBtn").disabled = false;
         document.getElementById("removeCouponBtn").style.display = "none";
         document.getElementById("appliedCoupon").value = "";
+        appliedCoupon = false;
         window.location.reload();
       }
     </script>

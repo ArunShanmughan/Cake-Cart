@@ -407,9 +407,194 @@
       </header>
       <!-- /#header -->
       <!-- Content -->
-
       <!-- <body> -->
-      
+      <style>
+        body {
+          font-family: "Open Sans", sans-serif;
+          margin: 20px;
+          background-color: #f7f7f7;
+        }
+
+        h1 {
+          text-align: center;
+          color: #333;
+          font-weight: bold;
+          margin-bottom: 20px;
+        }
+
+        .filter-container,
+        .download-buttons {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 20px;
+          align-items: center;
+        }
+
+        label {
+          margin: 0 10px;
+          font-weight: bold;
+          color: #666;
+        }
+
+        input[type="date"] {
+          padding: 10px;
+          margin-right: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-weight: bold;
+          font-size: 16px;
+        }
+
+        .btn-primary {
+          background-color: #337ab7;
+          color: #fff;
+        }
+
+        .btn-secondary {
+          background-color: #666;
+          color: #fff;
+        }
+
+        .btn-success {
+          background-color: #5cb85c;
+          color: #fff;
+        }
+
+        .btn-danger {
+          background-color: #d9534f;
+          color: #fff;
+        }
+
+        .btn:hover {
+          opacity: 0.8;
+        }
+
+        #sales-report-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #sales-report-table th,
+        #sales-report-table td {
+          border: 1px solid #ddd;
+          padding: 10px;
+          text-align: left;
+        }
+
+        #sales-report-table th {
+          background-color: #f2f2f2;
+          font-weight: bold;
+          color: #333;
+        }
+
+        #sales-report-table tr:nth-child(even) {
+          background-color: #f9f9f9;
+        }
+
+        #sales-report-table tr:hover {
+          background-color: #ddd;
+        }
+
+        #sales-report-table td {
+          vertical-align: middle;
+        }
+      </style>
+      <body>
+        <h1>Sales Report</h1>
+        <div class="filter-container">
+          <label for="start-date">Start Date:</label>
+          <input type="date" id="start-date" />
+          <label for="end-date">End Date:</label>
+          <input type="date" id="end-date" />
+          <button class="btn btn-primary" id="apply-filters">
+            Apply Filters
+          </button>
+          <button class="btn btn-secondary" id="remove-filters">
+            Remove Filters
+          </button>
+        </div>
+        <div class="download-buttons">
+          <button class="btn btn-success" id="download-excel">
+            Download Excel
+          </button>
+          <button class="btn btn-danger" id="download-pdf">Download PDF</button>
+        </div>
+        <table id="sales-report-table">
+          <thead>
+            <tr>
+              <th>Order Number</th>
+              <th>User Name</th>
+              <th>Order Date</th>
+              <th>Products</th>
+              <th>Product Offer</th>
+              <th>Quantity</th>
+              <th>Before Offer</th>
+              <th>Total Cost</th>
+              <th>Payment Method</th>
+              <th>Status</th>
+              <th>Coupons Applied</th>
+              <th>Before Coupon</th>
+              <th>Order Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(let i=0;i<salesData.length;i++){ %>
+            <tr>
+              <td><%= salesData[i].orderNumber %></td>
+              <td><%= salesData[i].userId.fName %></td>
+              <td><%= new Date(salesData[i].orderDate).toLocaleDateString()%></td>
+              <td>
+                <% salesData[i].cartData.forEach(product => { %>
+                <%= product.productId.productName %><br>
+                <% }); %>
+              </td>
+              <td>
+                <% if(!salesData[i].productOffers) { %>
+                Nill
+                <% } else { %>
+                <%= salesData[i].grandTotalcost%>
+                <% } %>
+              </td>
+              <td>
+                <% salesData[i].cartData.forEach(product => { %>
+                <%=product.productQuantity %><br>
+                <% }); %>
+              </td>
+              <td>
+                <% salesData[i].cartData.forEach(product => { %>
+                Rs.<%=product.productId.price%><br>
+                <% }); %>
+              </td>
+              <td>Rs.<%= salesData[i].grandTotalcost%></td>
+              <td><%= salesData[i].paymentType %></td>
+              <td><%= salesData[i].orderStatus %></td>
+              <td>
+                <% if(salesData[i].couponOffers.length === 0) { %>
+                None
+                <% } else { %>
+                <%= salesData[i].couponOffers[0] %>
+                <% } %>
+              </td>
+              <td>
+                <% salesData[i].cartData.forEach(product => { %>
+                Rs.<%= product.productId.priceBeforeCoupon %><br>
+                <% }); %>
+              </td>
+              <td>Rs.<%= salesData[i].grandTotalcost %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </body>
       <!-- </body> -->
 
       <div class="clearfix"></div>
