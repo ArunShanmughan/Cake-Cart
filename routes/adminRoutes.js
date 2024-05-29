@@ -55,7 +55,9 @@ const {
 } = require("../controllers/couponController.js");
 
 const {
-  getSalesReport
+  getSalesReport,
+  postSalesDateFilter,
+  salesReportPdfDownload,
 }=require("../controllers/salesReportController.js");
 
 //admin Routers
@@ -105,6 +107,8 @@ admRouter.put("/editCoupon/:id",admAuth,putEditCoupon)
 
 //Sales report routes
 admRouter.get("/salesreport",admAuth,getSalesReport)
+admRouter.post("/salesDateFilter",admAuth,postSalesDateFilter);
+admRouter.post("/downloadPdf",admAuth,salesReportPdfDownload)
 
 
 module.exports = admRouter;

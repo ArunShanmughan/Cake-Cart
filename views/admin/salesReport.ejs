@@ -510,18 +510,25 @@
       </style>
       <body>
         <h1>Sales Report</h1>
-        <div class="filter-container">
+        <form class="filter-container" id="date-filter">
+          <% if(dateValues){ %>
           <label for="start-date">Start Date:</label>
-          <input type="date" id="start-date" />
+          <input type="date" id="start-date" name="startDate" value="<%= dateValues.dateFrom%>"/>
           <label for="end-date">End Date:</label>
-          <input type="date" id="end-date" />
-          <button class="btn btn-primary" id="apply-filters">
+          <input type="date" id="end-date" name="endDate" value="<%= dateValues.dateTo %>"/>
+          <% }else{ %>
+            <label for="start-date">Start Date:</label>
+          <input type="date" id="start-date" name="startDate" />
+          <label for="end-date">End Date:</label>
+          <input type="date" id="end-date" name="endDate" />
+          <% } %>
+          <button class="btn btn-primary" type="submit" id="apply-filters">
             Apply Filters
           </button>
-          <button class="btn btn-secondary" id="remove-filters">
+          <button class="btn btn-secondary" type="button" id="remove-filters">
             Remove Filters
           </button>
-        </div>
+        </form>
         <div class="download-buttons">
           <button class="btn btn-success" id="download-excel">
             Download Excel
@@ -547,47 +554,51 @@
             </tr>
           </thead>
           <tbody>
-            <% for(let i=0;i<salesData.length;i++){ %>
+            <% for(let i = 0; i < salesData.length; i++) { %>
             <tr>
               <td><%= salesData[i].orderNumber %></td>
               <td><%= salesData[i].userId.fName %></td>
-              <td><%= new Date(salesData[i].orderDate).toLocaleDateString()%></td>
               <td>
-                <% salesData[i].cartData.forEach(product => { %>
-                <%= product.productId.productName %><br>
-                <% }); %>
+                <%= new Date(salesData[i].orderDate).toLocaleDateString() %>
               </td>
               <td>
-                <% if(!salesData[i].productOffers) { %>
-                Nill
-                <% } else { %>
-                <%= salesData[i].grandTotalcost%>
-                <% } %>
+                <% salesData[i].cartData.forEach(product => { %> <%=
+                product.productId.productName %>
+                <hr />
+                <% }) %>
               </td>
               <td>
-                <% salesData[i].cartData.forEach(product => { %>
-                <%=product.productQuantity %><br>
-                <% }); %>
+                <% if (!salesData[i].productOffers) { %> Nill <% } else { %> <%=
+                salesData[i].grandTotalcost %> <% } %>
               </td>
               <td>
-                <% salesData[i].cartData.forEach(product => { %>
-                Rs.<%=product.productId.price%><br>
-                <% }); %>
+                <% salesData[i].cartData.forEach(product => { %> <%=
+                product.productQuantity %>
+                <hr />
+                <% }) %>
               </td>
-              <td>Rs.<%= salesData[i].grandTotalcost%></td>
+              <td>
+                <% salesData[i].cartData.forEach(product => { %> Rs.<%=
+                product.productId.price %>
+                <hr />
+                <% }) %>
+              </td>
+              <td>Rs.<%= salesData[i].grandTotalcost %></td>
               <td><%= salesData[i].paymentType %></td>
-              <td><%= salesData[i].orderStatus %></td>
+              <td>Delivered</td>
               <td>
-                <% if(salesData[i].couponOffers.length === 0) { %>
-                None
-                <% } else { %>
-                <%= salesData[i].couponOffers[0] %>
+                <% if (salesData[i].couponOffers.length === 0) { %> 
+                  None 
+                <% } else { %> 
+                  <%= salesData[i].couponOffers.couponCode %>
                 <% } %>
               </td>
               <td>
-                <% salesData[i].cartData.forEach(product => { %>
-                Rs.<%= product.productId.priceBeforeCoupon %><br>
-                <% }); %>
+                <% if (salesData[i].couponOffers) { %>
+                Rs.<%=Math.round(salesData[i].grandTotalcost / (1 - salesData[i].couponOffers.discountPercentage / 100)) %>
+                 <% } else { %> 
+                  Rs.<%= salesData[i].grandTotalcost %> 
+                  <% } %>
               </td>
               <td>Rs.<%= salesData[i].grandTotalcost %></td>
             </tr>
@@ -595,6 +606,111 @@
           </tbody>
         </table>
       </body>
+
+      <style>
+        .pagination {
+          position: fixed;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 100;
+        }
+
+        .pagination li {
+          margin: 0 5px;
+        }
+
+        .pagination a {
+          color: #333;
+          border: 1px solid #ddd;
+          padding: 5px 10px;
+          border-radius: 5px;
+        }
+
+        .pagination a:hover {
+          background-color: #ddd;
+        }
+
+        .pagination .page-item.active a {
+          background-color: #337ab7;
+          color: #fff;
+          border-color: #337ab7;
+        }
+      </style>
+      <div class="row">
+        <nav
+          aria-label="Page navigation example"
+          class="d-flex justify-content-center"
+        >
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <% for(i = 0; i < page; i++) { %>
+            <li class="page-item">
+              <a class="page-link" href="/Sales?pages=<%= i + 1 %>">
+                <%= i + 1 %>
+              </a>
+            </li>
+            <% } %>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <script>
+        $("#date-filter").validate({
+          submitHandler: async (form, event) => {
+            event.preventDefault();
+            let formData = {
+              dateFrom: form.startDate.value,
+              dateTo: form.endDate.value,
+            };
+            console.log("calling this date filter function",formData)
+            try {
+              let response = await fetch("/salesDateFilter", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+              });
+
+              let result = await response.json();
+              if (result.success) {
+                console.log("this is because the data is being passed here success")
+                window.location.reload();
+              }
+            } catch (error) {
+              console.log("Something went wrong with the filter", error);
+            }
+          },
+        });
+      </script>
+      <script>
+        //for download pdf
+        document.getElementById("download-pdf").addEventListener("click",async()=>{
+          const fromDate = document.getElementById("start-date").value()
+          const toDate = document.getElementById("end-date").value()
+          try {
+            let obj ={
+              dateFrom:fromDate,
+              dateTo:toDate,
+            }
+            const response = await fetch("/downloadPdf",{
+              method:"POST",
+              headers: { "Content-Type": "application/json" },
+              body:JSON.stringify(obj),
+            })
+          } catch (error) {
+            
+          }
+        })
+      </script>
       <!-- </body> -->
 
       <div class="clearfix"></div>
