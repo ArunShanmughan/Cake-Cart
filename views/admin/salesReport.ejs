@@ -513,11 +513,21 @@
         <form class="filter-container" id="date-filter">
           <% if(dateValues){ %>
           <label for="start-date">Start Date:</label>
-          <input type="date" id="start-date" name="startDate" value="<%= dateValues.dateFrom%>"/>
+          <input
+            type="date"
+            id="start-date"
+            name="startDate"
+            value="<%= dateValues.dateFrom%>"
+          />
           <label for="end-date">End Date:</label>
-          <input type="date" id="end-date" name="endDate" value="<%= dateValues.dateTo %>"/>
+          <input
+            type="date"
+            id="end-date"
+            name="endDate"
+            value="<%= dateValues.dateTo %>"
+          />
           <% }else{ %>
-            <label for="start-date">Start Date:</label>
+          <label for="start-date">Start Date:</label>
           <input type="date" id="start-date" name="startDate" />
           <label for="end-date">End Date:</label>
           <input type="date" id="end-date" name="endDate" />
@@ -533,7 +543,9 @@
           <button class="btn btn-success" id="download-excel">
             Download Excel
           </button>
-          <button class="btn btn-danger" id="download-pdf">Download PDF</button>
+          <button type="button" class="btn btn-danger" id="download-pdf">
+            Download PDF
+          </button>
         </div>
         <table id="sales-report-table">
           <thead>
@@ -587,18 +599,14 @@
               <td><%= salesData[i].paymentType %></td>
               <td>Delivered</td>
               <td>
-                <% if (salesData[i].couponOffers.length === 0) { %> 
-                  None 
-                <% } else { %> 
-                  <%= salesData[i].couponOffers.couponCode %>
-                <% } %>
+                <% if (salesData[i].couponOffers.length === 0) { %> None <% }
+                else { %> <%= salesData[i].couponOffers.couponCode %> <% } %>
               </td>
               <td>
                 <% if (salesData[i].couponOffers) { %>
-                Rs.<%=Math.round(salesData[i].grandTotalcost / (1 - salesData[i].couponOffers.discountPercentage / 100)) %>
-                 <% } else { %> 
-                  Rs.<%= salesData[i].grandTotalcost %> 
-                  <% } %>
+                Rs.<%=Math.round(salesData[i].grandTotalcost / (1 -
+                salesData[i].couponOffers.discountPercentage / 100)) %> <% }
+                else { %> Rs.<%= salesData[i].grandTotalcost %> <% } %>
               </td>
               <td>Rs.<%= salesData[i].grandTotalcost %></td>
             </tr>
@@ -672,7 +680,7 @@
               dateFrom: form.startDate.value,
               dateTo: form.endDate.value,
             };
-            console.log("calling this date filter function",formData)
+            console.log("calling this date filter function", formData);
             try {
               let response = await fetch("/salesDateFilter", {
                 method: "POST",
@@ -682,7 +690,9 @@
 
               let result = await response.json();
               if (result.success) {
-                console.log("this is because the data is being passed here success")
+                console.log(
+                  "this is because the data is being passed here success"
+                );
                 window.location.reload();
               }
             } catch (error) {
@@ -692,24 +702,42 @@
         });
       </script>
       <script>
-        //for download pdf
-        document.getElementById("download-pdf").addEventListener("click",async()=>{
-          const fromDate = document.getElementById("start-date").value()
-          const toDate = document.getElementById("end-date").value()
-          try {
-            let obj ={
-              dateFrom:fromDate,
-              dateTo:toDate,
+        document
+          .getElementById("download-pdf")
+          .addEventListener("click", async () => {
+            const fromDate = document.getElementById("start-date").value;
+            const toDate = document.getElementById("end-date").value;
+            console.log("Coming to the dowload pdf function", fromDate);
+            try {
+              console.log("dkjfshgfjdgdfhgjsdfg");
+              const response = await fetch(`/downloadPdf?startDate=${fromDate}&endDate=${toDate}`, {
+                method: "GET",
+              });
+              console.log("hsbdiboe");
+              // if (!response.ok) {
+              //   throw new Error(
+              //     `API request failed with status: ${response.status}`
+              //   );
+              // }
+
+              const blob = await response.blob();
+              // if (!blob) {
+              //   throw new Error("Response body is empty or malformed");
+              // }
+
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "salesReport.pdf";
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              document.body.removeChild(a);
+            } catch (error) {
+              console.error("Something went wrong in downloading PDF", error.message);
+              alert("Error downloading PDF: " + error.message);
             }
-            const response = await fetch("/downloadPdf",{
-              method:"POST",
-              headers: { "Content-Type": "application/json" },
-              body:JSON.stringify(obj),
-            })
-          } catch (error) {
-            
-          }
-        })
+          });
       </script>
       <!-- </body> -->
 

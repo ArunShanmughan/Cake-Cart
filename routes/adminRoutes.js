@@ -108,7 +108,7 @@ admRouter.put("/editCoupon/:id",admAuth,putEditCoupon)
 //Sales report routes
 admRouter.get("/salesreport",admAuth,getSalesReport)
 admRouter.post("/salesDateFilter",admAuth,postSalesDateFilter);
-admRouter.post("/downloadPdf",admAuth,salesReportPdfDownload)
+admRouter.get("/downloadPdf",admAuth,salesReportPdfDownload)
 
 
 module.exports = admRouter;
