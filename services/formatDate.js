@@ -1,5 +1,6 @@
 module.exports = (date, format = "MonDDYYYY") => {
   const dateObject = new Date(date);
+  console.log("coming to the format date function")
   if (format == "MonDDYYYY") {
     var options = { day: "2-digit", month: "short", year: "numeric" };
   } else if (format == "yyyy-MM-dd") {

@@ -1348,7 +1348,7 @@
     <script src="assets/js/main.js"></script>
 
     <script>
-      var appliedCoupon = false;
+      var appliedCoupon;
       async function showDetails(percentage, minimumPurchase, grandTotal) {
         try {
           if (grandTotal > minimumPurchase) {
@@ -1418,7 +1418,6 @@
         document.getElementById("applyCouponBtn").disabled = false;
         document.getElementById("removeCouponBtn").style.display = "none";
         document.getElementById("appliedCoupon").value = "";
-        appliedCoupon = false;
         window.location.reload();
       }
     </script>

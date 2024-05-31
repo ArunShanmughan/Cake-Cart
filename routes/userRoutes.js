@@ -34,7 +34,7 @@ const {
   getCancelOrder,
   getSingleOrder,
   postApplyCoupon,
-} = require("../controllers/usercontroller");
+} = require("../controllers/userController");
 
 const {
   getProducts,

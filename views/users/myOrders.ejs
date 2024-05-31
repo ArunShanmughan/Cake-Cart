@@ -31,6 +31,9 @@
       crossorigin="anonymous"
     ></script>
 
+    <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <!-- css Icon Font -->
     <link rel="stylesheet" href="/assets/css/vendor/msicons.min.css" />
     <link
@@ -381,7 +384,7 @@
     <!-- Breadcrumb end -->
 
     <h4 style="text-align: center">
-      <i class="fa-solid fa-user-check fa-xl"></i>My Account
+      <i class="fa fa-user fa-xl"></i>My Orders
     </h4>
     <div class="row">
       <div class="col-12">
@@ -400,6 +403,9 @@
           <a class="btn btn-primary m-5" href="/addAddress"
             ><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Add
             Address</a
+          >
+          <a href="/myWallet" class="btn btn-primary m-5"
+            ><i class="fa-solid fa-wallet" aria-hidden="true"></i>Wallet</a
           >
           <a class="btn btn-primary m-5" href="/changePassword"
             ><i class="fa fa-list" aria-hidden="true"></i>Change Password</a
@@ -444,19 +450,19 @@
       }
 
       .order-status.pending {
-        color: #ffc107; 
+        color: #ffc107;
       }
 
       .order-status.shipped {
-        color: #28a745; 
+        color: #28a745;
       }
 
       .order-status.delivered {
-        color: #007bff; 
+        color: #007bff;
       }
 
       .order-status.cancelled {
-        color: #dc3545; 
+        color: #dc3545;
       }
     </style>
 
@@ -493,12 +499,11 @@
             <% if (order.orderStatus === "cancelled") { %>
             <button class="btn btn-secondary" disabled>Cancelled</button>
             <% } else if(order.orderStatus === "delivered") { %>
-              <button class="btn btn-secondary" disabled>Delivered</button>
-              <% }else{ %>
+            <button class="btn btn-secondary" disabled>Delivered</button>
+            <% }else{ %>
             <a
-              href="/cancelOrder?cancelId=<%= order._id %>"
               class="btn btn-danger"
-              onclick="return confirm('Do you want to cancel?')"
+              onclick="cancelOrder('<%=order._id%>')"
               >Cancel</a
             >
             <% } %>
@@ -507,6 +512,24 @@
         <% }) %>
       </tbody>
     </table>
+    <script>
+      function cancelOrder(orderId) {
+        console.log("this is calling the cancel order function ")
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Do you really want to cancel this order?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, cancel it!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/cancelOrder?cancelId=" + orderId;
+          }
+        });
+      }
+    </script>
 
     <!-- Footer Start -->
     <footer class="ms-footer m-t-30">

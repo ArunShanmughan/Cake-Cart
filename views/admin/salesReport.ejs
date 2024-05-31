@@ -710,9 +710,12 @@
             console.log("Coming to the dowload pdf function", fromDate);
             try {
               console.log("dkjfshgfjdgdfhgjsdfg");
-              const response = await fetch(`/downloadPdf?startDate=${fromDate}&endDate=${toDate}`, {
-                method: "GET",
-              });
+              const response = await fetch(
+                `/downloadPdf?startDate=${fromDate}&endDate=${toDate}`,
+                {
+                  method: "GET",
+                }
+              );
               console.log("hsbdiboe");
               // if (!response.ok) {
               //   throw new Error(
@@ -734,8 +737,40 @@
               window.URL.revokeObjectURL(url);
               document.body.removeChild(a);
             } catch (error) {
-              console.error("Something went wrong in downloading PDF", error.message);
+              console.error(
+                "Something went wrong in downloading PDF",
+                error.message
+              );
               alert("Error downloading PDF: " + error.message);
+            }
+          });
+      </script>
+      <script>
+        document
+          .getElementById("download-excel")
+          .addEventListener("click", async () => {
+            const fromDate = document.getElementById("start-date").value;
+            const toDate = document.getElementById("end-date").value;
+            try {
+              const response = await fetch(
+                `/downloadExcel?startDate=${fromDate}&endDate=${toDate}`,
+                {
+                  method: "GET",
+                }
+              );
+
+              const blob = await response.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.style.display = "none";
+              a.href = url;
+              a.download = "salesReport.xlsx";
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              document.body.removeChild(a);
+            } catch (error) {
+              console.log("Something went wrog in the front end while downloading the excel",error)
             }
           });
       </script>

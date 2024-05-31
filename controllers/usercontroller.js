@@ -68,6 +68,7 @@ const getLogin = (req, res) => {
 const postLogin = async (req, res) => {
   try {
     const check = await userData.findOne({ email: req.body.email });
+    console.log(check)
     if (check.password == req.body.password && check.isBlocked == false) {
       req.session.isLogged = true;
       req.session.userInfo = check;
@@ -89,8 +90,12 @@ const getOtp = async (req, res) => {
       const userEmail = req.session.email;
       // console.log(userEmail);
       const userDetail = await userData.findOne({ email: userEmail });
+      console.log(userDetail);
+      req.session.userInfo = userDetail;
       const oneTimePassword = () => Math.floor(1000 + Math.random() * 9000);
+      console.log(oneTimePassword)
       req.session.OTP = oneTimePassword();
+      console.log(req.session.OTP)
       await transport.sendMail({
         from: process.env.MAIL_ID,
         to: userEmail,
@@ -102,7 +107,7 @@ const getOtp = async (req, res) => {
       res.redirect("/views/users/login");
     }
   } catch (error) {
-    console.log("something went wrong", error);
+    console.log("something went wrong in getting Otp", error);
   }
 };
 
@@ -115,7 +120,7 @@ const postOtp = async (req, res) => {
       res.render("users/otp", { message: "Invalid OTP" });
     }
   } catch (error) {
-    console.log("Something went wrong", error);
+    console.log("Something went wrong Post otp", error);
   }
 };
 
@@ -167,7 +172,8 @@ const getMyAccount = async (req, res) => {
 
 const getMyWallet = async(req,res)=>{
   try {
-    let myWallet = await walletModel.find();
+    let myWallet = await walletModel.findOne({userId:req.session.userInfo._id});
+    console.log(myWallet)
     res.render("users/myWallet",{myWallet,islogin: req.session.isLogged})
   } catch (error) {
     
@@ -655,11 +661,11 @@ const getCancelOrder = async (req, res) => {
     );
     let walletTransaction = {
       transactiondate: new Date(),
-      transactionAmount: orderData.grandTotalCost,
+      transactionAmount: orderData.grandTotalcost,
       transactionType: "Online Payment Order Cancelled",
     };
     console.log(orderData.paymentType)
-    let exist = await walletModel.findOne({userId:req.sesson.userInfo._id})
+    let exist = await walletModel.findOne({userId:req.session.userInfo._id})
     if (orderData.paymentType != "COD") {
       if(exist){
       await walletModel.findOneAndUpdate(

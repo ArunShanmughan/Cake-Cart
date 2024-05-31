@@ -58,6 +58,7 @@ const {
   getSalesReport,
   postSalesDateFilter,
   salesReportPdfDownload,
+  salesReportExcelDownload,
 }=require("../controllers/salesReportController.js");
 
 //admin Routers
@@ -109,6 +110,7 @@ admRouter.put("/editCoupon/:id",admAuth,putEditCoupon)
 admRouter.get("/salesreport",admAuth,getSalesReport)
 admRouter.post("/salesDateFilter",admAuth,postSalesDateFilter);
 admRouter.get("/downloadPdf",admAuth,salesReportPdfDownload)
+admRouter.get("/downloadExcel",admAuth,salesReportExcelDownload)
 
 
 module.exports = admRouter;

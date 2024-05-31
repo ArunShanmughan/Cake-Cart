@@ -1,9 +1,7 @@
-
 const paypal = require("paypal-rest-sdk");
 const cartModel = require("../models/cartModel");
 const addressModel = require("../models/addressModel");
 const orderModel = require("../models/orderModel");
-
 
 const { PAYPAL_MODE, PAYPAL_CLIENT_KEY, PAYPAL_SECRET_KEY } = process.env;
 
@@ -18,7 +16,7 @@ const onlinePayments = async (req, res) => {
   console.log("req.session.userInfo details:", req.session.userInfo);
   req.session.presentOrderData = req.body;
   const total = req.query.total;
-  console.log("Total amount:", typeof(total));
+  console.log("Total amount:", typeof total);
   console.log("Total amount:", total);
 
   try {
@@ -70,7 +68,7 @@ const onlinePayments = async (req, res) => {
           if (payment.links[i].rel === "approval_url") {
             console.log("Approval URL found:", payment.links[i].href);
             // res.redirect(payment.links[i].href);
-            res.send({url:payment.links[i].href})
+            res.send({ url: payment.links[i].href });
             return;
           }
         }
@@ -78,11 +76,13 @@ const onlinePayments = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Something went wrong during the online payment process:", error);
+    console.error(
+      "Something went wrong during the online payment process:",
+      error
+    );
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 async function wholeTotal(req) {
   try {
@@ -98,76 +98,85 @@ async function wholeTotal(req) {
         { $set: { totalCostPerProduct: k.productId.price * k.productQuantity } }
       );
     }
+
     usersCartData = await cartModel
       .find({ userId: req.session.userInfo._id })
       .populate("productId");
     req.session.wholeTotal = wholeTotal;
     return JSON.parse(JSON.stringify(usersCartData));
   } catch (error) {
-    console.log("Something Went Wrong", error);
+    console.log("Something Went Wrong in wholetotal", error);
   }
 }
 
+const paymentDone = async (req, res) => {
+  try {
+    console.log(
+      "............this the data is coming from the post order method input's..........",
+      req.session.presentOrderData
+    );
+    let addressData = await addressModel
+      .findOne({ _id: req.session.presentOrderData.address })
+      .populate("addressModel");
+    if (!req.session.currentOrder) {
+      const tempOrder = {
+        userId: req.session.userInfo._id,
+        orderNumber: Math.floor(Math.random() * (10000 - 100 + 1)) + 100,
+        orderDate: new Date(),
+        addressChoosen: JSON.parse(JSON.stringify(addressData)),
+        couponOffers: req.session.presentOrderData.couponOffers,
+        cartData: await wholeTotal(req),
+        grandTotalCost: req.session.presentOrderData.presentTotal,
+      };
 
-const paymentDone = async(req,res)=>{
-    try {
-      console.log(
-        "............this the data is coming from the post order method input's..........",
-        req.session.presentOrderData
-      );
-      let addressData = await addressModel
-        .findOne({_id:req.session.presentOrderData.address})
-        .populate("addressModel");
-      if (!req.session.currentOrder) {
-        req.session.currentOrder = await orderModel.create({
-          userId: req.session.userInfo._id,
-          orderNumber: Math.floor(Math.random() * (10000 - 100 + 1)) + 100,
-          orderDate: new Date(),
-          addressChoosen: JSON.parse(JSON.stringify(addressData)),
-          couponOffers:req.session.presentOrderData.couponOffers,
-          cartData: await wholeTotal(req),
-          grandTotalCost: req.session.presentOrderData.presentTotal,
-        });
-      }
-      // if(discountAmount){
-      //   await orderModel.findByIdAndUpdate({_id:req.session.currentOrder._id},{$set:{totalCouponDeduction:discountAmount}})
-      // }
-      console.log(req.session.currentOrder)
-      let checkCart = await cartModel.find({ userId: req.session.userInfo._id });
-  
-      if (checkCart.length >= 0) {
-        //for paypal
-        // if(req.body.paymentMethod==COD)
-        await orderModel.updateOne(
-          { _id: req.session.currentOrder._id },
-          {
-            $set: {
-              paymentId: req.session.paymentId,
-              paymentType: "Paypal",
-              comments: req.session.presentOrderData.comments,
-              grandTotalcost: req.session.presentOrderData.presentTotal,
-            },
-          }
-        );
-        let cartData = await cartModel
-          .find({ _id: req.session.userInfo._id })
-          .populate("productId");
-  
-        for (const product of cartData) {
-          product.productId.quantity -= product.productQuantity;
-          product.productId.stockSold += 1;
-          await product.productId.save();
+      req.session.currentOrder = await orderModel.create(tempOrder);
+    }
+    // if(discountAmount){
+    //   await orderModel.findByIdAndUpdate({_id:req.session.currentOrder._id},{$set:{totalCouponDeduction:discountAmount}})
+    // }
+
+    console.log(req.session.currentOrder);
+    let checkCart = await cartModel.find({ userId: req.session.userInfo._id });
+
+    if (checkCart.length >= 0) {
+      //for paypal
+      // if(req.body.paymentMethod==COD)
+      let aa = await orderModel.updateOne(
+        { _id: req.session.currentOrder._id },
+        {
+          $set: {
+            paymentId: req.session.paymentId,
+            paymentType: "Paypal",
+            comments: req.session.presentOrderData.comments,
+            grandTotalcost: req.session.presentOrderData.presentTotal,
+          },
         }
-        // let k = await cartModel
-        //   .findByIdAndUpdate({ _id: req.session.currentOrder._id })
-        //   .populate("productId");
-        let currentOrderData = await orderModel.findOne({_id:req.session.currentOrder._id})
-        res.render("users/paymentDone",{islogin: req.session.isLogged,paymentId:req.session.paymentId,currentOrderData})
-        await cartModel.deleteMany({userId:req.session.userInfo._id});
-      }
-    } catch (error) {
-      console.log("something went wrong", error);
-    } 
-}
+      );
 
-module.exports = { onlinePayments , paymentDone};
+      let cartData = await cartModel
+        .find({ _id: req.session.userInfo._id })
+        .populate("productId");
+      for (const product of cartData) {
+        product.productId.quantity -= product.productQuantity;
+        product.productId.stockSold += 1;
+        await product.productId.save();
+      }
+      // let k = await cartModel
+      //   .findByIdAndUpdate({ _id: req.session.currentOrder._id })
+      //   .populate("productId");
+      let currentOrderData = await orderModel.findOne({
+        _id: req.session.currentOrder._id,
+      });
+      res.render("users/paymentDone", {
+        islogin: req.session.isLogged,
+        paymentId: req.session.paymentId,
+        currentOrderData,
+      });
+      await cartModel.deleteMany({ userId: req.session.userInfo._id });
+    }
+  } catch (error) {
+    console.log("something went wrong payment done", error);
+  }
+};
+
+module.exports = { onlinePayments, paymentDone };

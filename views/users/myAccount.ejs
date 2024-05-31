@@ -694,29 +694,32 @@
           });
         </script>
 
-        <div
-          class="btn-group me-0 d-flex justify-content-between"
-          role="group"
-          aria-label="..."
-        >
-          <a href="/orderHistory" class="btn btn-primary m-5 custom-btn"
-            ><i class="fa fa-user" aria-hidden="true"></i>Order History</a
-          >
-          <a
-            class="btn btn-primary m-5 custom-btn"
-            href="/myAddress?UserId=<%=userData._id%>"
-            ><i class="fa-solid fa-house" aria-hidden="true"></i> My Address</a
-          >
-          <a class="btn btn-primary m-5 custom-btn" href="/addAddress"
-            ><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Add
-            Address</a
-          >
-          <a class="btn btn-primary m-5 custom-btn" href="/myWallet"
-            ><i class="fa-solid fa-wallet" aria-hidden="true"></i>Wallet</a
-          >
-          <a class="btn btn-primary m-5 custom-btn" href="/changePassword"
-            ><i class="fa fa-list" aria-hidden="true"></i>Change Password</a
-          >
+        <div class="row">
+          <div class="col-12">
+            <div
+              class="btn-group me-0 d-flex justify-content-between"
+              role="group"
+              aria-label="..."
+            >
+              <a href="/orderHistory" class="btn btn-primary m-5"
+                ><i class="fa fa-user" aria-hidden="true"></i>Order History</a
+              >
+              <a class="btn btn-primary m-5" href="/myAddress"
+                ><i class="fas fa-map-marker-alt" aria-hidden="true"></i> My
+                Address</a
+              >
+              <a class="btn btn-primary m-5" href="/addAddress"
+                ><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Add
+                Address</a
+              >
+              <a href="/myWallet" class="btn btn-primary m-5"
+                ><i class="fa-solid fa-wallet" aria-hidden="true"></i>Wallet</a
+              >
+              <a class="btn btn-primary m-5" href="/changePassword"
+                ><i class="fa fa-list" aria-hidden="true"></i>Change Password</a
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
