@@ -11,7 +11,7 @@ const {
   userBlock,
   userUnBlock,
   admLogout,
-} = require("../controllers/admincontroller.js");
+} = require("../controllers/adminController.js");
 
 const {
   getCategoryManagment,
@@ -61,6 +61,10 @@ const {
   salesReportExcelDownload,
 }=require("../controllers/salesReportController.js");
 
+
+const {
+  getDashBoardData,
+} = require("../controllers/dashBoardController.js");
 //admin Routers
 admRouter.get("/admin", getAdmin);
 admRouter.post("/adminlog", postAdmin);
@@ -112,5 +116,7 @@ admRouter.post("/salesDateFilter",admAuth,postSalesDateFilter);
 admRouter.get("/downloadPdf",admAuth,salesReportPdfDownload)
 admRouter.get("/downloadExcel",admAuth,salesReportExcelDownload)
 
+//Dash Board controller
+admRouter.get("/dashBoardData",admAuth,getDashBoardData)
 
 module.exports = admRouter;

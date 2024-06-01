@@ -825,6 +825,11 @@
             });
           }
           let result = await response.json();
+
+          if(result.success){
+            console.log("soming here")
+            window.location.href = "/orderinfo"
+          }
         },
       });
     </script>

@@ -584,12 +584,7 @@ const postOrderPlaced = async (req, res) => {
       });
     }
 
-    if (discountAmount) {
-      await orderModel.findByIdAndUpdate(
-        { _id: req.session.currentOrder._id },
-        { $set: { totalCouponDeduction: discountAmount } }
-      );
-    }
+    console.log(req.session.currentOrder);
     let checkCart = await cartModel.find({ userId: req.session.userInfo._id });
 
     if (checkCart.length >= 0) {
@@ -615,8 +610,9 @@ const postOrderPlaced = async (req, res) => {
         product.productId.stockSold += 1;
         await product.productId.save();
       }
+      console.log("aaaaaaaaaa")
 
-      let orderData = await orderCollection.findOne({
+      let orderData = await orderModel.findOne({
         _id: req.session.currentOrder._id,
       });
       if (orderData.paymentType == "") {
@@ -628,7 +624,8 @@ const postOrderPlaced = async (req, res) => {
           _id: req.session.currentOrder._id,
         })
         .populate("productId");
-      res.redirect("/orderinfo", { islogin: req.session.isLogged });
+        console.log("bbbbbbbbbbbbb")
+      res.send({success:true});
       await cartModel.deleteMany({ userId: req.session.userInfo._id });
     }
   } catch (error) {
@@ -641,6 +638,7 @@ const getOrderInfo = async (req, res) => {
     let orderDetails = await orderModel.find({
       _id: req.session.currentOrder._id,
     });
+    console.log("Coming to getOrderInfo with order details->",orderDetails)
     res.render("users/orderinfo", {
       islogin: req.session.isLogged,
       presentOrder: orderDetails,

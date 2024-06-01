@@ -1,6 +1,7 @@
 const userdata = require("../models/userDB");
 const categoryModel = require("../models/categoryModel");
 const productModel = require("../models/productModel");
+const orderModel = require("../models/orderModel")
 
 const getAdmin = (req, res) => {
   try {
@@ -27,9 +28,14 @@ const postAdmin = (req, res) => {
   }
 };
 
-const getAdminDash = (req, res) => {
+const getAdminDash = async(req, res) => {
   try {
-      res.render("admin/admindash");
+    let orderData = await orderModel.find().populate("userId").populate({
+      path: "cartData.productId",
+      model: "products",
+      as: "productDetails",
+    })
+      res.render("admin/admindash",{orderData});
   } catch (error) {
     console.log("Something Went Wrong", error);
   }

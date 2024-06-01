@@ -556,7 +556,6 @@
                         <thead>
                           <tr>
                             <th class="serial">#</th>
-                            <th class="avatar">Avatar</th>
                             <th>ID</th>
                             <th>Name</th>
                             <th>Product</th>
@@ -565,108 +564,27 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td class="serial">1.</td>
-                            <td class="avatar">
-                              <div class="round-img">
-                                <a href="#"
-                                  ><img
-                                    class="rounded-circle"
-                                    src="images/avatar/1.jpg"
-                                    alt=""
-                                /></a>
-                              </div>
-                            </td>
-                            <td>#5469</td>
-                            <td><span class="name">Louis Stanley</span></td>
-                            <td><span class="product">iMax</span></td>
-                            <td><span class="count">231</span></td>
-                            <td>
-                              <span class="badge badge-complete">Complete</span>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="serial">2.</td>
-                            <td class="avatar">
-                              <div class="round-img">
-                                <a href="#"
-                                  ><img
-                                    class="rounded-circle"
-                                    src="images/avatar/2.jpg"
-                                    alt=""
-                                /></a>
-                              </div>
-                            </td>
-                            <td>#5468</td>
-                            <td><span class="name">Gregory Dixon</span></td>
-                            <td><span class="product">iPad</span></td>
-                            <td><span class="count">250</span></td>
-                            <td>
-                              <span class="badge badge-complete">Complete</span>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="serial">3.</td>
-                            <td class="avatar">
-                              <div class="round-img">
-                                <a href="#"
-                                  ><img
-                                    class="rounded-circle"
-                                    src="images/avatar/3.jpg"
-                                    alt=""
-                                /></a>
-                              </div>
-                            </td>
-                            <td>#5467</td>
-                            <td><span class="name">Catherine Dixon</span></td>
-                            <td><span class="product">SSD</span></td>
-                            <td><span class="count">250</span></td>
-                            <td>
-                              <span class="badge badge-complete">Complete</span>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="serial">4.</td>
-                            <td class="avatar">
-                              <div class="round-img">
-                                <a href="#"
-                                  ><img
-                                    class="rounded-circle"
-                                    src="images/avatar/4.jpg"
-                                    alt=""
-                                /></a>
-                              </div>
-                            </td>
-                            <td>#5466</td>
-                            <td><span class="name">Mary Silva</span></td>
-                            <td><span class="product">Magic Mouse</span></td>
-                            <td><span class="count">250</span></td>
-                            <td>
-                              <span class="badge badge-pending">Pending</span>
-                            </td>
-                          </tr>
-                          <tr class="pb-0">
-                            <td class="serial">5.</td>
-                            <td class="avatar pb-0">
-                              <div class="round-img">
-                                <a href="#"
-                                  ><img
-                                    class="rounded-circle"
-                                    src="images/avatar/6.jpg"
-                                    alt=""
-                                /></a>
-                              </div>
-                            </td>
-                            <td>#5465</td>
-                            <td><span class="name">Johnny Stephens</span></td>
-                            <td><span class="product">Monitor</span></td>
-                            <td><span class="count">250</span></td>
-                            <td>
-                              <span class="badge badge-complete">Complete</span>
-                            </td>
-                          </tr>
+                          <% for (let i = 0; i < orderData.length; i++) { %>
+                            <% orderData[i].cartData.forEach((product, j) => { %>
+                              <tr>
+                                <% if (j === 0) { %>
+                                  <td class="serial" rowspan="<%= orderData[i].cartData.length %>"><%= i + 1 %></td>
+                                  <td rowspan="<%= orderData[i].cartData.length %>"><%= orderData[i].orderNumber %></td>
+                                  <td rowspan="<%= orderData[i].cartData.length %>"><span class="name"><%= orderData[i].userId.fName %></span></td>
+                                <% } %>
+                                <td><span class="product"><%= product.productId.productName %></span></td>
+                                <td><span class="count"><%= product.productQuantity %></span></td>
+                                <% if (j === 0) { %>
+                                  <td rowspan="<%= orderData[i].cartData.length %>">
+                                    <span class="badge badge-complete"><%= orderData[i].orderStatus %></span>
+                                  </td>
+                                <% } %>
+                              </tr>
+                            <% }); %>
+                          <% } %>
                         </tbody>
                       </table>
+                      
                     </div>
                     <!-- /.table-stats -->
                   </div>
@@ -876,11 +794,19 @@
       jQuery(document).ready(function ($) {
         "use strict";
 
+        const fetchData = (async()=>{
+          try {
+            const response = await fetch("/dashBoardData",{method:"GET"});
+            const data = await response.json();
+          } catch (error) {
+            console.log("Something went wrong in the fetch method of dashboard data",error);
+          }
+        })
         // Pie chart flotPie1
         var piedata = [
-          { label: "Desktop visits", data: [[1, 32]], color: "#5c6bc0" },
-          { label: "Tab visits", data: [[1, 33]], color: "#ef5350" },
-          { label: "Mobile visits", data: [[1, 35]], color: "#66bb6a" },
+          { label: "Desktop visits", data: [[1, 20]], color: "#5c6bc0" },
+          { label: "Tab visits", data: [[1, 30]], color: "#ef5350" },
+          { label: "Mobile visits", data: [[1, 50]], color: "#66bb6a" },
         ];
 
         $.plot("#flotPie1", piedata, {
@@ -930,7 +856,7 @@
         // cellPaiChart End
         // Line Chart  #flotLine5
         var newCust = [
-          [0, 3],
+          [0, 1],
           [1, 5],
           [2, 4],
           [3, 7],
@@ -1001,6 +927,7 @@
               },
             }
           );
+          console.log("This is the function is coming to the traffic-chart",chart)
 
           chart.on("draw", function (data) {
             if (data.type === "line" || data.type === "area") {
@@ -1025,6 +952,7 @@
         if ($("#TrafficChart").length) {
           var ctx = document.getElementById("TrafficChart");
           ctx.height = 150;
+          console.log("This is the data which has been coming to the traffic Chart",ctx)
           var myChart = new Chart(ctx, {
             type: "line",
             data: {
