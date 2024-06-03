@@ -68,7 +68,7 @@ const getLogin = (req, res) => {
 const postLogin = async (req, res) => {
   try {
     const check = await userData.findOne({ email: req.body.email });
-    console.log(check)
+    console.log(check);
     if (check.password == req.body.password && check.isBlocked == false) {
       req.session.isLogged = true;
       req.session.userInfo = check;
@@ -93,9 +93,9 @@ const getOtp = async (req, res) => {
       console.log(userDetail);
       req.session.userInfo = userDetail;
       const oneTimePassword = () => Math.floor(1000 + Math.random() * 9000);
-      console.log(oneTimePassword)
+      console.log(oneTimePassword);
       req.session.OTP = oneTimePassword();
-      console.log(req.session.OTP)
+      console.log(req.session.OTP);
       await transport.sendMail({
         from: process.env.MAIL_ID,
         to: userEmail,
@@ -170,15 +170,15 @@ const getMyAccount = async (req, res) => {
   }
 };
 
-const getMyWallet = async(req,res)=>{
+const getMyWallet = async (req, res) => {
   try {
-    let myWallet = await walletModel.findOne({userId:req.session.userInfo._id});
-    console.log(myWallet)
-    res.render("users/myWallet",{myWallet,islogin: req.session.isLogged})
-  } catch (error) {
-    
-  }
-}
+    let myWallet = await walletModel.findOne({
+      userId: req.session.userInfo._id,
+    });
+    console.log(myWallet);
+    res.render("users/myWallet", { myWallet, islogin: req.session.isLogged });
+  } catch (error) {}
+};
 
 const postEditUserInfo = async (req, res) => {
   try {
@@ -390,33 +390,35 @@ const getAddToCart = async (req, res) => {
   }
 };
 
-
 async function wholeTotal(req) {
   try {
-    if(req.session.userInfo){
-    let usersCartData = await cartModel
-      .find({ userId: req.session.userInfo?._id })
-      .populate("productId");
-    let wholeTotal = 0;
-    console.log(usersCartData);
-    for (const k of usersCartData) {
-      wholeTotal += k.productId.price * k.productQuantity;
-      await cartModel.updateOne(
-        { _id: k._id },
-        { $set: { totalCostPerProduct: k.productId.price * k.productQuantity } }
-      );
+    if (req.session.userInfo) {
+      let usersCartData = await cartModel
+        .find({ userId: req.session.userInfo?._id })
+        .populate("productId");
+      let wholeTotal = 0;
+      console.log(usersCartData);
+      for (const k of usersCartData) {
+        wholeTotal += k.productId.price * k.productQuantity;
+        await cartModel.updateOne(
+          { _id: k._id },
+          {
+            $set: {
+              totalCostPerProduct: k.productId.price * k.productQuantity,
+            },
+          }
+        );
+      }
+      usersCartData = await cartModel
+        .find({ userId: req.session.userInfo._id })
+        .populate("productId");
+      req.session.wholeTotal = wholeTotal;
+      return JSON.parse(JSON.stringify(usersCartData));
     }
-    usersCartData = await cartModel
-      .find({ userId: req.session.userInfo._id })
-      .populate("productId");
-    req.session.wholeTotal = wholeTotal;
-    return JSON.parse(JSON.stringify(usersCartData));
-  }
   } catch (error) {
     console.log("Something Went Wrong", error);
   }
 }
-
 
 const getCart = async (req, res) => {
   try {
@@ -524,7 +526,7 @@ const postApplyCoupon = async (req, res) => {
     let coupData = await couponModel.findOne({
       couponCode: req.body.couponCode,
     });
-    console.log(coupData)
+    console.log(coupData);
     if (!coupData) {
       res.send({ validCoupon: false });
     }
@@ -546,8 +548,6 @@ const postApplyCoupon = async (req, res) => {
   }
 };
 
-
-
 // const postRemoveCoupon = async (req,res)=>{
 //   try {
 //     res.send({success:true})
@@ -556,8 +556,6 @@ const postApplyCoupon = async (req, res) => {
 //   }
 // }
 
-
-
 //This is for CASH ON DELIVERY option order placed method
 const postOrderPlaced = async (req, res) => {
   try {
@@ -565,19 +563,23 @@ const postOrderPlaced = async (req, res) => {
       "............this the data is coming from the post order method input's..........",
       req.body
     );
-    let appliedCoupon = null
-    if(req.body.couponOffers){
+    let appliedCoupon = null;
+    if (req.body.couponOffers) {
       appliedCoupon = req.body.couponOffers;
     }
     let addressData = await addressModel
       .find({ userId: req.session.userInfo._id })
       .populate("addressModel");
+    console.log(
+      "for checking is there anuy order in req.session.currentOrder",
+      req.session.currentOrder
+    );
     if (!req.session.currentOrder) {
       req.session.currentOrder = await orderModel.create({
         userId: req.session.userInfo._id,
         orderNumber: Math.floor(Math.random() * (10000 - 100 + 1)) + 100,
         orderDate: new Date(),
-        couponOffers:appliedCoupon,
+        couponOffers: appliedCoupon,
         addressChoosen: JSON.parse(JSON.stringify(addressData[0])),
         cartData: await wholeTotal(req),
         grandTotalCost: req.session.wholeTotal,
@@ -610,11 +612,15 @@ const postOrderPlaced = async (req, res) => {
         product.productId.stockSold += 1;
         await product.productId.save();
       }
-      console.log("aaaaaaaaaa")
+      console.log("aaaaaaaaaa");
 
       let orderData = await orderModel.findOne({
         _id: req.session.currentOrder._id,
       });
+      console.log(
+        "this is the orderData before checking whether the payment Type is empty or not",
+        orderData
+      );
       if (orderData.paymentType == "") {
         orderData.paymentType = "COD";
         orderData.save();
@@ -624,8 +630,17 @@ const postOrderPlaced = async (req, res) => {
           _id: req.session.currentOrder._id,
         })
         .populate("productId");
-        console.log("bbbbbbbbbbbbb")
-      res.send({success:true});
+      console.log("bbbbbbbbbbbbb");
+      let orderDetails = await orderModel.findOne({
+        _id: req.session.currentOrder._id,
+      });
+      console.log(
+        "This is the orderDetails getting after creating order success and sending to the res.send",
+        orderDetails
+      );
+      res.send({
+        success: true,
+      });
       await cartModel.deleteMany({ userId: req.session.userInfo._id });
     }
   } catch (error) {
@@ -635,10 +650,10 @@ const postOrderPlaced = async (req, res) => {
 
 const getOrderInfo = async (req, res) => {
   try {
-    let orderDetails = await orderModel.find({
+    let orderDetails = await orderModel.findOne({
       _id: req.session.currentOrder._id,
     });
-    console.log("Coming to getOrderInfo with order details->",orderDetails)
+    console.log("Coming to getOrderInfo with order details->", orderDetails);
     res.render("users/orderinfo", {
       islogin: req.session.isLogged,
       presentOrder: orderDetails,
@@ -662,24 +677,24 @@ const getCancelOrder = async (req, res) => {
       transactionAmount: orderData.grandTotalcost,
       transactionType: "Online Payment Order Cancelled",
     };
-    console.log(orderData.paymentType)
-    let exist = await walletModel.findOne({userId:req.session.userInfo._id})
+    console.log(orderData.paymentType);
+    let exist = await walletModel.findOne({ userId: req.session.userInfo._id });
     if (orderData.paymentType != "COD") {
-      if(exist){
-      await walletModel.findOneAndUpdate(
-        { userId: req.session.userInfo._id },
-        {
-          $inc: { walletBalance: orderData.grandTotalcost },
-          $push: { walletTransaction },
-        }
-      );
-    }else{
-      await walletModel.create({
-        userId:req.session.userInfo._id,
-        walletBalance:orderData.grandTotalcost,
-        walletTransaction: [{ ...walletTransaction }]
-    })
-    }
+      if (exist) {
+        await walletModel.findOneAndUpdate(
+          { userId: req.session.userInfo._id },
+          {
+            $inc: { walletBalance: orderData.grandTotalcost },
+            $push: { walletTransaction },
+          }
+        );
+      } else {
+        await walletModel.create({
+          userId: req.session.userInfo._id,
+          walletBalance: orderData.grandTotalcost,
+          walletTransaction: [{ ...walletTransaction }],
+        });
+      }
     }
     res.redirect("/orderHistory");
   } catch (error) {
@@ -690,7 +705,7 @@ const getCancelOrder = async (req, res) => {
 const getSingleOrder = async (req, res) => {
   try {
     let orderInfo = await orderModel.findOne({ _id: req.query.viewOrd });
-    console.log("this is CartData",orderInfo.cartData);
+    console.log("this is CartData", orderInfo);
     let addressInfo = await addressModel
       .findOne({ _id: orderInfo.addressChoosen })
       .populate("userId");

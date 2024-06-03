@@ -403,10 +403,68 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
 
+      .summary-section {
+        background-color: #f7f7f7;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative; /* added this to make the button absolute */
+      }
+
       .section-title {
         margin-top: 0;
         font-weight: bold;
         color: #333;
+      }
+
+      .order-status {
+        font-size: 14px;
+        font-weight: bold;
+        color: #666;
+        text-transform: uppercase;
+      }
+
+      .order-status.pending {
+        color: #ffc107;
+      }
+
+      .order-status.completed {
+        color: #28a745;
+      }
+
+      .pay-button {
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        background-color: #337ab7;
+        border: none;
+        color: #ffffff;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease; /* added transition for hover effect */
+      }
+
+      .pay-button:hover {
+        background-color: #23527c;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .pay-button a {
+        color: #ffffff;
+        text-decoration: none;
+      }
+
+      .pay-button a:hover {
+        text-decoration: underline;
       }
 
       /* Order Summary styles */
@@ -481,6 +539,35 @@
       .order-status.cancelled {
         color: #dc3545; /* Red for cancelled */
       }
+
+      .pay-button {
+        background-color: #1a53ff;
+        border: none;
+        color: #ffffff;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .pay-button:hover {
+        background-color: #0033cc;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .pay-button a {
+        color: #ffffff;
+        text-decoration: none;
+      }
+
+      .pay-button a:hover {
+        text-decoration: underline;
+      }
     </style>
 
     <div class="order-container" id="order-box">
@@ -491,6 +578,16 @@
         <span class="order-status <%=orderInfo.orderStatus.toLowerCase()%>">
           <%=orderInfo.orderStatus %>
         </span>
+        <br>
+        <p><strong>Payment Method:</strong><%=orderInfo.paymentType%></p>
+        <% if(orderInfo.paymentType=="COD"){ %>
+        <button
+          class="pay-button btn-primary"
+          style="text-decoration-color: #333"
+        >
+          <a href="">Pay Now</a>
+        </button>
+        <% } %>
       </div>
       <style>
         .card-container {

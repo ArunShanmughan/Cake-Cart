@@ -1,4 +1,3 @@
-
 const usersModel = require("../models/userDB.js") 
 const categoryCollection = require("../models/categoryModel.js");
 const orderCollection = require("../models/orderModel.js");
@@ -20,7 +19,7 @@ const categoryCount = async () => {
   }
 };
 
-const pendingOrdersCount = async () => {
+const pendingOrders = async () => {
   try {
     return await orderCollection.countDocuments({
       orderStatus: { $ne: "delivered" },
@@ -97,7 +96,7 @@ const totalRevenue = async () => {
   }
 }
 
-const MonthlyRevenue = async () => {
+const monthlyRevenue = async () => {
   try {
     const result = await orderCollection.aggregate([
       {
@@ -166,12 +165,12 @@ const activeUsers = async()=>{
 module.exports = {
   productsCount,
   categoryCount,
-  pendingOrdersCount,
+  pendingOrders,
   completedOrdersCount,
   currentDayRevenue,
   fourteenDaysRevenue,
   categoryWiseRevenue,
   totalRevenue,
-  MonthlyRevenue,
+  monthlyRevenue,
   activeUsers,
 };

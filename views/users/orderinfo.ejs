@@ -458,26 +458,24 @@
             <div class="ms-track-box">
               <!-- Details-->
               <div class="row">
-                <% for( let i = 0; i < presentOrder.length; i++ ) { %>
                 <div class="col-md-4 m-b-767">
                   <div class="ms-track-card">
                     <span class="ms-track-title">order ID</span
-                    ><span>#<%=presentOrder[i]._id%></span>
+                    ><span>#<%=presentOrder._id%></span>
                   </div>
                 </div>
                 <div class="col-md-4 m-b-767">
                   <div class="ms-track-card">
                     <span class="ms-track-title">Order Number</span
-                    ><span><%=presentOrder[i].orderNumber %></span>
+                    ><span><%=presentOrder.orderNumber %></span>
                   </div>
                 </div>
                 <div class="col-md-4 m-b-767">
                   <div class="ms-track-card">
                     <span class="ms-track-title">Order Status</span
-                    ><span><%=presentOrder[i].orderStatus %></span>
+                    ><span><%=presentOrder.orderStatus %></span>
                   </div>
                 </div>
-                <% } %>
               </div>
               <!-- Progress-->
               <div class="ms-steps">

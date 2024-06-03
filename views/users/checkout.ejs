@@ -818,18 +818,20 @@
               window.location.href = data.url;
             }
           } else if (form.paymentMethod.value == "COD") {
+            console.log("coming here because COD")
             let response = await fetch("/orderPlaced", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(obj),
             });
-          }
           let result = await response.json();
+          console.log("this is the result getting from the fetch method",result);
 
           if(result.success){
             console.log("soming here")
-            window.location.href = "/orderinfo"
+            window.location.href = `/orderinfo?islogin=${result.islogin}&presentOrder=${result.presentOrder}`
           }
+        }
         },
       });
     </script>

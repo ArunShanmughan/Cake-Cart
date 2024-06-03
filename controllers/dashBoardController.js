@@ -3,14 +3,52 @@ const userModel = require("../models/userDB");
 const orderModel = require("../models/orderModel");
 const productModel = require("../models/productModel");
 
-const getDashBoardData = async(req,res)=>{
+const getDashBoardData = async (req, res) => {
   try {
-    const [productCount,categoryCount,pendingOrders,completedOrders,currentDayRevenue,fourteenDayRevenue,categoryWiserevenue,TotalRevenue,monthlyRevenue,ActiveUsers] = await Promise.all([])
-  } catch (error) {
-    
-  }
-}
+    const [
+      productCount,
+      categoryCount,
+      pendingOrders,
+      completedOrdersCount,
+      currentDayRevenue,
+      fourteenDayRevenue,
+      categoryWiseRevenue,
+      totalRevenue,
+      monthlyRevenue,
+      activeUsers,
+    ] = await Promise.all([
+      dashboardHelper.productsCount(),
+      dashboardHelper.categoryCount(),
+      dashboardHelper.pendingOrders(),
+      dashboardHelper.completedOrdersCount(),
+      dashboardHelper.currentDayRevenue(),
+      dashboardHelper.fourteenDaysRevenue(),
+      dashboardHelper.categoryWiseRevenue(),
+      dashboardHelper.totalRevenue(),
+      dashboardHelper.monthlyRevenue(),
+      dashboardHelper.activeUsers()
+    ]);
 
-module.exports={
-  getDashBoardData
-}
+    const data = {
+      productCount,
+      categoryCount,
+      pendingOrders,
+      completedOrdersCount,
+      currentDayRevenue,
+      fourteenDayRevenue,
+      categoryWiseRevenue,
+      totalRevenue,
+      monthlyRevenue,
+      activeUsers
+    }
+
+    res.send({data});
+  } catch (error) {
+    console.log("Something went wrong",error);
+    res.send({error});
+  }
+};
+
+module.exports = {
+  getDashBoardData,
+};

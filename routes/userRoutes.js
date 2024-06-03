@@ -78,8 +78,8 @@ router.post("/deleteCart/:id",userAuth,postDeleteCart);
 router.put("/cart/decQty/:id",userAuth,getDecQtyCart);
 router.put("/cart/incQty/:id",userAuth,getIncQtyCart);
 router.get("/checkout",userAuth,getCheckout);
-router.post("/orderPlaced",userAuth,postOrderPlaced)
-router.get("/orderinfo",userAuth,getOrderInfo);
+router.post("/orderPlaced",userAuth,postOrderPlaced);
+router.get("/orderinfo",userAuth,getOrderInfo)
 router.get("/cancelOrder",userAuth,getCancelOrder);
 router.get("/singleOrder",userAuth,getSingleOrder)
 router.post("/applyCoupon",userAuth,postApplyCoupon)
