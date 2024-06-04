@@ -128,7 +128,7 @@ const categoryWiseRevenue = async () => {
       { $unwind: "$cartData" },
       {
         $group: {
-          _id: "$cartData.productId.parentCategory",
+          _id: "$cartData.productId.category",
           revenuePerCategory: { $sum: "$cartData.totalCostPerProduct" },
         },
       },
@@ -147,6 +147,7 @@ const categoryWiseRevenue = async () => {
       revenuePerCategory: result.map((v) => v.revenuePerCategory),
     };
 
+    console.log("CategoryWise Revenue",finalData)
     return finalData;
   } catch (error) {
     console.error(error);

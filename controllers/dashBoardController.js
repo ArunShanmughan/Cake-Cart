@@ -41,8 +41,8 @@ const getDashBoardData = async (req, res) => {
       monthlyRevenue,
       activeUsers
     }
-
-    res.send({data});
+    console.log("coming to the function for geting promise datas",data)
+    res.json(data);
   } catch (error) {
     console.log("Something went wrong",error);
     res.send({error});

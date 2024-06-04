@@ -44,8 +44,13 @@
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 
     <!-- cdn for font awsome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
     <link
       href="https://cdn.jsdelivr.net/npm/chartist@0.11.0/dist/chartist.min.css"
@@ -122,7 +127,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-table-columns"></i>  Dashboard</a
+                <i class="fa-solid fa-table-columns"></i> Dashboard</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -132,7 +137,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-bag-shopping"></i> Products</a
+                <i class="fa-solid fa-bag-shopping"></i> Products</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -142,7 +147,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-list"></i> Categories</a
+                <i class="fa-solid fa-list"></i> Categories</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -152,7 +157,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-users"></i>  User Managment</a
+                <i class="fa-solid fa-users"></i> User Managment</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -162,7 +167,8 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-cart-flatbed-suitcase"></i>  Order Managment</a
+                <i class="fa-solid fa-cart-flatbed-suitcase"></i> Order
+                Managment</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -172,7 +178,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-handshake"></i> Product Offer Managment</a
+                <i class="fa-solid fa-handshake"></i> Product Offer Managment</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -182,7 +188,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-percent"></i> Category Offer Managment</a
+                <i class="fa-solid fa-percent"></i> Category Offer Managment</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -192,7 +198,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-ticket"></i>  Coupon Managment</a
+                <i class="fa-solid fa-ticket"></i> Coupon Managment</a
               >
             </li>
             <li class="menu-item-has-children dropdown">
@@ -202,7 +208,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-              <i class="fa-solid fa-chart-line"></i>  Sales Reports</a
+                <i class="fa-solid fa-chart-line"></i> Sales Reports</a
               >
             </li>
           </ul>
@@ -387,9 +393,9 @@
                     <div class="stat-content">
                       <div class="text-left dib">
                         <div class="stat-text">
-                          $<span class="count">23569</span>
+                          <span class="total-revenue-count"></span>
                         </div>
-                        <div class="stat-heading">Revenue</div>
+                        <div class="stat-heading">Total Revenue</div>
                       </div>
                     </div>
                   </div>
@@ -407,9 +413,9 @@
                     <div class="stat-content">
                       <div class="text-left dib">
                         <div class="stat-text">
-                          <span class="count">3435</span>
+                          <span class="Total-Sales-count"></span>
                         </div>
-                        <div class="stat-heading">Sales</div>
+                        <div class="stat-heading">Delivered Orders</div>
                       </div>
                     </div>
                   </div>
@@ -427,9 +433,9 @@
                     <div class="stat-content">
                       <div class="text-left dib">
                         <div class="stat-text">
-                          <span class="count">349</span>
+                          <span class="Current-Day-count"></span>
                         </div>
-                        <div class="stat-heading">Templates</div>
+                        <div class="stat-heading">Today Income</div>
                       </div>
                     </div>
                   </div>
@@ -447,9 +453,9 @@
                     <div class="stat-content">
                       <div class="text-left dib">
                         <div class="stat-text">
-                          <span class="count">2986</span>
+                          <span class="Active-user-count"></span>
                         </div>
-                        <div class="stat-heading">Clients</div>
+                        <div class="stat-heading">Active Users</div>
                       </div>
                     </div>
                   </div>
@@ -463,13 +469,15 @@
             <div class="col-lg-12">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="box-title">Traffic</h4>
+                  <h4 class="box-title">
+                    <strong>Fourteen Day Revenue</strong>
+                  </h4>
                 </div>
                 <div class="row">
                   <div class="col-lg-8">
                     <div class="card-body">
-                      <!-- <canvas id="TrafficChart"></canvas>   -->
-                      <div id="traffic-chart" class="traffic-chart"></div>
+                      <canvas id="TrafficChart"></canvas>
+                      <!-- <div id="traffic-chart" class="traffic-chart"></div> -->
                     </div>
                   </div>
                   <div class="col-lg-4">
@@ -565,26 +573,45 @@
                         </thead>
                         <tbody>
                           <% for (let i = 0; i < orderData.length; i++) { %>
-                            <% orderData[i].cartData.forEach((product, j) => { %>
-                              <tr>
-                                <% if (j === 0) { %>
-                                  <td class="serial" rowspan="<%= orderData[i].cartData.length %>"><%= i + 1 %></td>
-                                  <td rowspan="<%= orderData[i].cartData.length %>"><%= orderData[i].orderNumber %></td>
-                                  <td rowspan="<%= orderData[i].cartData.length %>"><span class="name"><%= orderData[i].userId.fName %></span></td>
-                                <% } %>
-                                <td><span class="product"><%= product.productId.productName %></span></td>
-                                <td><span class="count"><%= product.productQuantity %></span></td>
-                                <% if (j === 0) { %>
-                                  <td rowspan="<%= orderData[i].cartData.length %>">
-                                    <span class="badge badge-complete"><%= orderData[i].orderStatus %></span>
-                                  </td>
-                                <% } %>
-                              </tr>
-                            <% }); %>
-                          <% } %>
+                          <%orderData[i].cartData.forEach((product, j) => { %>
+                          <tr>
+                            <% if (j === 0) { %>
+                            <td
+                              class="serial"
+                              rowspan="<%= orderData[i].cartData.length %>"
+                            >
+                              <%= i + 1 %>
+                            </td>
+                            <td rowspan="<%= orderData[i].cartData.length %>">
+                              <%= orderData[i].orderNumber %>
+                            </td>
+                            <td rowspan="<%= orderData[i].cartData.length %>">
+                              <span class="name"
+                                ><%= orderData[i].userId.fName %></span
+                              >
+                            </td>
+                            <% } %>
+                            <td>
+                              <span class="product"
+                                ><%= product.productId.productName %></span
+                              >
+                            </td>
+                            <td>
+                              <span class="count"
+                                ><%= product.productQuantity %></span
+                              >
+                            </td>
+                            <% if (j === 0) { %>
+                            <td rowspan="<%= orderData[i].cartData.length %>">
+                              <span class="badge badge-complete"
+                                ><%= orderData[i].orderStatus %></span
+                              >
+                            </td>
+                            <% } %>
+                          </tr>
+                          <% }); %> <% } %>
                         </tbody>
                       </table>
-                      
                     </div>
                     <!-- /.table-stats -->
                   </div>
@@ -790,250 +817,36 @@
     <script src="assets/js/init/fullcalendar-init.js"></script>
 
     <!--Local Stuff-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      jQuery(document).ready(function ($) {
-        "use strict";
+      const fetchData = (async()=>{
+        try {
+          const response = await fetch("/dashBoardData",{method:"GET"});
+          const data = await response.json();
 
-        const fetchData = (async()=>{
-          try {
-            const response = await fetch("/dashBoardData",{method:"GET"});
-            const data = await response.json();
-          } catch (error) {
-            console.log("Something went wrong in the fetch method of dashboard data",error);
-          }
-        })
-        // Pie chart flotPie1
-        var piedata = [
-          { label: "Desktop visits", data: [[1, 20]], color: "#5c6bc0" },
-          { label: "Tab visits", data: [[1, 30]], color: "#ef5350" },
-          { label: "Mobile visits", data: [[1, 50]], color: "#66bb6a" },
-        ];
+          const {productCount,
+            categoryCount,
+            pendingOrders,
+            completedOrdersCount,
+            currentDayRevenue,
+            fourteenDayRevenue,
+            categoryWiseRevenue,
+            totalRevenue,
+            monthlyRevenue,
+            activeUsers
+          } = data;
+          console.log(totalRevenue)
+          document.querySelector(".total-revenue-count").innerText = `${totalRevenue.revenue}`;
+          document.querySelector(".Total-Sales-count").innerText = `${completedOrdersCount}`;
+          document.querySelector(".Current-Day-count").innerText = `${currentDayRevenue}`;
+          document.querySelector(".Active-user-count").innerText = `${activeUsers}`;
 
-        $.plot("#flotPie1", piedata, {
-          series: {
-            pie: {
-              show: true,
-              radius: 1,
-              innerRadius: 0.65,
-              label: {
-                show: true,
-                radius: 2 / 3,
-                threshold: 1,
-              },
-              stroke: {
-                width: 0,
-              },
-            },
-          },
-          grid: {
-            hoverable: true,
-            clickable: true,
-          },
-        });
-        // Pie chart flotPie1  End
-        // cellPaiChart
-        var cellPaiChart = [
-          { label: "Direct Sell", data: [[1, 65]], color: "#5b83de" },
-          { label: "Channel Sell", data: [[1, 35]], color: "#00bfa5" },
-        ];
-        $.plot("#cellPaiChart", cellPaiChart, {
-          series: {
-            pie: {
-              show: true,
-              stroke: {
-                width: 0,
-              },
-            },
-          },
-          legend: {
-            show: false,
-          },
-          grid: {
-            hoverable: true,
-            clickable: true,
-          },
-        });
-        // cellPaiChart End
-        // Line Chart  #flotLine5
-        var newCust = [
-          [0, 1],
-          [1, 5],
-          [2, 4],
-          [3, 7],
-          [4, 9],
-          [5, 3],
-          [6, 6],
-          [7, 4],
-          [8, 10],
-        ];
-
-        var plot = $.plot(
-          $("#flotLine5"),
-          [
-            {
-              data: newCust,
-              label: "New Data Flow",
-              color: "#fff",
-            },
-          ],
-          {
-            series: {
-              lines: {
-                show: true,
-                lineColor: "#fff",
-                lineWidth: 2,
-              },
-              points: {
-                show: true,
-                fill: true,
-                fillColor: "#ffffff",
-                symbol: "circle",
-                radius: 3,
-              },
-              shadowSize: 0,
-            },
-            points: {
-              show: true,
-            },
-            legend: {
-              show: false,
-            },
-            grid: {
-              show: false,
-            },
-          }
-        );
-        // Line Chart  #flotLine5 End
-        // Traffic Chart using chartist
-        if ($("#traffic-chart").length) {
-          var chart = new Chartist.Line(
-            "#traffic-chart",
-            {
-              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-              series: [
-                [0, 18000, 35000, 25000, 22000, 0],
-                [0, 33000, 15000, 20000, 15000, 300],
-                [0, 15000, 28000, 15000, 30000, 5000],
-              ],
-            },
-            {
-              low: 0,
-              showArea: true,
-              showLine: false,
-              showPoint: false,
-              fullWidth: true,
-              axisX: {
-                showGrid: true,
-              },
-            }
-          );
-          console.log("This is the function is coming to the traffic-chart",chart)
-
-          chart.on("draw", function (data) {
-            if (data.type === "line" || data.type === "area") {
-              data.element.animate({
-                d: {
-                  begin: 2000 * data.index,
-                  dur: 2000,
-                  from: data.path
-                    .clone()
-                    .scale(1, 0)
-                    .translate(0, data.chartRect.height())
-                    .stringify(),
-                  to: data.path.clone().stringify(),
-                  easing: Chartist.Svg.Easing.easeOutQuint,
-                },
-              });
-            }
-          });
+          const fourteenDay = document.getElementById("TrafficChart");
+          
+        } catch (error) {
+          
         }
-        // Traffic Chart using chartist End
-        //Traffic chart chart-js
-        if ($("#TrafficChart").length) {
-          var ctx = document.getElementById("TrafficChart");
-          ctx.height = 150;
-          console.log("This is the data which has been coming to the traffic Chart",ctx)
-          var myChart = new Chart(ctx, {
-            type: "line",
-            data: {
-              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-              datasets: [
-                {
-                  label: "Visit",
-                  borderColor: "rgba(4, 73, 203,.09)",
-                  borderWidth: "1",
-                  backgroundColor: "rgba(4, 73, 203,.5)",
-                  data: [0, 2900, 5000, 3300, 6000, 3250, 0],
-                },
-                {
-                  label: "Bounce",
-                  borderColor: "rgba(245, 23, 66, 0.9)",
-                  borderWidth: "1",
-                  backgroundColor: "rgba(245, 23, 66,.5)",
-                  pointHighlightStroke: "rgba(245, 23, 66,.5)",
-                  data: [0, 4200, 4500, 1600, 4200, 1500, 4000],
-                },
-                {
-                  label: "Targeted",
-                  borderColor: "rgba(40, 169, 46, 0.9)",
-                  borderWidth: "1",
-                  backgroundColor: "rgba(40, 169, 46, .5)",
-                  pointHighlightStroke: "rgba(40, 169, 46,.5)",
-                  data: [1000, 5200, 3600, 2600, 4200, 5300, 0],
-                },
-              ],
-            },
-            options: {
-              responsive: true,
-              tooltips: {
-                mode: "index",
-                intersect: false,
-              },
-              hover: {
-                mode: "nearest",
-                intersect: true,
-              },
-            },
-          });
-        }
-        //Traffic chart chart-js  End
-        // Bar Chart #flotBarChart
-        $.plot(
-          "#flotBarChart",
-          [
-            {
-              data: [
-                [0, 18],
-                [2, 8],
-                [4, 5],
-                [6, 13],
-                [8, 5],
-                [10, 7],
-                [12, 4],
-                [14, 6],
-                [16, 15],
-                [18, 9],
-                [20, 17],
-                [22, 7],
-                [24, 4],
-                [26, 9],
-                [28, 11],
-              ],
-              bars: {
-                show: true,
-                lineWidth: 0,
-                fillColor: "#ffffff8a",
-              },
-            },
-          ],
-          {
-            grid: {
-              show: false,
-            },
-          }
-        );
-        // Bar Chart #flotBarChart End
-      });
+      })();
     </script>
   </body>
 </html>
