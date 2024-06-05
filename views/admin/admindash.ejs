@@ -465,89 +465,141 @@
           </div>
           <!-- /Widgets -->
           <!--  Traffic  -->
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="box-title">
-                    <strong>Fourteen Day Revenue</strong>
-                  </h4>
-                </div>
-                <div class="row">
-                  <div class="col-lg-8">
-                    <div class="card-body">
-                      <canvas id="TrafficChart"></canvas>
-                      <!-- <div id="traffic-chart" class="traffic-chart"></div> -->
-                    </div>
+          <style>
+            .stats-container {
+              display: flex;
+              flex-direction: column;
+              gap: 20px;
+              padding: 20px;
+            }
+
+            .filter-options {
+              display: flex;
+              gap: 10px;
+              margin-bottom: 20px;
+            }
+
+            .filter-options label {
+              font-size: 14px;
+              margin-right: 10px;
+            }
+
+            .stats-row {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 20px;
+              justify-content: space-between;
+            }
+
+            .stats-col {
+              flex: 1;
+              min-width: 45%;
+            }
+
+            .stats-card {
+              background-color: #fff;
+              border: 1px solid #ddd;
+              border-radius: 10px;
+              padding: 20px;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .stats-header {
+              background-color: #f7f7f7;
+              padding: 10px;
+              border-bottom: 1px solid #ddd;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+
+            .stats-title {
+              font-size: 18px;
+              font-weight: bold;
+              margin-bottom: 10px;
+            }
+
+            .stats-body {
+              padding: 20px;
+            }
+
+            .chart-canvas {
+              width: 100%;
+              height: 300px;
+              border: 1px solid #ddd;
+              border-radius: 10px;
+            }
+          </style>
+
+          <div class="stats-container">
+            <div class="filter-options">
+              <label
+                ><input type="radio" name="filter" value="this-week" /> This
+                Week</label
+              >
+              <label
+                ><input type="radio" name="filter" value="last-2-weeks" /> Last
+                2 Weeks</label
+              >
+              <label
+                ><input type="radio" name="filter" value="last-month" /> Last
+                Month</label
+              >
+              <label
+                ><input type="radio" name="filter" value="last-year" /> Last
+                Year</label
+              >
+            </div>
+            <div class="stats-row">
+              <div class="stats-col">
+                <div class="stats-card">
+                  <div class="stats-header">
+                    <h4 class="stats-title">
+                      <strong>FOURTEEN DAY REVENUE</strong>
+                    </h4>
                   </div>
-                  <div class="col-lg-4">
-                    <div class="card-body">
-                      <div class="progress-box progress-1">
-                        <h4 class="por-title">Visits</h4>
-                        <div class="por-txt">96,930 Users (40%)</div>
-                        <div class="progress mb-2" style="height: 5px">
-                          <div
-                            class="progress-bar bg-flat-color-1"
-                            role="progressbar"
-                            style="width: 40%"
-                            aria-valuenow="25"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                          ></div>
-                        </div>
-                      </div>
-                      <div class="progress-box progress-2">
-                        <h4 class="por-title">Bounce Rate</h4>
-                        <div class="por-txt">3,220 Users (24%)</div>
-                        <div class="progress mb-2" style="height: 5px">
-                          <div
-                            class="progress-bar bg-flat-color-2"
-                            role="progressbar"
-                            style="width: 24%"
-                            aria-valuenow="25"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                          ></div>
-                        </div>
-                      </div>
-                      <div class="progress-box progress-2">
-                        <h4 class="por-title">Unique Visitors</h4>
-                        <div class="por-txt">29,658 Users (60%)</div>
-                        <div class="progress mb-2" style="height: 5px">
-                          <div
-                            class="progress-bar bg-flat-color-3"
-                            role="progressbar"
-                            style="width: 60%"
-                            aria-valuenow="60"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                          ></div>
-                        </div>
-                      </div>
-                      <div class="progress-box progress-2">
-                        <h4 class="por-title">Targeted Visitors</h4>
-                        <div class="por-txt">99,658 Users (90%)</div>
-                        <div class="progress mb-2" style="height: 5px">
-                          <div
-                            class="progress-bar bg-flat-color-4"
-                            role="progressbar"
-                            style="width: 90%"
-                            aria-valuenow="90"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                          ></div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.card-body -->
+                  <div class="stats-body">
+                    <canvas id="TrafficChart" class="chart-canvas"></canvas>
                   </div>
                 </div>
-                <!-- /.row -->
-                <div class="card-body"></div>
+              </div>
+              <div class="stats-col">
+                <div class="stats-card">
+                  <div class="stats-header">
+                    <h4 class="stats-title">
+                      <strong>CATEGORY WISE</strong>
+                    </h4>
+                  </div>
+                  <div class="stats-body">
+                    <canvas id="dougnutChart" class="chart-canvas"></canvas>
+                  </div>
+                </div>
               </div>
             </div>
-            <!-- /# column -->
           </div>
+
+          <script>
+            // Add event listener to filter options
+            const filterOptions = document.querySelectorAll(
+              '.filter-options input[type="radio"]'
+            );
+            filterOptions.forEach((option) => {
+              option.addEventListener("change", function () {
+                const filterValue = this.value;
+                // Apply filter to both charts
+                applyFilter(filterValue, "TrafficChart");
+                applyFilter(filterValue, "doughnutChart");
+              });
+            });
+
+            // Function to apply filter to a chart
+            function applyFilter(filterValue, chartId) {
+              // TODO: Implement filtering logic for the chart
+              console.log(
+                `Applying filter "${filterValue}" to chart "${chartId}"`
+              );
+            }
+          </script>
           <!--  /Traffic -->
           <div class="clearfix"></div>
           <!-- Orders -->
@@ -619,158 +671,9 @@
                 <!-- /.card -->
               </div>
               <!-- /.col-lg-8 -->
-
-              <div class="col-xl-4">
-                <div class="row">
-                  <div class="col-lg-6 col-xl-12">
-                    <div class="card br-0">
-                      <div class="card-body">
-                        <div class="chart-container ov-h">
-                          <div id="flotPie1" class="float-chart"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.card -->
-                  </div>
-
-                  <div class="col-lg-6 col-xl-12">
-                    <div class="card bg-flat-color-3">
-                      <div class="card-body">
-                        <h4 class="card-title m-0 white-color">August 2018</h4>
-                      </div>
-                      <div class="card-body">
-                        <div id="flotLine5" class="flot-line"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- /.col-md-4 -->
             </div>
           </div>
           <!-- /.orders -->
-          <!-- Calender Chart Weather  -->
-          <div class="row">
-            <div class="col-lg-4 col-md-6">
-              <div class="card ov-h">
-                <div class="card-body bg-flat-color-2">
-                  <div id="flotBarChart" class="float-chart ml-4 mr-4"></div>
-                </div>
-                <div id="cellPaiChart" class="float-chart"></div>
-              </div>
-              <!-- /.card -->
-            </div>
-          </div>
-          <!-- /Calender Chart Weather -->
-          <!-- Modal - Calendar - Add New Event -->
-          <div class="modal fade none-border" id="event-modal">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-hidden="true"
-                  >
-                    &times;
-                  </button>
-                  <h4 class="modal-title"><strong>Add New Event</strong></h4>
-                </div>
-                <div class="modal-body"></div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-default waves-effect"
-                    data-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-success save-event waves-effect waves-light"
-                  >
-                    Create event
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-danger delete-event waves-effect waves-light"
-                    data-dismiss="modal"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- /#event-modal -->
-          <!-- Modal - Calendar - Add Category -->
-          <div class="modal fade none-border" id="add-category">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-hidden="true"
-                  >
-                    &times;
-                  </button>
-                  <h4 class="modal-title"><strong>Add a category </strong></h4>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <label class="control-label">Category Name</label>
-                        <input
-                          class="form-control form-white"
-                          placeholder="Enter name"
-                          type="text"
-                          name="category-name"
-                        />
-                      </div>
-                      <div class="col-md-6">
-                        <label class="control-label"
-                          >Choose Category Color</label
-                        >
-                        <select
-                          class="form-control form-white"
-                          data-placeholder="Choose a color..."
-                          name="category-color"
-                        >
-                          <option value="success">Success</option>
-                          <option value="danger">Danger</option>
-                          <option value="info">Info</option>
-                          <option value="pink">Pink</option>
-                          <option value="primary">Primary</option>
-                          <option value="warning">Warning</option>
-                        </select>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-default waves-effect"
-                    data-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-danger waves-effect waves-light save-category"
-                    data-dismiss="modal"
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- /#add-category -->
         </div>
         <!-- .animated -->
       </div>
@@ -814,17 +717,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.9.0/dist/fullcalendar.min.js"></script>
-    <script src="assets/js/init/fullcalendar-init.js"></script>
+    <script src="public/assets/js/init/fullcalendar-init.js"></script>
 
     <!--Local Stuff-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      const fetchData = (async()=>{
+      const fetchData = (async () => {
         try {
-          const response = await fetch("/dashBoardData",{method:"GET"});
+          const response = await fetch("/dashBoardData", { method: "GET" });
           const data = await response.json();
 
-          const {productCount,
+          const {
+            productCount,
             categoryCount,
             pendingOrders,
             completedOrdersCount,
@@ -833,19 +737,104 @@
             categoryWiseRevenue,
             totalRevenue,
             monthlyRevenue,
-            activeUsers
+            activeUsers,
           } = data;
-          console.log(totalRevenue)
-          document.querySelector(".total-revenue-count").innerText = `${totalRevenue.revenue}`;
-          document.querySelector(".Total-Sales-count").innerText = `${completedOrdersCount}`;
-          document.querySelector(".Current-Day-count").innerText = `${currentDayRevenue}`;
-          document.querySelector(".Active-user-count").innerText = `${activeUsers}`;
+          console.log(totalRevenue);
+          document.querySelector(
+            ".total-revenue-count"
+          ).innerText = `${totalRevenue.revenue}`;
+          document.querySelector(
+            ".Total-Sales-count"
+          ).innerText = `${completedOrdersCount}`;
+          document.querySelector(
+            ".Current-Day-count"
+          ).innerText = `${currentDayRevenue}`;
+          document.querySelector(
+            ".Active-user-count"
+          ).innerText = `${activeUsers}`;
 
-          const fourteenDay = document.getElementById("TrafficChart");
-          
-        } catch (error) {
-          
-        }
+          const fourteenDayChartElement =
+            document.getElementById("TrafficChart");
+          const fourteenDayChartOption = {
+            type: "radar",
+            data: {
+              labels: fourteenDayRevenue.date,
+              datasets: [
+                {
+                  label: "Last 2 Weeks Revenue per Day",
+                  data: fourteenDayRevenue.revenue,
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              title: {
+                display: true,
+                text: "Predicted world population (millions) in 2050",
+              },
+            },
+          };
+
+          function getRandomColor() {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            return `rgb(${r}, ${g}, ${b})`;
+          }
+
+          function getRandomColors(count) {
+            const colors = [];
+            for (let i = 0; i < count; i++) {
+              colors.push(getRandomColor());
+            }
+            return colors;
+          }
+
+          const categoryRevenueChartElement =
+            document.getElementById("dougnutChart");
+          const randomColors = getRandomColors(
+            categoryWiseRevenue.categoryName.length
+          );
+          const categoryRevenueChartOptions = {
+            type: "doughnut",
+            data: {
+              labels: categoryWiseRevenue.categoryName,
+              datasets: [
+                {
+                  label: "Category wise Revenue in dollars",
+                  backgroundColor: randomColors,
+                  data: categoryWiseRevenue.revenuePerCategory,
+                },
+              ],
+            },
+          };
+
+          const revenueColors = getRandomColors(monthlyRevenue.date.length);
+          const monthWiseRevenueElement = document.getElementById("flotLine5");
+          const monthWiseRevenueOptions = {
+            type: "radar",
+            data: {
+              labels: monthlyRevenue.date,
+              datasets: [
+                {
+                  label: "Revenue In Dollars",
+                  backgroundColor: revenueColors,
+                  data: monthlyRevenue.revenue,
+                },
+              ],
+            },
+            options: {
+              title: {
+                display: true,
+                text: "Revenue of the current month in Dollars",
+              },
+            },
+          };
+
+          new Chart(fourteenDayChartElement, fourteenDayChartOption);
+          new Chart(categoryRevenueChartElement, categoryRevenueChartOptions);
+          new Chart(monthWiseRevenueElement, monthWiseRevenueOptions);
+        } catch (error) {}
       })();
     </script>
   </body>
