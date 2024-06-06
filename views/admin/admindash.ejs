@@ -477,11 +477,27 @@
               display: flex;
               gap: 10px;
               margin-bottom: 20px;
+              align-items: center;
             }
 
-            .filter-options label {
+            .filter-options select {
               font-size: 14px;
-              margin-right: 10px;
+              padding: 5px;
+              border: 1px solid #ccc;
+              border-radius: 5px;
+            }
+
+            .apply-filter-btn {
+              background-color: #4caf50;
+              color: #fff;
+              padding: 5px 10px;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            }
+
+            .apply-filter-btn:hover {
+              background-color: #3e8e41;
             }
 
             .stats-row {
@@ -533,22 +549,16 @@
 
           <div class="stats-container">
             <div class="filter-options">
-              <label
-                ><input type="radio" name="filter" value="this-week" /> This
-                Week</label
-              >
-              <label
-                ><input type="radio" name="filter" value="last-2-weeks" /> Last
-                2 Weeks</label
-              >
-              <label
-                ><input type="radio" name="filter" value="last-month" /> Last
-                Month</label
-              >
-              <label
-                ><input type="radio" name="filter" value="last-year" /> Last
-                Year</label
-              >
+              <select id="filter-select">
+                <option value="" disabled selected>Choose Filter</option>
+                <option value="week">This Week</option>
+                <option value="2-weeks">Last 2 Weeks</option>
+                <option value="last-month">Last Month</option>
+                <option value="last-year">Last Year</option>
+              </select>
+              <button class="apply-filter-btn" onclick="applyFilter()">
+                Apply Filter
+              </button>
             </div>
             <div class="stats-row">
               <div class="stats-col">
@@ -578,28 +588,6 @@
             </div>
           </div>
 
-          <script>
-            // Add event listener to filter options
-            const filterOptions = document.querySelectorAll(
-              '.filter-options input[type="radio"]'
-            );
-            filterOptions.forEach((option) => {
-              option.addEventListener("change", function () {
-                const filterValue = this.value;
-                // Apply filter to both charts
-                applyFilter(filterValue, "TrafficChart");
-                applyFilter(filterValue, "doughnutChart");
-              });
-            });
-
-            // Function to apply filter to a chart
-            function applyFilter(filterValue, chartId) {
-              // TODO: Implement filtering logic for the chart
-              console.log(
-                `Applying filter "${filterValue}" to chart "${chartId}"`
-              );
-            }
-          </script>
           <!--  /Traffic -->
           <div class="clearfix"></div>
           <!-- Orders -->
@@ -722,120 +710,138 @@
     <!--Local Stuff-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      const fetchData = (async () => {
+      function applyFilter() {
+        const filterValue = document.getElementById("filter-select").value;
+        console.log("Filter value selected:", filterValue);
+        fetchData(filterValue);
+      }
+
+      async function fetchData(filterData) {
         try {
-          const response = await fetch("/dashBoardData", { method: "GET" });
+          console.log("Fetching data with filter:", filterData);
+          const response = await fetch(`/dashBoardData?filter=${filterData}`, {
+            method: "GET",
+          });
           const data = await response.json();
+          console.log("Data fetched:", data);
+          // Update the charts with the new data
+          updateCharts(data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
 
-          const {
-            productCount,
-            categoryCount,
-            pendingOrders,
-            completedOrdersCount,
-            currentDayRevenue,
-            fourteenDayRevenue,
-            categoryWiseRevenue,
-            totalRevenue,
-            monthlyRevenue,
-            activeUsers,
-          } = data;
-          console.log(totalRevenue);
-          document.querySelector(
-            ".total-revenue-count"
-          ).innerText = `${totalRevenue.revenue}`;
-          document.querySelector(
-            ".Total-Sales-count"
-          ).innerText = `${completedOrdersCount}`;
-          document.querySelector(
-            ".Current-Day-count"
-          ).innerText = `${currentDayRevenue}`;
-          document.querySelector(
-            ".Active-user-count"
-          ).innerText = `${activeUsers}`;
+      function updateCharts(data) {
+        const {
+          productCount,
+          categoryCount,
+          pendingOrders,
+          completedOrdersCount,
+          currentDayRevenue,
+          fourteenDayRevenue,
+          categoryWiseRevenue,
+          totalRevenue,
+          monthlyRevenue,
+          activeUsers,
+        } = data;
 
-          const fourteenDayChartElement =
-            document.getElementById("TrafficChart");
-          const fourteenDayChartOption = {
-            type: "radar",
-            data: {
-              labels: fourteenDayRevenue.date,
-              datasets: [
-                {
-                  label: "Last 2 Weeks Revenue per Day",
-                  data: fourteenDayRevenue.revenue,
-                  borderWidth: 1,
-                },
-              ],
-            },
-            options: {
-              title: {
-                display: true,
-                text: "Predicted world population (millions) in 2050",
+        console.log("Updating charts with data:", data);
+
+        // Update the text elements
+        document.querySelector(
+          ".total-revenue-count"
+        ).innerText = `${totalRevenue.revenue}`;
+        document.querySelector(
+          ".Total-Sales-count"
+        ).innerText = `${completedOrdersCount}`;
+        document.querySelector(
+          ".Current-Day-count"
+        ).innerText = `${currentDayRevenue}`;
+        document.querySelector(
+          ".Active-user-count"
+        ).innerText = `${activeUsers}`;
+
+        // Update the charts
+        const fourteenDayChartElement = document.getElementById("TrafficChart");
+        console.log("Fourteen Day Chart Element:", fourteenDayChartElement);
+
+        const fourteenDayChartOption = {
+          type: "radar",
+          data: {
+            labels: fourteenDayRevenue.date,
+            datasets: [
+              {
+                label: "Last 2 Weeks Revenue per Day",
+                data: fourteenDayRevenue.revenue,
+                borderWidth: 1,
               },
+            ],
+          },
+          options: {
+            title: {
+              display: true,
+              text: "Revenue for the Last 2 Weeks",
             },
-          };
+          },
+        };
 
-          function getRandomColor() {
-            const r = Math.floor(Math.random() * 256);
-            const g = Math.floor(Math.random() * 256);
-            const b = Math.floor(Math.random() * 256);
-            return `rgb(${r}, ${g}, ${b})`;
-          }
+        const categoryRevenueChartElement =
+          document.getElementById("dougnutChart");
+        console.log(
+          "Category Revenue Chart Element:",
+          categoryRevenueChartElement
+        );
 
-          function getRandomColors(count) {
-            const colors = [];
-            for (let i = 0; i < count; i++) {
-              colors.push(getRandomColor());
-            }
-            return colors;
-          }
-
-          const categoryRevenueChartElement =
-            document.getElementById("dougnutChart");
-          const randomColors = getRandomColors(
-            categoryWiseRevenue.categoryName.length
-          );
-          const categoryRevenueChartOptions = {
-            type: "doughnut",
-            data: {
-              labels: categoryWiseRevenue.categoryName,
-              datasets: [
-                {
-                  label: "Category wise Revenue in dollars",
-                  backgroundColor: randomColors,
-                  data: categoryWiseRevenue.revenuePerCategory,
-                },
-              ],
-            },
-          };
-
-          const revenueColors = getRandomColors(monthlyRevenue.date.length);
-          const monthWiseRevenueElement = document.getElementById("flotLine5");
-          const monthWiseRevenueOptions = {
-            type: "radar",
-            data: {
-              labels: monthlyRevenue.date,
-              datasets: [
-                {
-                  label: "Revenue In Dollars",
-                  backgroundColor: revenueColors,
-                  data: monthlyRevenue.revenue,
-                },
-              ],
-            },
-            options: {
-              title: {
-                display: true,
-                text: "Revenue of the current month in Dollars",
+        const randomColors = getRandomColors(
+          categoryWiseRevenue.categoryName.length
+        );
+        const categoryRevenueChartOptions = {
+          type: "doughnut",
+          data: {
+            labels: categoryWiseRevenue.categoryName,
+            datasets: [
+              {
+                label: "Category wise Revenue in dollars",
+                backgroundColor: randomColors,
+                data: categoryWiseRevenue.revenuePerCategory,
               },
-            },
-          };
+            ],
+          },
+        };
 
-          new Chart(fourteenDayChartElement, fourteenDayChartOption);
-          new Chart(categoryRevenueChartElement, categoryRevenueChartOptions);
-          new Chart(monthWiseRevenueElement, monthWiseRevenueOptions);
-        } catch (error) {}
-      })();
+        // Ensure the charts are properly destroyed before creating new ones
+        if (fourteenDayChartElement.chart) {
+          fourteenDayChartElement.chart.destroy();
+        }
+        if (categoryRevenueChartElement.chart) {
+          categoryRevenueChartElement.chart.destroy();
+        }
+
+        // Create new charts
+        console.log("Creating new Fourteen Day Chart...",fourteenDayChartOption);
+        fourteenDayChartElement.chart = new Chart(
+          fourteenDayChartElement,
+          fourteenDayChartOption
+        );
+
+        console.log("Creating new Category Revenue Chart...");
+        categoryRevenueChartElement.chart = new Chart(
+          categoryRevenueChartElement,
+          categoryRevenueChartOptions
+        );
+      }
+
+      // Call the fetchData function initially with the default filter value
+      console.log("Initial data fetch with default filter value...");
+      fetchData("Two Week");
+
+      // Helper function to generate random colors
+      function getRandomColors(length) {
+        return Array.from(
+          { length },
+          () => `#${Math.floor(Math.random() * 16777215).toString(16)}`
+        );
+      }
     </script>
   </body>
 </html>

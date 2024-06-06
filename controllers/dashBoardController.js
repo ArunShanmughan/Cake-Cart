@@ -22,8 +22,8 @@ const getDashBoardData = async (req, res) => {
       dashboardHelper.pendingOrders(),
       dashboardHelper.completedOrdersCount(),
       dashboardHelper.currentDayRevenue(),
-      dashboardHelper.fourteenDaysRevenue(),
-      dashboardHelper.categoryWiseRevenue(),
+      dashboardHelper.fourteenDaysRevenue(req.query.filterData),
+      dashboardHelper.categoryWiseRevenue(req.query.filterData),
       dashboardHelper.totalRevenue(),
       dashboardHelper.monthlyRevenue(),
       dashboardHelper.activeUsers()

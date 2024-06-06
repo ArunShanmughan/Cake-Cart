@@ -658,6 +658,8 @@ const getOrderInfo = async (req, res) => {
       islogin: req.session.isLogged,
       presentOrder: orderDetails,
     });
+    req.session.currentOrder = null;
+    console.log("After making the req.session.currentOrder as null",req.session.currentOrder)
     await cartModel.deleteMany({ userId: req.session.userInfo._id });
   } catch (error) {
     console.log("Something Went Wrong", error);
