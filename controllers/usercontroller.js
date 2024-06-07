@@ -506,11 +506,14 @@ const getCheckout = async (req, res) => {
       let availableCoupons = await couponModel.find({
         expiryDate: { $gte: new Date() },
       });
+      let walletBalance = await walletModel.findOne({userId:req.session.userInfo._id});
+      console.log("This is the wallet Balance from the back end",walletBalance)
       res.render("users/checkout", {
         islogin: req.session.isLogged,
         locationData: addressData,
         grandTotal: req?.session?.wholeTotal,
         validCoupons: availableCoupons,
+        walletData:walletBalance,
       });
     } else {
       res.redirect("/views/users/login");
@@ -566,6 +569,14 @@ const postOrderPlaced = async (req, res) => {
     let appliedCoupon = null;
     if (req.body.couponOffers) {
       appliedCoupon = req.body.couponOffers;
+    }
+
+    if(req.body.paymentMethod=="wallet"){
+      let walletInfo = await walletModel.findOne({useerId:req.session.userInfo._id});
+      let walletBal = walletInfo.walletBalance;
+      if(walletBal<req.session.wholeTotal){
+        res.send({inSufficient:true})
+      }
     }
     let addressData = await addressModel
       .find({ userId: req.session.userInfo._id })

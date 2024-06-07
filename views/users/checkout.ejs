@@ -758,6 +758,16 @@
                           />
                           <label for="pay2">PayPal</label>
                         </span>
+                        <span>
+                          <input
+                            type="radio"
+                            id="pay3"
+                            name="paymentMethod"
+                            value="wallet"
+                            onclick="walletBalanceChecker()"
+                          />
+                          <label for="pay3">Wallet</label>
+                        </span>
                       </span>
                       <span class="ms-pay-commemt">
                         <span class="ms-pay-opt-head"
@@ -786,6 +796,43 @@
       </form>
     </section>
     <script>
+      async function walletBalanceChecker() {
+        try {
+          console.log(
+            "calling this walletBalanceChecker function",
+            `<%= walletData %>`
+          );
+          let walletDetailsString = `<%= JSON.stringify(walletData) %>`;
+          console.log(walletDetailsString);
+          let decodedWalletDetailsString = walletDetailsString
+            .replace(/&quot;/g, '"')
+            .replace(/&#34;/g, '"');
+          let walletDetails = JSON.parse(decodedWalletDetailsString);
+
+          console.log("thi sis  wallet details", walletDetails);
+          let availableBalance = walletDetails.walletBalance;
+          let currGrandTotal = Number(
+            document.getElementById("presentGrandTotal").innerText
+          );
+
+          if (availableBalance >= currGrandTotal) {
+            await Swal.fire({
+              title: `Your Wallet Balance is :${availableBalance}`,
+              text: `You can now purchase with your wallet Balance`,
+              icon: "info",
+            });
+          }else{
+            await Swal.fire({
+              title: `Your Wallet Balance is :${availableBalance}`,
+              text: `Your wallet balance is not sufficient`,
+              icon: "warning",
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
       $("#orderItems").validate({
         submitHandler: async (form, event) => {
           event.preventDefault();
@@ -799,9 +846,9 @@
           let obj = {
             address: form.selectedAddress.value,
             paymentMethod: form.paymentMethod.value,
-            presentTotal:grandTotal,
+            presentTotal: grandTotal,
             comments: form.Comments.value,
-            couponOffers:appliedCoupon,
+            couponOffers: appliedCoupon,
           };
           console.log(appliedCoupon);
           console.log(obj);
@@ -818,20 +865,36 @@
               window.location.href = data.url;
             }
           } else if (form.paymentMethod.value == "COD") {
-            console.log("coming here because COD")
+            console.log("coming here because COD");
             let response = await fetch("/orderPlaced", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(obj),
             });
-          let result = await response.json();
-          console.log("this is the result getting from the fetch method",result);
+            let result = await response.json();
+            console.log(
+              "this is the result getting from the fetch method",
+              result
+            );
 
-          if(result.success){
-            console.log("soming here")
-            window.location.href = `/orderinfo?islogin=${result.islogin}&presentOrder=${result.presentOrder}`
+            if (result.success) {
+              console.log("soming here");
+              window.location.href = `/orderinfo?islogin=${result.islogin}&presentOrder=${result.presentOrder}`;
+            }
+          }else if(form.paymentMethod.value=="wallet"){
+            console.log("coming here because of Wallet")
+            let response = await fetch("/orderPlaced",{
+              method:"POST",
+              headers:{"Content-Type": "application/json"},
+              body:JSON.stringify(obj),
+            });
+
+            let result = await response.json();
+            if(result.inSufficient){
+
+              
+            }
           }
-        }
         },
       });
     </script>
@@ -1399,9 +1462,9 @@
           let currPercentage = result.coupData.discountPercentage;
           let grandTotal =
             document.getElementById("presentGrandTotal").innerText;
-            console.log(grandTotal);
+          console.log(grandTotal);
           let discountAmount = (grandTotal * currPercentage) / 100;
-          console.log(discountAmount)
+          console.log(discountAmount);
           if (discountAmount > maximumDiscount) {
             discountAmount = maximumDiscount;
           }
@@ -1417,11 +1480,11 @@
       }
 
       async function removeCoupon() {
-          await Swal.fire({
-              title: "Coupon Removed",
-              text: `Your coupon has been removed`,
-              icon: "warning",
-            });
+        await Swal.fire({
+          title: "Coupon Removed",
+          text: `Your coupon has been removed`,
+          icon: "warning",
+        });
         document.getElementById("applyCouponBtn").disabled = false;
         document.getElementById("removeCouponBtn").style.display = "none";
         document.getElementById("appliedCoupon").value = "";

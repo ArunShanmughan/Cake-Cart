@@ -569,6 +569,26 @@
         text-decoration: underline;
       }
     </style>
+    <script>
+      let orderedDate = new Date(`<%= orderInfo.orderDate %>`);
+      let currentDate = new Date();
+      console.log(currentDate.getTime());
+      console.log(orderedDate.getTime());
+      var timeDifference = Math.floor(
+        (currentDate.getTime() - orderedDate.getTime()) / (1000 * 3600 * 24)
+      );
+      console.log(timeDifference);
+
+      if (
+        `<%= orderInfo.orderStatus %>` == "delivered" &&
+        timeDifference <= 14
+      ) {
+        var button = document.createElement("button");
+        button.className = "pay-button btn-primary";
+        button.innerHTML = `<a href="">return</a>`;
+        document.getElementById("buttonContainer").appendChild(button); // append to a specific container
+      }
+    </script>
 
     <div class="order-container" id="order-box">
       <div class="summary-section" id="order-summary">
@@ -578,9 +598,9 @@
         <span class="order-status <%=orderInfo.orderStatus.toLowerCase()%>">
           <%=orderInfo.orderStatus %>
         </span>
-        <br>
+        <br />
         <p><strong>Payment Method:</strong><%=orderInfo.paymentType%></p>
-        <% if(orderInfo.paymentType=="COD"){ %>
+        <% if(orderInfo.paymentType=="COD"&&orderInfo.orderStatus!="delivered"){%>
         <button
           class="pay-button btn-primary"
           style="text-decoration-color: #333"
@@ -588,6 +608,7 @@
           <a href="">Pay Now</a>
         </button>
         <% } %>
+        <div id="buttonContainer"></div>
       </div>
       <style>
         .card-container {
