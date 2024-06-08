@@ -572,10 +572,11 @@ const postOrderPlaced = async (req, res) => {
     }
 
     if(req.body.paymentMethod=="wallet"){
-      let walletInfo = await walletModel.findOne({useerId:req.session.userInfo._id});
+      let walletInfo = await walletModel.findOne({userId:req.session.userInfo._id});
+      console.log(walletInfo)
       let walletBal = walletInfo.walletBalance;
       if(walletBal<req.session.wholeTotal){
-        res.send({inSufficient:true})
+        return res.send({inSufficient:true})
       }
     }
     let addressData = await addressModel
@@ -649,6 +650,11 @@ const postOrderPlaced = async (req, res) => {
         "This is the orderDetails getting after creating order success and sending to the res.send",
         orderDetails
       );
+      if(req.body.paymentMethod=="wallet"){
+      await walletModel.updateOne({ userId:req.session.userInfo._id },
+        { $inc: { walletBalance: -req.session.wholeTotal } })
+      }
+
       res.send({
         success: true,
       });
@@ -734,6 +740,7 @@ const getSingleOrder = async (req, res) => {
 
 const getLogout = (req, res) => {
   req.session.isLogged = false;
+  req.session.destroy()
   res.redirect("/");
 };
 

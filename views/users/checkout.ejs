@@ -878,7 +878,7 @@
             );
 
             if (result.success) {
-              console.log("soming here");
+              console.log("coming here");
               window.location.href = `/orderinfo?islogin=${result.islogin}&presentOrder=${result.presentOrder}`;
             }
           }else if(form.paymentMethod.value=="wallet"){
@@ -891,8 +891,14 @@
 
             let result = await response.json();
             if(result.inSufficient){
-
-              
+              await Swal.fire({
+              title: `wallet Payment failed`,
+              text: `Your wallet balance is not sufficient`,
+              icon: "warning",
+            });
+            }else if(result.succuess){
+              console.log("coming here beacause the wallet payment done");
+              window.location.href = `/orderinfo?islogin=${result.islogin}&presentOrder=${result.presentOrder}`;
             }
           }
         },
