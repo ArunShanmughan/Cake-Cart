@@ -600,7 +600,11 @@
         </span>
         <br />
         <p><strong>Payment Method:</strong><%=orderInfo.paymentType%></p>
-        <% if(orderInfo.paymentType=="COD"&&orderInfo.orderStatus!="delivered"){%>
+        <a class="btn btn-primary" href="/downloadInvoice?orderId=<%=orderInfo._id%>">
+          Download Invoice
+      </a>
+        <%
+        if(orderInfo.paymentType=="COD"&&orderInfo.orderStatus!="delivered"){%>
         <button
           class="pay-button btn-primary"
           style="text-decoration-color: #333"

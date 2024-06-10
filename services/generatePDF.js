@@ -1,41 +1,58 @@
 const PDFDocument = require("pdfkit");
 
 module.exports = {
-  generateInvoice: (dataCallback, endCallback, orderData) => {
+  generateInvoice: (dataCallback, endCallback, orderDet) => {
+    console.log("coming to this function invoice generating...")
     let doc = new PDFDocument({ size: "A4", margin: 50 });
 
     generateHeader(doc);
-    generateCustomerInformation(doc, orderData);
-    generateBody(doc, orderData);
+    generateCustomerInformation(doc, orderDet);
+    generateBody(doc, orderDet);
     generateFooter(doc);
     doc.on("data", dataCallback);
     doc.on("end", endCallback);
 
     doc.end();
+    console.log("everything over in here generate pdf")
   },
 };
 
 function generateHeader(doc) {
-  doc
+  try {
+    console.log("generateHeader coming to here too")
+    doc
     .fillColor("#444444")
     .fontSize(20)
-    .text("Smart Store.", 110, 57)
+    .text("Cake Cart", 110, 57)
     .fontSize(10)
     .text("BetaSpace-4thFloor, Desabandhu St., Ramnagar,", 200, 65, {
       align: "right",
     })
     .text(" Coimbatore, TN- 6100025", 200, 80, { align: "right" })
     .moveDown();
+  } catch (error) {
+    console.log("Something went wrong on generating header invoice downloading",error)
+  }
+  
 }
 
 function generateFooter(doc) {
-  doc.fontSize(10).text("Thank You! Shop with us again :)", 50, 750, {
-    align: "center",
-    width: 500,
-  });
+  try {
+    console.log("generateFooter coming to here ")
+    doc.fontSize(10).text("Thank You! Shop with us again :)", 50, 750, {
+      align: "center",
+      width: 500,
+    });
+  } catch (error) {
+    console.log("Something went wrong in the generatefooter in invoice donwloading",error)
+  }
 }
+
+
 function generateCustomerInformation(doc, orderData) {
-  const addressChosen = orderData.addressChosen;
+  try {
+    console.log("generateCustomerInformation coming to here")
+    const addressChoosen = orderData.addressChoosen;
 
   doc
     .text(`Order Number: ${orderData.orderNumber}`, 50, 100)
@@ -44,23 +61,28 @@ function generateCustomerInformation(doc, orderData) {
       50,
       115
     )
-    .text(`Total Price: ${orderData.grandTotalCost}`, 50, 130)
+    .text(`Total Price: ${orderData.grandTotalcost}`, 50, 130)
     .text(
-      `Name: ${addressChosen.firstName} ${addressChosen.lastName}`,
+      `Name: ${addressChoosen.firstName} ${addressChoosen.lastName}`,
       300,
       100
     )
     .text(
-      `Address: ${addressChosen.addressLine1} ${addressChosen.addressLine2} `,
+      `Address: ${addressChoosen.addressLine1} ${addressChoosen.addressLine2} `,
       300,
       115
     )
-    .text(`Phone: ${addressChosen.phone}`, 300, 150)
+    .text(`Phone: ${addressChoosen.phone}`, 300, 150)
     .moveDown();
+  } catch (error) {
+    console.log("Something went wrong in the generatorcustomerinformation",error)
+  }
 }
 
 function generateBody(doc, orderData) {
-  generateHr(doc, 90);
+  try {
+    console.log("generateBody coming to this function..")
+    generateHr(doc, 90);
 
   doc.fontSize(15).text("Invoice", 210, 170);
 
@@ -89,9 +111,17 @@ function generateBody(doc, orderData) {
 
   doc
     .fontSize(14)
-    .text(`Total Price: ${'Rs.'+orderData.grandTotalCost}`, 350, doc.y);
+    .text(`Total Price: ${'Rs.'+orderData.grandTotalcost}`, 350, doc.y);
+  } catch (error) {
+    console.log("Something went wrong in the generate body in invoice downloading..",error)
+  }
 }
 
 function generateHr(doc, y) {
-  doc.strokeColor("#aaaaaa").lineWidth(1).moveTo(50, y).lineTo(550, y).stroke();
+  try {
+    console.log("generateHr coming to this function")
+    doc.strokeColor("#aaaaaa").lineWidth(1).moveTo(50, y).lineTo(550, y).stroke();
+  } catch (error) {
+    console.log("Something went wrong in the generator hr in invoice downloading",error)
+  }
 }

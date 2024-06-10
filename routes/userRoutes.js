@@ -33,6 +33,7 @@ const {
   getOrderInfo,
   getCancelOrder,
   getSingleOrder,
+  downloadInvoicePDF,
   postApplyCoupon,
 } = require("../controllers/userController");
 
@@ -82,6 +83,7 @@ router.post("/orderPlaced",userAuth,postOrderPlaced);
 router.get("/orderinfo",userAuth,getOrderInfo)
 router.get("/cancelOrder",userAuth,getCancelOrder);
 router.get("/singleOrder",userAuth,getSingleOrder)
+router.get("/downloadInvoice",userAuth,downloadInvoicePDF)
 router.post("/applyCoupon",userAuth,postApplyCoupon)
 
 //user side product Controllers

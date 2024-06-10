@@ -64,6 +64,8 @@ const {
 
 const {
   getDashBoardData,
+  topProducts,
+  topCategory,
 } = require("../controllers/dashBoardController.js");
 //admin Routers
 admRouter.get("/admin", getAdmin);
@@ -117,6 +119,8 @@ admRouter.get("/downloadPdf",admAuth,salesReportPdfDownload)
 admRouter.get("/downloadExcel",admAuth,salesReportExcelDownload)
 
 //Dash Board controller
-admRouter.get("/dashBoardData",admAuth,getDashBoardData)
+admRouter.get("/dashBoardData",admAuth,getDashBoardData);
+admRouter.get("/topProducts",admAuth,topProducts);
+admRouter.get("/topCategory",admAuth,topCategory)
 
 module.exports = admRouter;

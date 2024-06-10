@@ -11,6 +11,7 @@ const wishListCollection = require("../models/wishListModel");
 const paypal = require("paypal-rest-sdk");
 const couponModel = require("../models/couponModel");
 const walletModel = require("../models/walletmodel");
+const {generateInvoice} = require("../services/generatePDF");
 
 const getlandingpage = async (req, res) => {
   try {
@@ -506,14 +507,19 @@ const getCheckout = async (req, res) => {
       let availableCoupons = await couponModel.find({
         expiryDate: { $gte: new Date() },
       });
-      let walletBalance = await walletModel.findOne({userId:req.session.userInfo._id});
-      console.log("This is the wallet Balance from the back end",walletBalance)
+      let walletBalance = await walletModel.findOne({
+        userId: req.session.userInfo._id,
+      });
+      console.log(
+        "This is the wallet Balance from the back end",
+        walletBalance
+      );
       res.render("users/checkout", {
         islogin: req.session.isLogged,
         locationData: addressData,
         grandTotal: req?.session?.wholeTotal,
         validCoupons: availableCoupons,
-        walletData:walletBalance,
+        walletData: walletBalance,
       });
     } else {
       res.redirect("/views/users/login");
@@ -571,12 +577,14 @@ const postOrderPlaced = async (req, res) => {
       appliedCoupon = req.body.couponOffers;
     }
 
-    if(req.body.paymentMethod=="wallet"){
-      let walletInfo = await walletModel.findOne({userId:req.session.userInfo._id});
-      console.log(walletInfo)
+    if (req.body.paymentMethod == "wallet") {
+      let walletInfo = await walletModel.findOne({
+        userId: req.session.userInfo._id,
+      });
+      console.log(walletInfo);
       let walletBal = walletInfo.walletBalance;
-      if(walletBal<req.session.wholeTotal){
-        return res.send({inSufficient:true})
+      if (walletBal < req.session.wholeTotal) {
+        return res.send({ inSufficient: true });
       }
     }
     let addressData = await addressModel
@@ -650,9 +658,11 @@ const postOrderPlaced = async (req, res) => {
         "This is the orderDetails getting after creating order success and sending to the res.send",
         orderDetails
       );
-      if(req.body.paymentMethod=="wallet"){
-      await walletModel.updateOne({ userId:req.session.userInfo._id },
-        { $inc: { walletBalance: -req.session.wholeTotal } })
+      if (req.body.paymentMethod == "wallet") {
+        await walletModel.updateOne(
+          { userId: req.session.userInfo._id },
+          { $inc: { walletBalance: -req.session.wholeTotal } }
+        );
       }
 
       res.send({
@@ -676,7 +686,10 @@ const getOrderInfo = async (req, res) => {
       presentOrder: orderDetails,
     });
     req.session.currentOrder = null;
-    console.log("After making the req.session.currentOrder as null",req.session.currentOrder)
+    console.log(
+      "After making the req.session.currentOrder as null",
+      req.session.currentOrder
+    );
     await cartModel.deleteMany({ userId: req.session.userInfo._id });
   } catch (error) {
     console.log("Something Went Wrong", error);
@@ -738,9 +751,36 @@ const getSingleOrder = async (req, res) => {
   }
 };
 
+const downloadInvoicePDF = async (req, res,next) => {
+  try {
+    console.log(
+      "This is comingto the downloadinvoice pdf with query ",
+      req.query
+    );
+    let orderDet = await orderModel
+      .findOne({ _id: req.query.orderId })
+      .populate("addressChoosen");
+    console.log(orderDet);
+    const orderNumber = orderDet._id;
+    const fileName = `invoice_order_${orderNumber}.pdf`;
+    const stream = res.writeHead(200, {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename=${fileName}`,
+    });
+
+    await generateInvoice(
+      (chunk) => stream.write(chunk),
+      () => stream.end(),
+      orderDet
+    );
+  } catch (error) {
+    console.log("Something went wrong in downloading the invoice", error);
+  }
+};
+
 const getLogout = (req, res) => {
   req.session.isLogged = false;
-  req.session.destroy()
+  req.session.destroy();
   res.redirect("/");
 };
 
@@ -775,5 +815,6 @@ module.exports = {
   getOrderInfo,
   getCancelOrder,
   getSingleOrder,
+  downloadInvoicePDF,
   postApplyCoupon,
 };

@@ -739,6 +739,7 @@
                         Please select the preferred payment method to use on
                         this order.
                       </div>
+                      <% if(grandTotal>1000){ %>
                       <span class="ms-pay-option">
                         <span>
                           <input
@@ -746,9 +747,22 @@
                             id="pay1"
                             name="paymentMethod"
                             value="COD"
+                            disabled = "true"
                           />
-                          <label for="pay1">Cash On Delivery</label>
+                          <label for="pay1" onclick="overRated()">Cash On Delivery</label>
                         </span>
+                        <% }else{ %>
+                          <span class="ms-pay-option">
+                            <span>
+                              <input
+                                type="radio"
+                                id="pay1"
+                                name="paymentMethod"
+                                value="COD"
+                              />
+                              <label for="pay1">Cash On Delivery</label>
+                            </span>
+                          <% } %>
                         <span>
                           <input
                             type="radio"
@@ -903,6 +917,15 @@
           }
         },
       });
+
+      async function overRated(){
+        console.log("Calling this overRated function")
+        return  Swal.fire({
+              title: `COD is not available`,
+              text: `You total amount is not eligible for COD`,
+              icon: "warning",
+            });
+      }
     </script>
     <!-- Checkout section End -->
 

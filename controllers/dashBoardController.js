@@ -49,6 +49,107 @@ const getDashBoardData = async (req, res) => {
   }
 };
 
+const topProducts = async(req,res)=>{
+  try {
+    const topProducts = await orderModel.aggregate([
+      {
+        $match: { orderStatus: "delivered" },
+      },
+      {
+        $unwind: "$cartData",
+      },
+      {
+        $group: {
+          _id: "$cartData.productId",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+      {
+        $limit: 10,
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      {
+        $unwind: "$product",
+      },
+      {
+        $project: {
+          _id: 0,
+          productId: "$_id",
+          count: 1,
+          productName: "$product.productName",
+          productPrice: "$product.offerPrice",
+        },
+      },
+    ]);
+    console.log(topProducts);
+  } catch (error) {
+    console.log("something went wrong in topProducts",error)
+  }
+}
+
+const topCategory = async(req,res)=>{
+  try {
+    const topCategories = await orderModel.aggregate([
+      {
+        $match: { orderStatus: 'delivered' }
+      },
+      {
+        $unwind: '$cartData'
+      },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'cartData.productId',
+          foreignField: '_id',
+          as: 'product'
+        }
+      },
+      {
+        $unwind: '$product'
+      },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'product.parentCategory',
+          foreignField: '_id',
+          as: 'category'
+        }
+      },
+      {
+        $unwind: '$category'
+      },
+      {
+        $group: {
+          _id: '$category.categoryName',
+          quantity: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { quantity: -1 }
+      },
+      {
+        $limit: 10
+      }
+    ]);
+    console.log(topCategories);
+    res.render("admin/topCategories",{topCategories})
+  } catch (error) {
+    console.log("Something went wrong in the topCategories",error)
+  }
+}
+
 module.exports = {
   getDashBoardData,
+  topProducts,
+  topCategory,
 };
