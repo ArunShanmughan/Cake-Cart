@@ -26,7 +26,7 @@ const getDashBoardData = async (req, res) => {
       dashboardHelper.categoryWiseRevenue(req.query.filterData),
       dashboardHelper.totalRevenue(),
       dashboardHelper.monthlyRevenue(),
-      dashboardHelper.activeUsers()
+      dashboardHelper.activeUsers(),
     ]);
 
     const data = {
@@ -39,18 +39,74 @@ const getDashBoardData = async (req, res) => {
       categoryWiseRevenue,
       totalRevenue,
       monthlyRevenue,
-      activeUsers
-    }
-    console.log("coming to the function for geting promise datas",data)
+      activeUsers,
+    };
+    console.log("coming to the function for geting promise datas", data);
     res.json(data);
   } catch (error) {
-    console.log("Something went wrong",error);
-    res.send({error});
+    console.log("Something went wrong", error);
+    res.send({ error });
   }
 };
 
-const topProducts = async(req,res)=>{
+const topProducts = async (req, res) => {
   try {
+    // const topProducts = await orderModel.aggregate([
+    //   {
+    //     $match: { orderStatus: "delivered" },
+    //   },
+    //   {
+    //     $unwind: "$cartData",
+    //   },
+    //   {
+    //     $group: {
+    //       _id: "$cartData.productId",
+    //       count: { $sum: 1 },
+    //     },
+    //   },
+    //   {
+    //     $sort: { count: -1 },
+    //   },
+    //   {
+    //     $limit: 10,
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "products",
+    //       localField: "_id",
+    //       foreignField: "_id",
+    //       as: "product",
+    //     },
+    //   },
+    //   {
+    //     $unwind: "$product",
+    //   },
+    //   {
+    //     $replaceRoot: {
+    //       newRoot: {
+    //         $mergeObjects: ["$$ROOT", "$product"],
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "categorymodels",
+    //       localField: "product.category",
+    //       foreignField: "_id",
+    //       as: "category",
+    //     },
+    //   },
+    //   {
+    //     $unwind: "$category",
+    //   },
+    //   {
+    //     $replaceRoot: {
+    //       newRoot: {
+    //         $mergeObjects: ["$$ROOT", "$category"],
+    //       },
+    //     },
+    //   },
+    // ]);
     const topProducts = await orderModel.aggregate([
       {
         $match: { orderStatus: "delivered" },
@@ -70,83 +126,64 @@ const topProducts = async(req,res)=>{
       {
         $limit: 10,
       },
-      {
-        $lookup: {
-          from: "products",
-          localField: "_id",
-          foreignField: "_id",
-          as: "product",
-        },
-      },
-      {
-        $unwind: "$product",
-      },
-      {
-        $project: {
-          _id: 0,
-          productId: "$_id",
-          count: 1,
-          productName: "$product.productName",
-          productPrice: "$product.offerPrice",
-        },
-      },
     ]);
-    console.log(topProducts);
+    console.log("this is the top products data", topProducts);
+    res.render("admin/topProducts", { topProducts });
   } catch (error) {
-    console.log("something went wrong in topProducts",error)
+    console.log("something went wrong in topProducts", error);
   }
-}
+};
 
-const topCategory = async(req,res)=>{
+const topCategory = async (req, res) => {
   try {
     const topCategories = await orderModel.aggregate([
       {
-        $match: { orderStatus: 'delivered' }
+        $match: { orderStatus: "delivered" },
       },
       {
-        $unwind: '$cartData'
-      },
-      {
-        $lookup: {
-          from: 'products',
-          localField: 'cartData.productId',
-          foreignField: '_id',
-          as: 'product'
-        }
-      },
-      {
-        $unwind: '$product'
+        $unwind: "$cartData",
       },
       {
         $lookup: {
-          from: 'categories',
-          localField: 'product.parentCategory',
-          foreignField: '_id',
-          as: 'category'
-        }
+          from: "products",
+          localField: "cartData.productId.category",
+          foreignField: "_id",
+          as: "category",
+        },
       },
+      // {
+      //   $unwind: "$product",
+      // },
+      // {
+      //   $lookup: {
+      //     from: "categorymodels",
+      //     localField: "product.category",
+      //     foreignField: "_id",
+      //     as: "category",
+      //   },
+      // },
       {
-        $unwind: '$category'
+        $unwind: "$category",
       },
       {
         $group: {
-          _id: '$category.categoryName',
-          quantity: { $sum: 1 }
-        }
+          _id: "$category.categoryName",
+          quantity: { $sum: 1 },
+        },
       },
       {
-        $sort: { quantity: -1 }
+        $sort: { quantity: -1 },
       },
       {
-        $limit: 10
-      }
+        $limit: 10,
+      },
     ]);
-    console.log(topCategories);
-    res.render("admin/topCategories",{topCategories})
+    console.log("This is the topcategories",topCategories);
+    res.render("admin/topCategory", { topCategories });
   } catch (error) {
-    console.log("Something went wrong in the topCategories",error)
+    console.log("Something went wrong in the topCategories", error);
   }
-}
+};
 
 module.exports = {
   getDashBoardData,

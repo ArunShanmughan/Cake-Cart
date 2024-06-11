@@ -2,6 +2,7 @@ const userdata = require("../models/userDB");
 const categoryModel = require("../models/categoryModel");
 const productModel = require("../models/productModel");
 const productCollection = require("../models/productModel");
+const orderModel = require("../models/orderModel")
 
 const getProductManagment = async (req, res) => {
   try {
@@ -87,6 +88,9 @@ const postAddProduct = async(req,res)=>{
 const getEditProduct = async(req,res)=>{
   try {
     if(req.session.adminLogged){
+      const orderData = await orderModel.find().populate("cartData");
+      console.log(orderData);
+
       const categoryDetails = await categoryModel.find()
       const categoryInfo = await categoryModel.findOne({ _id: req.query.catId })
       const productInfo = await productModel.findOne({ _id: req.query.proId })

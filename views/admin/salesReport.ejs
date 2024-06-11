@@ -599,7 +599,7 @@
               <td><%= salesData[i].paymentType %></td>
               <td>Delivered</td>
               <td>
-                <% if (salesData[i].couponOffers.length === 0) { %> None <% }
+                <% if (salesData[i].length === 0) { %> None <% }
                 else { %> <%= salesData[i].couponOffers.couponCode %> <% } %>
               </td>
               <td>
