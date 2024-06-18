@@ -10,6 +10,7 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + '-' + uniqueSuffix+ path.extname(file.originalname))
   }
 })
+console.log("coming here in multer");
 
 const upload = multer({ storage })
 

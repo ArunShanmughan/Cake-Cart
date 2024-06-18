@@ -29,7 +29,7 @@ const {
   postAddProduct,
   getEditProduct,
   postEditProduct,
-} = require("../controllers/productcontroller.js");
+} = require("../controllers/productController.js");
 
 const {
   getOrderManagment,

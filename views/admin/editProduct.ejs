@@ -431,7 +431,7 @@
               <label for="exampleFormControlInput1">Product Name</label>
               <input
                 type="text"
-                value="<%=productInfo.productName%>"
+                value="<%=productInfo?.productName %>"
                 name="productName"
                 class="form-control"
                 id="exampleFormControlInput1"
@@ -446,47 +446,58 @@
               class="form-control form-control-md mb-4"
               style="max-width: 300px"
             >
-              <option disabled selected>Select Parent Category</option>
               <% categorydetails.forEach(category => { %>
-  
-              <option value="<%=category._id %>"><%= category.categoryName%></option>
+                <option 
+                  value="<%= category._id %>" 
+                  <%=categoryInfo?.categoryName === productInfo?.category?.categoryName ? 'selected' : '' %>
+                >
+                  <%=categoryInfo?.categoryName %>
+                </option>
               <% }) %>
             </select>
-
+          
             <div class="form-group">
               <span id="imageCount" style="margin-top: 5px;">
-                <% if (productInfo.images.length> 0) { %>
-                  <%=productInfo.images.length%> images exists
-                    <% } else { %>
-                      No image exists
-                      <% } %>
+                <% if (productInfo?.images?.length > 0) { %>
+                  <%= productInfo?.images?.length %> images exist
+                <% } else { %>
+                  No image exists
+                <% } %>
               </span>
             </div>
-
-            <% for(let i=0;i<productInfo.images.length;i++){ %>
-              <img src="assets/img/uploads/<%=productInfo.images[i]%>"
-                style="height: 60px; width: 60px; border-radius: 0;">
+            <div id="image-container">
+              <% for (let i = 0; i < productInfo?.images?.length; i++) { %>
+                <div class="image-item" style="display: inline-block; position: relative; margin: 5px;">
+                  <img src="assets/img/uploads/<%= productInfo?.images[i] %>" class="image-preview">
+                  <button class="delete-btn" type="button" onclick="deleteImage(`<%= i %>`)">Delete</button>
+                  <button class="crop-btn" type="button" onclick="cropImage(`<%= i %>`)">Crop</button>
+                </div>
               <% } %>
-  
+            </div>
+          
             <div class="form-group">
               <label for="images">Add image</label>
               <input
                 type="file"
                 name="images"
-                value = "productInfo.images[i]"
                 class="form-control-file"
                 id="images"
                 multiple
+                onchange="previewImages(event)"
               />
             </div>
-  
+          
+            <div id="new-image-preview" style="margin-top: 10px;">
+              <!-- New images preview area -->
+            </div>
+          
             <br />
-  
+          
             <div class="form-group">
               <label for="exampleFormControlInput1">Product Price</label>
               <input
                 class="form-control"
-                value="<%=productInfo.price%>"
+                value="<%= productInfo?.price %>"
                 name="productPrice"
                 type="text"
                 placeholder=""
@@ -494,12 +505,12 @@
                 style="max-width: 300px"
               />
             </div>
-  
+          
             <div class="form-group">
               <label for="exampleFormControlInput1">Product Stock</label>
               <input
                 class="form-control"
-                value="<%=productInfo.quantity%>"
+                value="<%= productInfo?.quantity %>"
                 name="productStock"
                 type="text"
                 placeholder=""
@@ -507,81 +518,231 @@
                 style="max-width: 300px"
               />
             </div>
-  
+          
             <button type="submit" class="btn btn-success mt-4">Save</button>
           </form>
          </div>
-      <script>
-        $.validator.addMethod("startspace", function(value, element) {
-          return value.trim().charAt(0) !== " ";
-         }, "Product name should not start with a space.");
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+         <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+         <script>
+           function previewImages(event) {
+    const previewContainer = document.getElementById('new-image-preview');
+    previewContainer.innerHTML = '';
 
-        $.validator.addMethod("noMoreThanTwoSpaces", function(value, element) {
-           return value.trim().replace(/\s+/g, " ").match(/ {2,}/) === null;
-         }, "Product name should not have more than two spaces together.");
-        $("#editproduct").validate({
-          rules: {
-            productName: {
-              required: true,
-              minlength: 2,
-              maxlength: 50,
-              startspace: true,
-              noMoreThanTwoSpaces: true,
-           },
-            productPrice: {
-              required: true,
-              pattern: "[0-9]+",
-            },
-            productStock: {
-              required: true,
-              pattern: "[0-9]+",
-            },
-            parentCategory: {
-              required: true,
-            },
-          },
-          submitHandler: async (form, event) => {
-            event.preventDefault();
-            // Create a new FormData object
-            const formData = new FormData(form);
+    const files = event.target.files;
 
-            const fileInputs = form.querySelectorAll(
-              'input[type="file"][name="images"]'
-            );
-            fileInputs.forEach((input) => {
-              const files = input.files;
-              for (let i = 0; i < files.length; i++) {
-                formData.append("images", files[i]);
+    if (files) {
+      Array.from(files).forEach((file, index) => {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          const imgElement = document.createElement('div');
+          imgElement.classList.add('image-item');
+          imgElement.style.position = 'relative';
+          imgElement.style.display = 'inline-block';
+          imgElement.style.margin = '5px';
+          imgElement.innerHTML = `
+            <img src="${e.target.result}" class="image-preview">
+            <button class="delete-btn" type="button" onclick="deleteNewImage(${index})">Delete</button>
+            <button class="crop-btn" type="button" onclick="cropNewImage(${index})">Crop</button>
+          `;
+          previewContainer.appendChild(imgElement);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+  }
+
+  function deleteNewImage(index) {
+    const previewContainer = document.getElementById('new-image-preview');
+    const images = previewContainer.getElementsByClassName('image-item');
+    if (images[index]) {
+      previewContainer.removeChild(images[index]);
+      // Remove the file from the input field
+      const inputField = document.getElementById('images');
+      const files = inputField.files;
+      files.splice(index, 1);
+      inputField.files = files;
+    }
+  }
+
+  function cropNewImage(index) {
+    const previewContainer = document.getElementById('new-image-preview');
+    const images = previewContainer.getElementsByClassName('image-item');
+    const imageSrc = images[index].getElementsByTagName('img')[0].src;
+    const cropperModal = document.createElement('div');
+    cropperModal.innerHTML = `
+      <div style="display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.8); position: fixed; top: 0; left: 0; width: 100%; height: 100%;">
+        <div style="background: white; padding: 10px;">
+          <img id="cropper-image" src="${imageSrc}" style="max-width: 100%; max-height: 80vh;">
+          <button onclick="confirmCrop(${index})">Crop</button>
+          <button onclick="closeCropper()">Cancel</button>
+        </div>
+      </div>`;
+    document.body.appendChild(cropperModal);
+    const image = document.getElementById('cropper-image');
+    const cropper = new Cropper(image, {
+      aspectRatio: 1,
+      viewMode: 1,
+    });
+
+    window.confirmCrop = function(idx) {
+      const canvas = cropper.getCroppedCanvas();
+      const croppedImageDataURL = canvas.toDataURL('image/jpeg');
+      // Update the preview image with the cropped image
+      const previewImage = previewContainer.getElementsByClassName('image-item')[idx].getElementsByTagName('img')[0];
+      previewImage.src = croppedImageDataURL;
+      closeCropper();
+    }
+
+    window.closeCropper = function() {
+      cropper.destroy();
+      cropperModal.remove();
+    }
+  }
+        
+          function updateImages() {
+            const imageContainer = document.getElementById('image-container');
+            imageContainer.innerHTML = '';
+            productImages.forEach((image, i) => {
+              const imageItem = document.createElement('div');
+              imageItem.className = 'image-item';
+              imageItem.style.cssText = 'display: inline-block; position: relative; margin: 5px;';
+              imageItem.innerHTML = `
+                <img src="${image}" style="height: 60px; width: 60px; border-radius: 0;">
+                <button class="delete-btn" type="button" onclick="deleteImage(${i})" style="position: absolute; top: 0; right: 0;">Delete</button>
+                <button class="crop-btn" type="button" onclick="cropImage(${i})" style="position: absolute; bottom: 0; right: 0;">Crop</button>`;
+              imageContainer.appendChild(imageItem);
+            });
+          }
+        
+          function handleImagePreview(files) {
+            const previewContainer = document.getElementById('image-preview-container');
+            previewContainer.innerHTML = '';
+        
+            for (let i = 0; i < files.length; i++) {
+              const file = files[i];
+              const reader = new FileReader();
+        
+              reader.onload = function (e) {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item';
+                imageItem.style.cssText = 'display: inline-block; position: relative; margin: 5px;';
+                imageItem.innerHTML = `
+                  <img src="${e.target.result}" style="height: 60px; width: 60px; border-radius: 0;">
+                  <button class="delete-btn" type="button" onclick="removePreviewImage(${i})" style="position: absolute; top: 0; right: 0;">Delete</button>`;
+                previewContainer.appendChild(imageItem);
+              };
+        
+              reader.readAsDataURL(file);
+            }
+          }
+        
+          function removePreviewImage(index) {
+            const previewContainer = document.getElementById('image-preview-container');
+            const previewImages = previewContainer.getElementsByClassName('image-item');
+        
+            if (previewImages.length > index) {
+              previewContainer.removeChild(previewImages[index]);
+            }
+          }
+        
+          document.getElementById('images').addEventListener('change', function () {
+            handleImagePreview(this.files);
+          });
+        
+          $.validator.addMethod("startspace", function (value, element) {
+            return value.trim().charAt(0) !== " ";
+          }, "Product name should not start with a space.");
+        
+          $.validator.addMethod("noMoreThanTwoSpaces", function (value, element) {
+            return value.trim().replace(/\s+/g, " ").match(/ {2,}/) === null;
+          }, "Product name should not have more than two spaces together.");
+        
+          $("#editproduct").validate({
+            rules: {
+              productName: {
+                required: true,
+                minlength: 2,
+                maxlength: 50,
+                startspace: true,
+                noMoreThanTwoSpaces: true,
+              },
+              productPrice: {
+                required: true,
+                pattern: "[0-9]+",
+              },
+              productStock: {
+                required: true,
+                pattern: "[0-9]+",
+              },
+              parentCategory: {
+                required: true,
+              },
+              images: {
+                required: function() {
+                  return productImages.length + document.getElementById('images').files.length < 3;
+                }
               }
-            });
+            },
+            messages: {
+              images: {
+                required: "At least 3 images are required.",
+              }
+            },
+            submitHandler: async (form, event) => {
+              event.preventDefault();
+              // Create a new FormData object
+              const formData = new FormData(form);
+        
+              const fileInputs = form.querySelectorAll('input[type="file"][name="images"]');
+              fileInputs.forEach((input) => {
+                const files = input.files;
+                for (let i = 0; i < files.length; i++) {
+                  formData.append("images", files[i]);
+                }
+              });
+        
+              if (productImages.length + document.getElementById('images').files.length < 3) {
+                await Swal.fire({
+                  icon: "error",
+                  title: "At least 3 images are required.",
+                });
+                return;
+              }
 
-            let response = await fetch("/editProducts/<%=productInfo._id%>", {
-              method: "POST",
-              body: formData,
-            });
-            let result = await response.json();
-            if (result.exists) {
-              await Swal.fire({
-                icon: "error",
-                title: "Product Already exists",
+              console.log("coming to the fetch method");
+              let response = await fetch("/editProducts/<%=productInfo?._id%>", {
+                method: "POST",
+                body: formData,
               });
-            }
-            if (result.success) {
-              await Swal.fire({
-                icon: "success",
-                title: "Product Added",
-              });
-              window.location.href = "/productManagment";
-            }
-            if (result.noValue) {
-              await Swal.fire({
-                icon: "error",
-                title: "No Value in Product Name",
-              });
-            }
-          },
-        });
-      </script>
+              console.log("it's inside the fetchMethod")
+              let result = await response.json();
+              if (result.exists) {
+                await Swal.fire({
+                  icon: "error",
+                  title: "Product Already exists",
+                });
+              }
+              if (result.success) {
+                await Swal.fire({
+                  icon: "success",
+                  title: "Product Added",
+                });
+                window.location.href = "/productManagment";
+              }
+              if (result.noValue) {
+                await Swal.fire({
+                  icon: "error",
+                  title: "No Value in Product Name",
+                });
+              }
+            },
+          });
+        </script>
+     
+        
       <!-- </body> -->
 
       <div class="clearfix"></div>
