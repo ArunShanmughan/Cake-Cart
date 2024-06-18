@@ -13,6 +13,7 @@ const getAdmin = (req, res) => {
   } catch (error) {
     console.log("Something went wrong", error);
   }
+  
 };
 
 const postAdmin = (req, res) => {
